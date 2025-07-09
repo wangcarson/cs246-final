@@ -1,0 +1,44 @@
+#ifndef __BOARD_H__
+#define __BOARD_H__
+#include <vector>
+#include <optional>
+
+#include <structs.h>
+#include <window.h>
+
+class Board {
+    Colour turn;
+    std::vector<std::vector<std::optional<Piece>>> grid;
+    
+    // game states
+    std::optional<Tile> enPassant; // nullopt to represent no tile
+    bool castleBlack;
+    bool castleWhite;
+  
+  public:
+    Board();
+
+    void init(); // init board to default position (deallocate old data, allocate new)
+
+    // setup mode.
+    void addPiece(Piece p, Tile t);
+    void removePiece(Tile t);
+    void setTurn(Colour c);
+    Colour getTurn();
+    bool isValidBoard(); // verify one king each, no pawns on last rank, no checks
+
+    // game mode.    
+    bool isLegal(Move m);
+    bool attemptMove(Tile start, Tile end); // verifies legal. true if success
+    void makeMove(Move m);
+    void undoMove(Move m);
+    
+    // game state.
+    Tile getKing(Colour c); 
+    bool isCheck(Colour c); // check
+    bool isMate(Colour c); // checkmate (no moves, check)
+    bool isDraw(); // stalemate (no moves, no check) or no material
+    // add (private?) helper function to determine when no moves left
+};
+
+#endif
