@@ -14,5 +14,10 @@ class TextDisplay: public Observer {
     void init();
     void notify(Tile t) override;
     void print();
+
+    friend ostream &operator<<(ostream &out, const TextDisplay &s);
 };
+
+ostream &operator<<(ostream &out, const TextDisplay &s);
+
 #endif

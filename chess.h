@@ -3,11 +3,11 @@
 #include <string>
 #include <optional>
 
-#include <structs.h>
-#include <board.h>
-#include <textdisplay.h>
-#include <graphicsdisplay.h>
-#include <player.h>
+#include "structs.h"
+#include "board.h"
+#include "textdisplay.h"
+#include "graphicsdisplay.h"
+#include "player.h"
 
 // implementation included as well (remove later)
 // for input and output (maybe change this)
@@ -25,7 +25,7 @@ class GameController {
     int blackScore = 0;
 
     // private helper functions
-    Player *getPlayer(string s);
+    Player *getPlayer(std::string s);
     void restart();
 
   public:

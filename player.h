@@ -10,7 +10,7 @@
 
 class Player {
 protected:
-    Board *board;
+    Board *board; // maybe change to ref?
 
 public:
     Player(Board *b);

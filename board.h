@@ -2,6 +2,7 @@
 #define __BOARD_H__
 #include <vector>
 #include <optional>
+#include <map>
 
 #include "structs.h"
 #include "window.h"
@@ -13,8 +14,9 @@ class Board: public Subject {
     
     // game states
     std::optional<Tile> enPassant; // nullopt to represent no tile
-    bool castleBlack;
-    bool castleWhite;
+    std::map<Colour, bool> castlingRights;
+
+    std::vector<TurnData> previousMoves;
   
   public:
     Board();
@@ -22,7 +24,7 @@ class Board: public Subject {
     void init(); // init board to default position (deallocate old data, allocate new)
 
     // setup mode. (should call observers)
-    void addPiece(Piece p, Tile t);
+    void setPiece(Tile t, Piece p);
     void removePiece(Tile t);
     void setTurn(Colour c);
     Colour getTurn();
@@ -30,7 +32,7 @@ class Board: public Subject {
 
     // game mode.    
     bool isLegal(Move m);
-    void makeMove(Move m);
+    void makeMove(Move m); // should be called on legal moves
     void undoMove(Move m);
 
     std::vector<Move> generateMoves(); // maybe cache
