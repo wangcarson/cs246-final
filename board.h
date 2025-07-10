@@ -35,7 +35,7 @@ class Board: public Subject {
     void makeMove(Move m); // should be called on legal moves
     void undoMove();
 
-    std::vector<Move> generateMoves(Colour c); // maybe cache
+    std::vector<Move> generateLegalMoves(Colour c); // maybe cache
     
     // game state.
     Tile getKing(Colour c); 

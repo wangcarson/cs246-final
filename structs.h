@@ -41,12 +41,12 @@ class Move {
 
 public:
     Move();
-    Move(MoveType type, Tile from, Tile to);
+    Move(MoveType type, Piece piece, Tile from, Tile to);
 
-    Colour getColour();
-    MoveType getType();
     Tile getFrom();
     Tile getTo();
+    Colour getColour();
+    MoveType getType();
     Piece getPiece();
     Piece getCapturePiece();
     Piece getPromotionPiece();
@@ -55,13 +55,22 @@ public:
     void setCapturePiece(Piece p);
     void setPromotionPiece(Piece p);
     
-    bool operator==(Move m);
     bool isCapture();
     bool isPromotion();
     bool isEnPassant();
     bool isCastle();
     bool isDoubleAdvance();
 };
+
+Move::Move(MoveType type, Piece piece, Tile from, Tile to): type{type}, piece{piece}, startTile{from}, endTile{to} {}
+Tile Move::getTo() { return startTile; }
+Tile Move::getFrom() { return endTile; }
+Colour Move::getColour() { return piece.colour; }
+MoveType Move::getType() { return type; }
+Piece Move::getPiece() { return piece; }
+Piece Move::getCapturePiece() { return capturePiece; }
+Piece Move::getPromotionPiece() { return promotionPiece; }
+
 
 // keeps a move and previous state (for undoing moves)
 struct TurnData {

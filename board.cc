@@ -45,6 +45,7 @@ bool Board::isValidBoard() {
     // check isCheck(Colour::White) and isCheck(Colour::Black)
 }
 
+// maybe private?
 bool Board::isLegal(Move m) {
     makeMove(m);
     bool legal = !isCheck(m.getColour());
@@ -99,7 +100,7 @@ void Board::undoMove() {
     // change turn
 }
 
-std::vector<Move> Board::generateMoves(Colour c) {
+std::vector<Move> Board::generateLegalMoves(Colour c) {
     // todo
 }
 
@@ -116,10 +117,10 @@ bool Board::isCheck(Colour c) {
 
 // check if *current* colour is in check
 bool Board::isMate() {
-    return isCheck(turn) && generateMoves(turn).size() == 0;
+    return isCheck(turn) && generateLegalMoves(turn).size() == 0;
 }
 
 bool Board::isDraw() {
-    return !isCheck(turn) && generateMoves(turn).size() == 0;
+    return !isCheck(turn) && generateLegalMoves(turn).size() == 0;
     // todo: check for insufficient material
 }

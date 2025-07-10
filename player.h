@@ -56,7 +56,7 @@ Move Human::getLegalMove() {
                 cerr << "Invalid tile inputs." << endl;
                 continue;
             }
-            auto moves = board->generateMoves();
+            auto moves = board->generateLegalMoves(board->getTurn());
             for (auto it : moves) {
                 if (it.getTo() == start && it.getFrom() == end) {
                     return it;

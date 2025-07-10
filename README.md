@@ -17,3 +17,19 @@ main
 observer (no impl needed)
 subject
 window
+
+Board Representation:
+https://www.chessprogramming.org/Mailbox
+https://www.chessprogramming.org/10x12_Board
+
+Moves:
+https://www.chessprogramming.org/Incremental_Updates
+https://www.chessprogramming.org/Vector_Attacks
+https://www.chessprogramming.org/Encoding_Moves (From-To Based)
+
+Engine (if we add computer level 4):
+https://www.chessprogramming.org/Depth-First
+https://www.chessprogramming.org/Minimax
+https://www.chessprogramming.org/Negamax
+https://www.chessprogramming.org/Alpha-Beta
+
