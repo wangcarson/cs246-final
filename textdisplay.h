@@ -15,9 +15,9 @@ class TextDisplay: public Observer {
     void notify(Tile t) override;
     void print();
 
-    friend ostream &operator<<(ostream &out, const TextDisplay &s);
+    friend std::ostream &operator<<(std::ostream &out, const TextDisplay &s);
 };
 
-ostream &operator<<(ostream &out, const TextDisplay &s);
+std::ostream &operator<<(std::ostream &out, const TextDisplay &s);
 
 #endif
