@@ -2,20 +2,15 @@
 #define __SUBJECT_H__
 #include <vector>
 
-#include <observer.h>
-#include <structs.h>
+#include "observer.h"
+#include "structs.h"
 
 class Subject {
     std::vector<Observer*> observers;
-    Tile updatedTile;
-  
-  protected:
-    void setState(Tile t);
   
   public:
-    void attach(Observer *o);  
-    void notifyObservers();
-    Tile getState() const;
+    void attach(Observer *o);
+    void notifyObservers(Tile t); // pass info directly to observers instead of using state
 };
 
 #endif

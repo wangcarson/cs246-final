@@ -3,15 +3,20 @@
 #include <optional>
 #include <map>
 
+// errors
+const int EOF_ERROR = 1;
+const int RESIGN_ERROR = 0;
+
 // this is low cohesion. move later (im too lazy rn)
-enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen };
+enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty, Invalid };
 enum class Mode { Setup, Game, Normal };
-enum class Colour { Black, White };
-enum class MoveType { Promotion, PromotionCapture, EnPassant, Capture, Castle, Regular, Unknown };
+enum class Colour { Black, White, None };
+enum class MoveType { Quiet, DoublePush, Castle, Capture, EnPassant, Promotion, PromotionCapture };
 
 struct Tile {
     int row;
     int col;
+    bool operator==(Tile t);
 };
 
 struct Piece { // change to class later
@@ -19,11 +24,33 @@ struct Piece { // change to class later
     Colour colour;
 };
 
-struct Move {
+// Helper functions
+Piece parsePiece(std::string s);  // P, p, etc. to Piece()
+Tile parseTile(std::string s);    // eg. from 'e3' to Tile(5, 2)
+
+class Move {
     MoveType type;
-    Tile startTile;
-    Tile endTile;
-    std::optional<Tile> captureTile = std::nullopt; // for en passant
+    Tile startTile, endTile;
+    Piece piece, capturePiece, promotionPiece;
+
+public:
+    Move();
+    Move(MoveType type, Tile from, Tile to);
+
+    MoveType getType();
+    Tile getTo();
+    Tile getFrom();
+    Piece getPiece();
+    Piece getCapturePiece();
+    Piece getPromotionPiece();
+
+    void setPiece(Piece p);
+    void setCapturePiece(Piece p);
+    void setPromotionPiece(Piece p);
+    
+    bool operator==(Move m);
+    bool isCapture();
+    bool isPromotion();
 };
 
 const std::map<char, Piece> PIECE_MAP = {

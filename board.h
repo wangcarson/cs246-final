@@ -3,12 +3,13 @@
 #include <vector>
 #include <optional>
 
-#include <structs.h>
-#include <window.h>
+#include "structs.h"
+#include "window.h"
+#include "subject.h"
 
-class Board {
+class Board: public Subject {
     Colour turn;
-    std::vector<std::vector<std::optional<Piece>>> grid;
+    std::vector<std::vector<std::optional<Piece>>> position;
     
     // game states
     std::optional<Tile> enPassant; // nullopt to represent no tile
@@ -20,7 +21,7 @@ class Board {
 
     void init(); // init board to default position (deallocate old data, allocate new)
 
-    // setup mode.
+    // setup mode. (should call observers)
     void addPiece(Piece p, Tile t);
     void removePiece(Tile t);
     void setTurn(Colour c);
@@ -29,9 +30,10 @@ class Board {
 
     // game mode.    
     bool isLegal(Move m);
-    bool attemptMove(Tile start, Tile end); // verifies legal. true if success
     void makeMove(Move m);
     void undoMove(Move m);
+
+    std::vector<Move> generateMoves(); // maybe cache
     
     // game state.
     Tile getKing(Colour c); 

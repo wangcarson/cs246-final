@@ -3,7 +3,8 @@
 #include <vector>
 #include <iostream>
 
-#include <observer.h>
+#include "observer.h"
+#include "structs.h"
 
 class TextDisplay: public Observer {
     std::vector<std::vector<char>> display; // stdout display
@@ -11,7 +12,7 @@ class TextDisplay: public Observer {
   public:
     TextDisplay();
     void init();
-    void notify() override;
+    void notify(Tile t) override;
     void print();
 };
 #endif

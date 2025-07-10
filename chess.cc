@@ -1,9 +1,26 @@
 #include <chess.h>
 using namespace std;
 
+GameController::GameController(): mode{Mode::Normal} { // other fields are default constructed
+    
+}
+
+GameController::~GameController() {
+    delete whitePlayer;
+    delete blackPlayer;
+}
+
+// resets fields for new game
+void GameController::restart() {
+    mode = Mode::Normal;
+    board.init();
+    delete whitePlayer;
+    delete blackPlayer;
+}
+
 void GameController::start() {
     string cmd;
-    board->init();
+    board.init();
 
     while (true) {
         if (mode == Mode::Setup) {
@@ -16,7 +33,7 @@ void GameController::start() {
                 try {
                     Piece piece = parsePiece(p);
                     Tile tile = parseTile(t);
-                    board->addPiece(piece, tile);
+                    board.addPiece(piece, tile);
                 } catch (int n) {
                     cerr << "Invalid piece or square." << endl;
                 }
@@ -25,7 +42,7 @@ void GameController::start() {
                 cin >> s;
                 try {
                     Tile t = parseTile(s);
-                    board->removePiece(t);
+                    board.removePiece(t);
                 } catch (int n) {
                     cerr << "Invalid square." << endl;
                 }
@@ -33,54 +50,56 @@ void GameController::start() {
                 string c;
                 cin >> c;
                 if (c == "white") {
-                    try {
-                        board->setTurn(Colour::White);
-                    } catch (int n) { // EOF
-                        break;
-                    }
+                    board.setTurn(Colour::White);
                 } else if (c == "black") {
-                    try {
-                        board->setTurn(Colour::Black);
-                    } catch (int n) { // EOF
-                        break;
-                    }
+                    board.setTurn(Colour::Black);
                 } else {
                     cerr << "Invalid colour." << endl;
                 }
             } else if (cmd == "done") {
-                if (board->isValidBoard()) {
+                if (board.isValidBoard()) {
                     mode = Mode::Normal;
                 } else {
                     cerr << "Invalid board!" << endl;
-                }
-                
+                }   
             }
-        
         } else if (mode == Mode::Game) {
-            Colour c = board->getTurn();
+            Colour c = board.getTurn();
             Move m;
             if (c == Colour::White) { // get move from player
-                m = whitePlayer->getMove();
+                try {
+                    m = whitePlayer->getLegalMove();
+                } catch (int error) { // EOF or resign
+                    if (error == EOF_ERROR) break;
+                    else if (error == RESIGN_ERROR) {
+                        ++blackScore;
+                        restart();
+                    }
+                }
             } else {
-                m = blackPlayer->getMove();
-            }
-
-            if (board->isLegal(m)) { // check if legal
-                board->makeMove(m);  // make move if yes 
-                cout << td;
-                if (board->isMate(Colour::White)) {
-                    ++whiteScore;
-                    restart();
-                } else if (board->isMate(Colour::Black)) {
-                    ++blackScore;
-                    restart();
-                } else if (board->isDraw()) {
-                    whiteScore += 1;
-                    blackScore += 1;
-                    restart();
+                try {
+                    m = blackPlayer->getLegalMove();
+                } catch (int error) {
+                    if (error == EOF_ERROR) break;
+                    else if (error == RESIGN_ERROR) {
+                        ++whiteScore;
+                        restart();
+                    }
                 }
             }
-        
+            board.makeMove(m); // m is now a legal move 
+            cout << td;
+            if (board.isMate(Colour::White)) {
+                ++whiteScore;
+                restart();
+            } else if (board.isMate(Colour::Black)) {
+                ++blackScore;
+                restart();
+            } else if (board.isDraw()) {
+                whiteScore += 1;
+                blackScore += 1;
+                restart();
+            }
         } else {
             cin >> cmd;
             if (cin.fail()) break;
@@ -89,29 +108,22 @@ void GameController::start() {
                 string p1, p2;
                 cin >> p1 >> p2;
                 
-                whitePlayer = new Human(cin); // todo: pick human or computer
-                blackPlayer = new Human(cin);
+                whitePlayer = getPlayer(p1); // pick human or computer
+                blackPlayer = getPlayer(p2);
 
-                cout << td;
                 mode = Mode::Game;
+                cout << td;
 
             } else if (cmd == "setup") {
                 mode = Mode::Setup;
             }
-
         }
     }
 
-    // print scores
+    // print scores on break
     cout << "Final Score:" << endl;
     cout << "White: " << whiteScore << endl;
     cout << "Black: " << blackScore << endl;
 
 }
 
-void GameController::restart() {
-    mode = Mode::Normal;
-    board->init();
-    delete whitePlayer;
-    delete blackPlayer;
-}
