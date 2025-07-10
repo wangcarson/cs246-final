@@ -48,7 +48,10 @@
     "text_encoding": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp",
-    "ranges": "cpp"
+    "ranges": "cpp",
+    "fstream": "cpp",
+    "functional": "cpp",
+    "*.inc": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

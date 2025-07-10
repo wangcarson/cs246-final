@@ -1,5 +1,5 @@
 #include <iostream>
-#include "chess.h"
+#include "gameController.h"
 
 int main() {
     GameController g;
