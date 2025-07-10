@@ -25,7 +25,7 @@ class GameController {
     int blackScore = 0;
 
     // private helper functions
-    Player *getPlayer(std::string s);
+    Player *getPlayer(std::string s, Colour c);
     void restart();
 
   public:

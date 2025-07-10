@@ -10,10 +10,11 @@
 
 class Player {
 protected:
-    Board *board; // maybe change to ref?
+    Colour colour;
+    Board &board;
 
 public:
-    Player(Board *b);
+    Player(Board &b, Colour c);
     virtual Move getLegalMove() = 0;
 };
 
@@ -21,7 +22,7 @@ class Human: public Player {
     std::istream &in;
 
 public:
-    Human(Board *b, std::istream &input);
+    Human(Board &b, Colour c, std::istream &input);
     Move getLegalMove() override;
 }; 
 
@@ -29,40 +30,38 @@ class Computer: public Player {
     int level;  
 
 public:
-    Computer(Board *b, int level);
+    Computer(Board &b, Colour c, int level);
     Move getLegalMove() override;
 };
 
 // implementation
-Player::Player(Board *b): board{b} {}
-Computer::Computer(Board *b, int level): Player{b}, level{level} {}
-Human::Human(Board *b, std::istream &input): Player{b}, in{input} {}
+Player::Player(Board &b, Colour c): board{b}, colour{c} {}
+Computer::Computer(Board &b, Colour c, int level): Player{b, c}, level{level} {}
+Human::Human(Board &b, Colour c, std::istream &input): Player{b, c}, in{input} {}
 
 // Returns a valid move.
 Move Human::getLegalMove() {
     std::string cmd;
-    in >> cmd;
     if (in.fail()) throw EOF_ERROR; // raise exception
 
     while (true) {
         if (cmd == "move") {
-            string from, to, promote;
+            std::string from, to, promote;
             in >> from >> to;
             Tile start, end;
             try {
                 start = parseTile(from); // add exception handling here
                 end = parseTile(to);
             } catch (int n) {
-                cerr << "Invalid tile inputs." << endl;
+                std::cerr << "Invalid tile inputs." << std::endl;
                 continue;
             }
-            auto moves = board->generateLegalMoves(board->getTurn());
+            auto moves = board.generateLegalMoves(board.getTurn());
             for (auto it : moves) {
                 if (it.getTo() == start && it.getFrom() == end) {
                     return it;
                 }
             }
-    
         } else if (cmd == "resign") {
             throw RESIGN_ERROR;
         }

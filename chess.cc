@@ -1,4 +1,4 @@
-#include <chess.h>
+#include "chess.h"
 using namespace std;
 
 GameController::GameController(): mode{Mode::Normal} { // other fields are default constructed
@@ -11,17 +11,17 @@ GameController::~GameController() {
 }
 
 // Get player object corresponding to s. Allocates dynamic memory.
-Player *GameController::getPlayer(string s) {
+Player *GameController::getPlayer(string s, Colour c) {
     if (s == "human") {
-        return new Human(&board, cin);
+        return new Human(board, c, cin);
     } else if (s == "computer1") {
-        return new Computer(&board, 1);
+        return new Computer(board, c, 1);
     } else if (s == "computer2") {
-        return new Computer(&board, 2);
+        return new Computer(board, c, 2);
     } else if (s == "computer3") {
-        return new Computer(&board, 3);
+        return new Computer(board, c, 3);
     } else if (s == "computer4") {
-        return new Computer(&board, 4);
+        return new Computer(board, c, 4);
     } else {
         throw DEFAULT_ERROR;
     }
@@ -127,8 +127,8 @@ void GameController::start() {
                 string p1, p2;
                 cin >> p1 >> p2;
                 
-                whitePlayer = getPlayer(p1); // pick human or computer
-                blackPlayer = getPlayer(p2);
+                whitePlayer = getPlayer(p1, Colour::White); // pick human or computer
+                blackPlayer = getPlayer(p2, Colour::Black);
 
                 mode = Mode::Game;
                 cout << td;
