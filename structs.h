@@ -12,13 +12,15 @@ const int RESIGN_ERROR = 2;
 enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty, Invalid };
 enum class Mode { Setup, Game, Normal };
 enum class Colour { White = 1, Black = -1, None = 0 };
-enum class MoveType { Quiet, DoublePush, Castle, Capture, EnPassant, Promotion, PromotionCapture };
+enum class MoveType { Quiet, DoublePush, KingSideCastle,QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
 
 struct Tile {
     int row;
     int col;
     bool operator==(Tile t);
 };
+
+////////////////////////////////////////////////////////////
 
 struct Piece { // change to class later
     PieceType type;
@@ -33,6 +35,8 @@ struct Piece { // change to class later
 // Helper functions
 Piece parsePiece(std::string s);  // P, p, etc. to Piece()
 Tile parseTile(std::string s);    // eg. from 'e3' to Tile(5, 2)
+
+////////////////////////////////////////////////////////////
 
 class Move {
     MoveType type;
@@ -71,6 +75,8 @@ Piece Move::getPiece() { return piece; }
 Piece Move::getCapturePiece() { return capturePiece; }
 Piece Move::getPromotionPiece() { return promotionPiece; }
 
+
+////////////////////////////////////////////////////////////
 
 // keeps a move and previous state (for undoing moves)
 struct TurnData {
