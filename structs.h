@@ -26,6 +26,7 @@ struct Piece { // change to class later
 
     bool isKing() { return type == PieceType::King; }
     bool isRook() { return type == PieceType::Rook; }
+    bool isPawn() { return type == PieceType::Pawn; }
     // add more
 };
 

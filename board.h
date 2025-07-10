@@ -33,14 +33,14 @@ class Board: public Subject {
     // game mode.    
     bool isLegal(Move m);
     void makeMove(Move m); // should be called on legal moves
-    void undoMove(Move m);
+    void undoMove();
 
-    std::vector<Move> generateMoves(); // maybe cache
+    std::vector<Move> generateMoves(Colour c); // maybe cache
     
     // game state.
     Tile getKing(Colour c); 
     bool isCheck(Colour c); // check
-    bool isMate(Colour c); // checkmate (no moves, check)
+    bool isMate(); // checkmate (no moves, check)
     bool isDraw(); // stalemate (no moves, no check) or no material
     // add (private?) helper function to determine when no moves left
 };

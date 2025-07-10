@@ -50,7 +50,7 @@ void GameController::start() {
                 try {
                     Piece piece = parsePiece(p);
                     Tile tile = parseTile(t);
-                    board.addPiece(piece, tile);
+                    board.setPiece(tile, piece);
                 } catch (int n) {
                     cerr << "Invalid piece or square." << endl;
                 }
@@ -106,15 +106,17 @@ void GameController::start() {
             }
             board.makeMove(m); // m is now a legal move 
             cout << td;
-            if (board.isMate(Colour::White)) {
-                ++whiteScore;
+            if (board.isMate()) {
+                if (c == Colour::White) {
+                    ++whiteScore;
+                } else {
+                    ++blackScore;
+                }
                 restart();
-            } else if (board.isMate(Colour::Black)) {
-                ++blackScore;
-                restart();
+                
             } else if (board.isDraw()) {
-                whiteScore += 1;
-                blackScore += 1;
+                whiteScore += 0.5;
+                blackScore += 0.5;
                 restart();
             }
         } else {
