@@ -26,17 +26,19 @@ public:
     Move getLegalMove() override;
 }; 
 
-class Computer: public Player {
+class Bot: public Player {
     int level;  
 
 public:
-    Computer(Board &b, Colour c, int level);
+    Bot(Board &b, Colour c, int level);
     Move getLegalMove() override;
 };
 
 // implementation
 Player::Player(Board &b, Colour c): board{b}, colour{c} {}
-Computer::Computer(Board &b, Colour c, int level): Player{b, c}, level{level} {}
+
+Bot::Bot(Board &b, Colour c, int level): Player{b, c}, level{level} {}
+
 Human::Human(Board &b, Colour c, std::istream &input): Player{b, c}, in{input} {}
 
 // Returns a valid move.

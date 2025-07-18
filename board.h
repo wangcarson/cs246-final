@@ -16,7 +16,7 @@ class Board: public Subject {
     std::optional<Tile> enPassant; // nullopt to represent no tile
     std::map<Colour, bool> castlingRights;
 
-    std::vector<TurnData> previousMoves;
+    std::vector<BoardState> previousMoves;
   
   public:
     Board();

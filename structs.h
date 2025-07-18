@@ -64,8 +64,14 @@ struct BoardState {
     Colour turn;
     Move move;
     std::optional<Tile> enPassant; // nullopt to represent no tile
-    std::map<Colour, bool> castlingRights;
     
+    std::map<Colour, bool> castlingRights;
+    // 0 = white king side
+    // 1 = white queen side
+    // 2 = black king side
+    // 3 = black queen side
+    
+
     Colour getColour(){
         return turn;
     }
