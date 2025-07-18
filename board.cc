@@ -55,7 +55,7 @@ bool Board::isLegal(Move m) {
 
 // assumes m is a legal move
 void Board::makeMove(Move m) {
-    previousMoves.emplace_back(TurnData{turn, m, enPassant, castlingRights});
+    previousMoves.emplace_back(BoardState{turn, m, enPassant, castlingRights});
 
     // add and remove pieces.
     removePiece(m.getFrom());
