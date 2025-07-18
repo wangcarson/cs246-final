@@ -62,12 +62,22 @@ Tile parseTile(std::string s);    // eg. from 'e3' to Tile(5, 2)
 // keeps a move and previous state (for undoing moves)
 struct BoardState {
     Colour turn;
+    Move move;
     std::optional<Tile> enPassant; // nullopt to represent no tile
     Move move;
-    bool castleKingWhite;
-    bool castleQueenBlack;
-    bool castleQueenWhite;
-    bool castleKingBlack;
+    bool castleKingSideWhite;
+    bool castleQueenSideBlack;
+    bool castleQueenSideWhite;
+    bool castleKingSideBlack;
+
+    Colour getColour(){
+        return turn;
+    }
+    Move getMove(){
+        return move;
+    }
+
+
 };
 
 const std::map<char, Piece> PIECE_MAP = {
