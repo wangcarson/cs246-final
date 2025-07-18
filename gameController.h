@@ -1,3 +1,5 @@
+#ifndef __GAMECONTROLLER_H__
+#define __GAMECONTROLLER_H__
 #include <vector>
 #include <iostream>
 #include <string>
@@ -33,3 +35,5 @@ class GameController {
     ~GameController();
     void start();
 };
+
+#endif

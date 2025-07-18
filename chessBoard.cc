@@ -1,5 +1,5 @@
 #include <string>
-#include "board.h"
+#include "chessBoard.h"
 using namespace std;
 
 const int BOARD_SIZE = 8;

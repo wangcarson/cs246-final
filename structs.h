@@ -9,15 +9,16 @@ const int DEFAULT_ERROR = 0;
 const int EOF_ERROR = 1;
 const int RESIGN_ERROR = 2;
 
-// this is low cohesion. move later (im too lazy rn)
 enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty, Invalid };
 enum class Mode { Setup, Game, Normal };
-//Setup Mode is for when we are setting up a position.
-//Game Mode is for taking move commands from input
-//Normal Mode is defult before we choose what other mode we want to be in.
+// Setup Mode is for when we are setting up a position.
+// Game Mode is for taking move commands from input
+// Normal Mode is defult before we choose what other mode we want to be in.
 
 enum class Colour { White = 1, Black = -1, None = 0 };
 enum class MoveType { Quiet, DoublePush, KingSideCastle,QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
+
+////////////////////////////////////////////////////////////
 
 struct Tile {
     int row;
@@ -58,25 +59,15 @@ Tile parseTile(std::string s);    // eg. from 'e3' to Tile(5, 2)
 
 ////////////////////////////////////////////////////////////
 
-
 // keeps a move and previous state (for undoing moves)
 struct BoardState {
     Colour turn;
     std::optional<Tile> enPassant; // nullopt to represent no tile
     Move move;
-    bool castleKingSideWhite;
-    bool castleQueenSideBlack;
-    bool castleQueenSideWhite;
-    bool castleKingSideBlack;
-
-    Colour getColour(){
-        return turn;
-    }
-    Move getMove(){
-        return move;
-    }
-
-
+    bool castleKingWhite;
+    bool castleQueenBlack;
+    bool castleQueenWhite;
+    bool castleKingBlack;
 };
 
 const std::map<char, Piece> PIECE_MAP = {
