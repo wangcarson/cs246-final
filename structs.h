@@ -42,6 +42,13 @@ struct Piece { // change to class later
     bool isInvalid() { return type == PieceType::Invalid; }
     bool isWhite() { return colour == Colour::White; }
 
+    Colour getColour(){
+        return colour;
+    }
+    Tile getTile(){
+        return position;
+    }
+
     // add more
 };
 
@@ -53,14 +60,23 @@ Tile parseTile(std::string s);    // eg. from 'e3' to Tile(5, 2)
 
 
 // keeps a move and previous state (for undoing moves)
-struct TurnData {
+struct BoardState {
     Colour turn;
-    Move move;
     std::optional<Tile> enPassant; // nullopt to represent no tile
+    Move move;
     bool castleKingSideWhite;
     bool castleQueenSideBlack;
     bool castleQueenSideWhite;
     bool castleKingSideBlack;
+
+    Colour getColour(){
+        return turn;
+    }
+    Move getMove(){
+        return move;
+    }
+
+
 };
 
 const std::map<char, Piece> PIECE_MAP = {
