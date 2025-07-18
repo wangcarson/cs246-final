@@ -3,17 +3,18 @@
 #include <vector>
 #include <iostream>
 
-#include "observer.h"
 #include "structs.h"
+#include "boardManager.h"
+#include "observer.h"
 
 class TextDisplay: public Observer {
+    BoardManager boardManager;
     std::vector<std::vector<char>> display; // stdout display
 
   public:
-    TextDisplay();
-    void init();
+    TextDisplay(BoardManager bm);
     void notify(Tile t) override;
-    void print();
+    void print(std::ostream &out) const;
 
     friend std::ostream &operator<<(std::ostream &out, const TextDisplay &s);
 };

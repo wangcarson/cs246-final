@@ -1,15 +1,17 @@
 #ifndef __GRAPHICSDISPLAY_H__
 #define __GRAPHICSDISPLAY_H__
 
-#include "window.h"
-#include "observer.h"
 #include "structs.h"
+#include "boardManager.h"
+#include "observer.h"
+#include "window.h"
 
 class GraphicsDisplay: public Observer {
+    BoardManager boardManager;
     Xwindow *window; // X11 graphical display
 
   public:
-    GraphicsDisplay();
+    GraphicsDisplay(BoardManager bm);
     ~GraphicsDisplay();
     void notify(Tile t) override; 
 };

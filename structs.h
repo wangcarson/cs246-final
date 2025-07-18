@@ -67,7 +67,7 @@ struct BoardState {
     std::map<Colour, bool> castlingRights;
 };
 
-const std::map<char, Piece> PIECE_MAP = {
+const std::map<char, Piece> CHAR_PIECE_MAP = { // for creating pieces
     {'P', Piece{PieceType::Pawn,   Colour::White}},
     {'N', Piece{PieceType::Knight, Colour::White}},
     {'B', Piece{PieceType::Bishop, Colour::White}},
@@ -81,5 +81,21 @@ const std::map<char, Piece> PIECE_MAP = {
     {'q', Piece{PieceType::Queen,  Colour::Black}},
     {'k', Piece{PieceType::King,   Colour::Black}}
 };
+
+const std::map<Piece, char> PIECE_CHAR_MAP = {
+    {Piece{PieceType::Pawn,   Colour::White}, 'P'},
+    {Piece{PieceType::Knight, Colour::White}, 'N'},
+    {Piece{PieceType::Bishop, Colour::White}, 'B'},
+    {Piece{PieceType::Rook,   Colour::White}, 'R'},
+    {Piece{PieceType::Queen,  Colour::White}, 'Q'},
+    {Piece{PieceType::King,   Colour::White}, 'K'},
+    {Piece{PieceType::Pawn,   Colour::Black}, 'p'},
+    {Piece{PieceType::Knight, Colour::Black}, 'n'},
+    {Piece{PieceType::Bishop, Colour::Black}, 'b'},
+    {Piece{PieceType::Rook,   Colour::Black}, 'r'},
+    {Piece{PieceType::Queen,  Colour::Black}, 'q'},
+    {Piece{PieceType::King,   Colour::Black}, 'k'}
+};
+
 
 #endif
