@@ -7,14 +7,16 @@
 #include "subject.h"
 
 class ChessBoard: public Subject {
-    std::vector<std::vector<std::optional<Piece>>> position;
+    std::vector<std::vector<std::optional<Piece>>> grid;
+    Colour turn;
   
   public:
     ChessBoard();
-    
+
     // changing board. (should call observers)
     void setPiece(Tile t, Piece p);
     void removePiece(Tile t);
+    void clearGrid();
 
     // some accessors.
     bool isOccupied(Tile t);

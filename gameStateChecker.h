@@ -3,13 +3,15 @@
 
 #include "structs.h"
 #include "chessBoard.h"
+#include "moveGenerator.h"
 
 class GameStateChecker {
     ChessBoard &board;
+    MoveGenerator &moveGenerator;
   
   public:
-    GameStateChecker();
-    
+    GameStateChecker(ChessBoard &b, MoveGenerator &mg);
+
     // checking game states.
     bool isValidBoard();    // verify one king each, no pawns on last rank, no checks
     bool isCheck(Colour c); // check

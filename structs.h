@@ -64,11 +64,7 @@ struct BoardState {
     Colour turn;
     Move move;
     std::optional<Tile> enPassant; // nullopt to represent no tile
-    Move move;
-    bool castleKingWhite;
-    bool castleQueenBlack;
-    bool castleQueenWhite;
-    bool castleKingBlack;
+    std::map<Colour, bool> castlingRights;
 };
 
 const std::map<char, Piece> PIECE_MAP = {

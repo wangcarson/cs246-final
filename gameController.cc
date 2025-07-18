@@ -1,10 +1,9 @@
-#include <chess.h>
+#include "gameController.h"
 using namespace std;
 
 GameController::GameController(): mode{Mode::Normal} { // other fields are default constructed
-    board.init();
+    boardManager.init();
 }
-
 GameController::~GameController() {
     delete whitePlayer;
     delete blackPlayer;
@@ -13,15 +12,15 @@ GameController::~GameController() {
 // Get player object corresponding to s. Allocates dynamic memory.
 Player *GameController::getPlayer(string s) {
     if (s == "human") {
-        return new Human(&board, cin);
+        return new Human(boardManager, cin);
     } else if (s == "computer1") {
-        return new Computer(&board, 1);
+        return new Computer(boardManager, 1);
     } else if (s == "computer2") {
-        return new Computer(&board, 2);
+        return new Computer(boardManager, 2);
     } else if (s == "computer3") {
-        return new Computer(&board, 3);
+        return new Computer(boardManager, 3);
     } else if (s == "computer4") {
-        return new Computer(&board, 4);
+        return new Computer(boardManager, 4);
     } else {
         throw DEFAULT_ERROR;
     }
@@ -30,14 +29,14 @@ Player *GameController::getPlayer(string s) {
 // resets fields for new game
 void GameController::restart() {
     mode = Mode::Normal;
-    board.init();
+    boardManager.init();
     delete whitePlayer;
     delete blackPlayer;
 }
 
 void GameController::start() {
     string cmd;
-    board.init();
+    boardManager.init();
 
     while (true) {
         if (mode == Mode::Setup) {
@@ -50,7 +49,7 @@ void GameController::start() {
                 try {
                     Piece piece = parsePiece(p);
                     Tile tile = parseTile(t);
-                    board.setPiece(tile, piece);
+                    boardManager.getBoard().setPiece(tile, piece);
                 } catch (int n) {
                     cerr << "Invalid piece or square." << endl;
                 }
@@ -59,7 +58,7 @@ void GameController::start() {
                 cin >> s;
                 try {
                     Tile t = parseTile(s);
-                    board.removePiece(t);
+                    boardManager.getBoard().removePiece(t);
                 } catch (int n) {
                     cerr << "Invalid square." << endl;
                 }
@@ -67,21 +66,21 @@ void GameController::start() {
                 string c;
                 cin >> c;
                 if (c == "white") {
-                    board.setTurn(Colour::White);
+                    boardManager.getMoveMaker().setTurn(Colour::White);
                 } else if (c == "black") {
-                    board.setTurn(Colour::Black);
+                    boardManager.getMoveMaker().setTurn(Colour::Black);
                 } else {
                     cerr << "Invalid colour." << endl;
                 }
             } else if (cmd == "done") {
-                if (board.isValidBoard()) {
+                if (boardManager.getGameStateChecker().isValidBoard()) {
                     mode = Mode::Normal;
                 } else {
                     cerr << "Invalid board!" << endl;
                 }   
             }
         } else if (mode == Mode::Game) {
-            Colour c = board.getTurn();
+            Colour c = boardManager.getMoveMaker().getTurn();
             Move m;
             if (c == Colour::White) { // get move from player
                 try {
@@ -104,9 +103,9 @@ void GameController::start() {
                     }
                 }
             }
-            board.makeMove(m); // m is now a legal move 
+            boardManager.getMoveMaker().makeMove(m); // m is now a legal move 
             cout << td;
-            if (board.isMate()) {
+            if (boardManager.getGameStateChecker().isMate(c)) {
                 if (c == Colour::White) {
                     ++whiteScore;
                 } else {
@@ -114,7 +113,7 @@ void GameController::start() {
                 }
                 restart();
                 
-            } else if (board.isDraw()) {
+            } else if (boardManager.getGameStateChecker().isDraw(c)) {
                 whiteScore += 0.5;
                 blackScore += 0.5;
                 restart();

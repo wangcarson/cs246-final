@@ -51,7 +51,10 @@
     "ranges": "cpp",
     "fstream": "cpp",
     "functional": "cpp",
-    "*.inc": "cpp"
+    "*.inc": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "unordered_map": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

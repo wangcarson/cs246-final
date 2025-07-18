@@ -9,10 +9,9 @@
 
 class BoardManager {
     ChessBoard board;
-    BoardState boardState;
+    MoveGenerator moveGenerator;
     GameStateChecker gameStateChecker;
     MoveMaker moveMaker;
-    MoveGenerator moveGenerator;
   
   public:
     BoardManager();
@@ -21,7 +20,6 @@ class BoardManager {
 
     // accesors.
     ChessBoard getBoard();
-    BoardState getBoardState();
     GameStateChecker getGameStateChecker();
     MoveMaker getMoveMaker();
     MoveGenerator getMoveGenerator();

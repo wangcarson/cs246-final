@@ -6,15 +6,14 @@
 #include <string>
 
 #include "structs.h"
-#include "board.h"
+#include "boardManager.h"
 
 class Player {
 protected:
-    Colour colour;
-    Board &board;
+    BoardManager boardManager;
 
 public:
-    Player(Board &b, Colour c);
+    Player(BoardManager &bm);
     virtual Move getLegalMove() = 0;
 };
 
@@ -22,7 +21,7 @@ class Human: public Player {
     std::istream &in;
 
 public:
-    Human(Board &b, Colour c, std::istream &input);
+    Human(BoardManager &bm, std::istream &input);
     Move getLegalMove() override;
 }; 
 
@@ -30,14 +29,14 @@ class Computer: public Player {
     int level;  
 
 public:
-    Computer(Board &b, Colour c, int level);
+    Computer(BoardManager &bm, int level);
     Move getLegalMove() override;
 };
 
 // implementation
-Player::Player(Board &b, Colour c): board{b}, colour{c} {}
-Computer::Computer(Board &b, Colour c, int level): Player{b, c}, level{level} {}
-Human::Human(Board &b, Colour c, std::istream &input): Player{b, c}, in{input} {}
+Player::Player(BoardManager &bm): boardManager{bm} {}
+Computer::Computer(BoardManager &bm, int level): Player{bm}, level{level} {}
+Human::Human(BoardManager &bm, std::istream &input): Player{bm}, in{input} {}
 
 // Returns a valid move.
 Move Human::getLegalMove() {
@@ -56,7 +55,7 @@ Move Human::getLegalMove() {
                 std::cerr << "Invalid tile inputs." << std::endl;
                 continue;
             }
-            auto moves = board.generateLegalMoves(board.getTurn());
+            auto moves = boardManager.getMoveGenerator().generateLegalMoves(boardManager.getMoveMaker().getTurn());
             for (auto it : moves) {
                 if (it.getTo() == start && it.getFrom() == end) {
                     return it;

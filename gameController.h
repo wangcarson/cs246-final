@@ -4,9 +4,10 @@
 #include <iostream>
 #include <string>
 #include <optional>
+#include <memory>
 
 #include "structs.h"
-#include "board.h"
+#include "boardManager.h"
 #include "textdisplay.h"
 #include "graphicsdisplay.h"
 #include "player.h"
@@ -15,13 +16,13 @@
 // for input and output (maybe change this)
 class GameController {
     Mode mode;
-    Board board;
-
+    BoardManager boardManager;
+    
     TextDisplay td;
     GraphicsDisplay gd;
 
-    Player *whitePlayer = nullptr;
-    Player *blackPlayer = nullptr;
+    Player *whitePlayer; // only set when 'game' cmd is run
+    Player *blackPlayer; // don't change to unique_ptr yet
 
     int whiteScore = 0;
     int blackScore = 0;

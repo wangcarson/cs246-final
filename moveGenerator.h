@@ -6,9 +6,12 @@
 
 class MoveGenerator {
     ChessBoard &board;
+
+    // add private functions
+    // getPawnMoves(Tile t);
   
   public:
-    MoveGenerator();
+    MoveGenerator(ChessBoard &b);
 
     // generating moves.
     std::vector<Move> generateLegalMoves(Colour c);
