@@ -1,9 +1,9 @@
-#include "boardManager.h"
-
+#include "boardmanager.h"
 #include <string>
+using namespace std;
 
 const int BOARD_SIZE = 8;
-const std::string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+const string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
 BoardManager::BoardManager(): board{}, moveGenerator{board}, gameStateChecker{board, moveGenerator}, moveMaker{board, gameStateChecker} {}
 

@@ -1,4 +1,4 @@
-#include "gameController.h"
+#include "gamecontroller.h"
 using namespace std;
 
 GameController::GameController(): mode{Mode::Normal} { // other fields are default constructed

@@ -2,7 +2,7 @@
 #define __MOVEGENERATOR_H__
 
 #include "structs.h"
-#include "chessBoard.h"
+#include "chessboard.h"
 
 class MoveGenerator {
     ChessBoard &board;

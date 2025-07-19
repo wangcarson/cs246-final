@@ -1,5 +1,5 @@
+#include "chessboard.h"
 #include <string>
-#include "chessBoard.h"
 using namespace std;
 
 void ChessBoard::setPiece(Tile t, Piece p) {

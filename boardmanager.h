@@ -2,10 +2,11 @@
 #define __BOARDMANAGER_H__
 
 #include "structs.h"
-#include "chessBoard.h"
-#include "moveMaker.h"
-#include "gameStateChecker.h"
-#include "moveGenerator.h"
+
+#include "chessboard.h"
+#include "movemaker.h"
+#include "gamestatechecker.h"
+#include "movegenerator.h"
 
 class BoardManager {
     ChessBoard board;

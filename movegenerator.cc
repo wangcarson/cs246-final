@@ -1,4 +1,4 @@
-#include "moveGenerator.h"
+#include "movegenerator.h"
 
 MoveGenerator::MoveGenerator(ChessBoard &b):
     board{b} {}

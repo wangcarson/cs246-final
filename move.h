@@ -4,13 +4,12 @@
 #include <map>
 #include "structs.h"
 
-
 class Move {
     MoveType type;
     Tile startTile, endTile;
     Piece piece, capturePiece, promotionPiece; // optional
 
-public:
+  public:
     Move();
     Move(MoveType type, Piece piece, Tile from, Tile to);
 
@@ -31,6 +30,5 @@ public:
     bool isCastle();
     bool isDoubleAdvance();
 };
-
 
 #endif

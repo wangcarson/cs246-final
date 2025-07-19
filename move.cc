@@ -5,9 +5,6 @@
 #include "move.h"
 #include "structs.h"
 
-
-
-
 Move::Move(MoveType type, Piece piece, Tile from, Tile to): 
     type{type}, piece{piece}, startTile{from}, endTile{to} {}
 

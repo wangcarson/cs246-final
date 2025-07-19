@@ -2,8 +2,8 @@
 #define __GAMESTATECHECKER_H__
 
 #include "structs.h"
-#include "chessBoard.h"
-#include "moveGenerator.h"
+#include "chessboard.h"
+#include "movegenerator.h"
 
 class GameStateChecker {
     ChessBoard &board;

@@ -2,7 +2,7 @@
 #define __GRAPHICSDISPLAY_H__
 
 #include "structs.h"
-#include "boardManager.h"
+#include "boardmanager.h"
 #include "observer.h"
 #include "window.h"
 

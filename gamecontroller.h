@@ -7,9 +7,9 @@
 #include <memory>
 
 #include "structs.h"
-#include "boardManager.h"
 #include "textdisplay.h"
 #include "graphicsdisplay.h"
+#include "boardmanager.h"
 #include "player.h"
 
 // implementation included as well (remove later)

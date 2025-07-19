@@ -1,4 +1,4 @@
-#include "moveMaker.h"
+#include "movemaker.h"
 using namespace std;
 
 MoveMaker::MoveMaker(ChessBoard &b, GameStateChecker &gsc): board{b}, stateChecker{gsc} { initBoardState(); }

@@ -6,7 +6,7 @@
 #include <string>
 
 #include "structs.h"
-#include "boardManager.h"
+#include "boardmanager.h"
 
 class Player {
 protected:

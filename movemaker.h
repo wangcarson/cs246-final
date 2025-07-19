@@ -5,8 +5,8 @@
 #include <optional>
 
 #include "structs.h"
-#include "chessBoard.h"
-#include "gameStateChecker.h"
+#include "chessboard.h"
+#include "gamestatechecker.h"
 
 class MoveMaker: public Subject {
     ChessBoard &board;

@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "structs.h"
-#include "boardManager.h"
+#include "boardmanager.h"
 #include "observer.h"
 
 class TextDisplay: public Observer {

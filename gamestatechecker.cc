@@ -1,4 +1,4 @@
-#include "gameStateChecker.h"
+#include "gamestatechecker.h"
 
 GameStateChecker::GameStateChecker(ChessBoard &b, MoveGenerator &mg):
     board{b}, moveGenerator{mg} {}
