@@ -2,36 +2,43 @@
 #define __STRUCTS_H__
 #include <optional>
 #include <map>
-#include "move.h"
+#include <string>
+#include <stdexcept>
 
 // errors
 const int DEFAULT_ERROR = 0;
 const int EOF_ERROR = 1;
 const int RESIGN_ERROR = 2;
 
+////////////////////////////////////////////////////////////
+
 enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty, Invalid };
+
 enum class Mode { Setup, Game, Normal };
 // Setup Mode is for when we are setting up a position.
 // Game Mode is for taking move commands from input
 // Normal Mode is defult before we choose what other mode we want to be in.
 
 enum class Colour { White = 1, Black = -1, None = 0 };
-enum class MoveType { Quiet, DoublePush, KingSideCastle,QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
+
+enum class MoveType { Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
 
 ////////////////////////////////////////////////////////////
 
 struct Tile {
     int row;
     int col;
-    bool operator==(Tile t);
+    bool operator==(const Tile &other) const {
+        return row == other.row && col == other.col;
+    }
 };
 
 ////////////////////////////////////////////////////////////
 
-struct Piece { // change to class later
+struct Piece {
     PieceType type;
     Colour colour;
-    Tile position;
+    Tile position; // 
 
     bool isKing() { return type == PieceType::King; }
     bool isQueen() { return type == PieceType::Queen; }
@@ -41,21 +48,43 @@ struct Piece { // change to class later
     bool isPawn() { return type == PieceType::Pawn; }
     bool isEmpty() { return type == PieceType::Empty; }
     bool isInvalid() { return type == PieceType::Invalid; }
-    bool isWhite() { return colour == Colour::White; }
+    bool isColour(Colour c) { return colour == c; }
 
-    Colour getColour(){
-        return colour;
+    bool operator<(const Piece& other) const {
+        if (colour != other.colour)
+            return colour < other.colour;
+        return type < other.type;
     }
-    Tile getTile(){
-        return position;
-    }
-
-    // add more
 };
 
-// Helper functions
-Piece parsePiece(std::string s);  // P, p, etc. to Piece()
-Tile parseTile(std::string s);    // eg. from 'e3' to Tile(5, 2)
+////////////////////////////////////////////////////////////
+
+class Move {
+    MoveType type;
+    Piece piece, capturePiece, promotionPiece; // last two are optional
+    Tile startTile, endTile;
+
+  public:
+    Move();
+    Move(MoveType type, Piece piece, Tile from, Tile to);
+
+    Tile getFrom();
+    Tile getTo();
+    Colour getColour();
+    MoveType getType();
+    Piece getPiece();
+    Piece getCapturePiece();
+    Piece getPromotionPiece();
+
+    void setCapturePiece(Piece p);
+    void setPromotionPiece(Piece p);
+    
+    bool isCapture();
+    bool isPromotion();
+    bool isEnPassant();
+    bool isCastle();
+    bool isDoubleAdvance();
+};
 
 ////////////////////////////////////////////////////////////
 
@@ -97,5 +126,30 @@ const std::map<Piece, char> PIECE_CHAR_MAP = {
     {Piece{PieceType::King,   Colour::Black}, 'k'}
 };
 
+// Helper functions
+Tile parseTile(std::string s) {
+    if (s.size() != 2 || s[0] < 'a' || s[0] > 'h' || s[1] < '1' || s[1] > '8') {
+        throw std::invalid_argument("Invalid tile string: " + s);
+    }
+    int col = s[0] - 'a'; // 'a' → 0, ..., 'h' → 7
+    int row = s[1] - '1'; // '1' → 0, ..., '8' → 7
+    return Tile{row, col};
+}
+
+Piece parsePiece(char s) {
+    auto it = CHAR_PIECE_MAP.find(s);
+    if (it == CHAR_PIECE_MAP.end()) {
+        throw std::invalid_argument("parsePiece: Invalid piece character: " + s);
+    }
+    return it->second;
+}
+
+char getPieceChar(Piece p) {
+    auto it = PIECE_CHAR_MAP.find(p);
+    if (it == PIECE_CHAR_MAP.end()) {
+        throw std::invalid_argument("getPieceChar: Invalid piece");
+    }
+    return it->second;
+}
 
 #endif

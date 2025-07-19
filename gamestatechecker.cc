@@ -9,13 +9,16 @@ bool GameStateChecker::isValidBoard() {
     // if pawn: check none on rank 0 or 7
     // if king: ensure one king of each colour
     // check isCheck(Colour::White) and isCheck(Colour::Black)
+    return true;
 }
 
 bool GameStateChecker::isCheck(Colour c) {
-    Tile ktile = board.getKing(c);
+    // Tile ktile = board.getKing(c);
+
     // check if opponent rook on same rank/file
     // bishop on diagonal
     // similar to move generation 
+    return false;
 }
 
 bool GameStateChecker::isMate(Colour c) {

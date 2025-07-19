@@ -21,7 +21,7 @@ void BoardManager::init() {
         } else if (isdigit(c)) {
             col += c - '0';
         } else {
-            board.setPiece(Tile{row, col}, CHAR_PIECE_MAP.at(c)); // at() raises error if not found
+            board.setPiece(Tile{row, col}, parsePiece(c)); // at() raises error if not found
         }
     }
 }

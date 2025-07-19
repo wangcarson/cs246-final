@@ -1,9 +1,10 @@
 #include "gamecontroller.h"
 using namespace std;
 
-GameController::GameController(): mode{Mode::Normal} { // other fields are default constructed
+GameController::GameController(): mode{Mode::Normal}, boardManager{}, td{boardManager}, gd{boardManager} { // other fields are default constructed
     boardManager.init();
 }
+
 GameController::~GameController() {
     delete whitePlayer;
     delete blackPlayer;
@@ -44,7 +45,8 @@ void GameController::start() {
             if (cin.fail()) break;
 
             if (cmd == "+") { // adding pieces
-                string p, t;
+                char p;
+                string t;
                 cin >> p >> t;
                 try {
                     Piece piece = parsePiece(p);

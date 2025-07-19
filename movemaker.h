@@ -41,9 +41,3 @@ class MoveMaker: public Subject {
 };
 
 #endif
-
-void MoveMaker::initBoardState() {
-  turn = Colour::White;
-  enPassant = std::nullopt;
-  castlingRights = {{Colour::White, true}, {Colour::Black, true}};
-}

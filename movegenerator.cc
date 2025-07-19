@@ -1,12 +1,15 @@
 #include "movegenerator.h"
+using namespace std;
 
 MoveGenerator::MoveGenerator(ChessBoard &b):
     board{b} {}
 
-std::vector<Move> generateLegalMoves(Colour c) {
+vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
     // todo
+    return vector<Move>();
 }
 
-std::vector<Move> getLegalMoves(Tile t) {
+vector<Move> MoveGenerator::getLegalMoves(Tile t) {
     // todo
+    return vector<Move>();
 }

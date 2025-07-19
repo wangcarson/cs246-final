@@ -13,7 +13,7 @@ boardManager{bm}, display{vector<vector<char>>(8, vector<char>(8, ' '))} {
 }
 
 void TextDisplay::notify(Tile t) {
-    display[t.row][t.col] = PIECE_CHAR_MAP.at(boardManager.getBoard().getPiece(t));
+    display[t.row][t.col] = getPieceChar(boardManager.getBoard().getPiece(t));
 }
 
 // Note: the vector storing data begins at the bottom-left (a1 square)
@@ -33,4 +33,5 @@ void TextDisplay::print(ostream &out) const {
 
 std::ostream &operator<<(ostream &out, const TextDisplay &s) {
     s.print(out);
+    return out;
 }
