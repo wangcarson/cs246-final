@@ -20,10 +20,10 @@ class BoardManager {
     void init(); // init board to default position (deallocate old data, allocate new)
 
     // accesors.
-    ChessBoard getBoard();
-    GameStateChecker getGameStateChecker();
-    MoveMaker getMoveMaker();
-    MoveGenerator getMoveGenerator();
+    ChessBoard &getBoard();
+    GameStateChecker &getGameStateChecker();
+    MoveMaker &getMoveMaker();
+    MoveGenerator &getMoveGenerator();
 };
 
 #endif

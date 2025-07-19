@@ -4,15 +4,15 @@
 #include <iostream>
 
 #include "structs.h"
-#include "boardmanager.h"
+#include "chessboard.h"
 #include "observer.h"
 
 class TextDisplay: public Observer {
-    BoardManager boardManager;
+    ChessBoard &board;
     std::vector<std::vector<char>> display; // stdout display
 
   public:
-    TextDisplay(BoardManager bm);
+    TextDisplay(ChessBoard &b); // explicit?
     void notify(Tile t) override;
     void print(std::ostream &out) const;
 

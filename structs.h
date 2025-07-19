@@ -5,10 +5,21 @@
 #include <string>
 #include <stdexcept>
 
+// Board size constant
+const int BOARD_ROWS = 8;
+const int BOARD_COLS = 8;
+
 // errors
-const int DEFAULT_ERROR = 0;
-const int EOF_ERROR = 1;
-const int RESIGN_ERROR = 2;
+class resign_error: public std::runtime_error {
+  public:
+    explicit resign_error(const std::string& msg = ""): runtime_error(msg) {}
+};
+
+class eof_error: public std::runtime_error {
+  public:
+    explicit eof_error(const std::string& msg = ""): runtime_error(msg) {}
+};
+
 
 ////////////////////////////////////////////////////////////
 
@@ -57,6 +68,18 @@ struct Piece {
     }
 };
 
+// Empty and invalid piece constants
+const Piece EMPTY_PIECE{PieceType::Empty, Colour::None};
+const Piece INVALID_PIECE{PieceType::Invalid, Colour::None};
+
+// Parsing Pieces and Tiles
+Tile parseTile(std::string s);
+Piece parsePiece(char s);
+char getPieceChar(Piece p);
+
+// for debugging
+std::ostream &operator<<(std::ostream &out, const Piece &p);
+
 ////////////////////////////////////////////////////////////
 
 class Move {
@@ -95,61 +118,5 @@ struct BoardState {
     std::optional<Tile> enPassant; // nullopt to represent no tile
     std::map<Colour, bool> castlingRights;
 };
-
-const std::map<char, Piece> CHAR_PIECE_MAP = { // for creating pieces
-    {'P', Piece{PieceType::Pawn,   Colour::White}},
-    {'N', Piece{PieceType::Knight, Colour::White}},
-    {'B', Piece{PieceType::Bishop, Colour::White}},
-    {'R', Piece{PieceType::Rook,   Colour::White}},
-    {'Q', Piece{PieceType::Queen,  Colour::White}},
-    {'K', Piece{PieceType::King,   Colour::White}},
-    {'p', Piece{PieceType::Pawn,   Colour::Black}},
-    {'n', Piece{PieceType::Knight, Colour::Black}},
-    {'b', Piece{PieceType::Bishop, Colour::Black}},
-    {'r', Piece{PieceType::Rook,   Colour::Black}},
-    {'q', Piece{PieceType::Queen,  Colour::Black}},
-    {'k', Piece{PieceType::King,   Colour::Black}}
-};
-
-const std::map<Piece, char> PIECE_CHAR_MAP = {
-    {Piece{PieceType::Pawn,   Colour::White}, 'P'},
-    {Piece{PieceType::Knight, Colour::White}, 'N'},
-    {Piece{PieceType::Bishop, Colour::White}, 'B'},
-    {Piece{PieceType::Rook,   Colour::White}, 'R'},
-    {Piece{PieceType::Queen,  Colour::White}, 'Q'},
-    {Piece{PieceType::King,   Colour::White}, 'K'},
-    {Piece{PieceType::Pawn,   Colour::Black}, 'p'},
-    {Piece{PieceType::Knight, Colour::Black}, 'n'},
-    {Piece{PieceType::Bishop, Colour::Black}, 'b'},
-    {Piece{PieceType::Rook,   Colour::Black}, 'r'},
-    {Piece{PieceType::Queen,  Colour::Black}, 'q'},
-    {Piece{PieceType::King,   Colour::Black}, 'k'}
-};
-
-// Helper functions
-Tile parseTile(std::string s) {
-    if (s.size() != 2 || s[0] < 'a' || s[0] > 'h' || s[1] < '1' || s[1] > '8') {
-        throw std::invalid_argument("Invalid tile string: " + s);
-    }
-    int col = s[0] - 'a'; // 'a' → 0, ..., 'h' → 7
-    int row = s[1] - '1'; // '1' → 0, ..., '8' → 7
-    return Tile{row, col};
-}
-
-Piece parsePiece(char s) {
-    auto it = CHAR_PIECE_MAP.find(s);
-    if (it == CHAR_PIECE_MAP.end()) {
-        throw std::invalid_argument("parsePiece: Invalid piece character: " + s);
-    }
-    return it->second;
-}
-
-char getPieceChar(Piece p) {
-    auto it = PIECE_CHAR_MAP.find(p);
-    if (it == PIECE_CHAR_MAP.end()) {
-        throw std::invalid_argument("getPieceChar: Invalid piece");
-    }
-    return it->second;
-}
 
 #endif

@@ -1,9 +1,10 @@
 #include "chessboard.h"
 #include <string>
+#include <iostream>
 using namespace std;
 
 ChessBoard::ChessBoard():
-grid{vector<vector<optional<Piece>>>(8, vector<optional<Piece>>(8, nullopt))} {}
+    grid{vector<vector<Piece>>(BOARD_ROWS, vector<Piece>(BOARD_COLS, EMPTY_PIECE))} {}
 
 void ChessBoard::setPiece(Tile t, Piece p) {
     grid[t.row][t.col] = p;
@@ -11,7 +12,7 @@ void ChessBoard::setPiece(Tile t, Piece p) {
 }
 
 void ChessBoard::removePiece(Tile t) {
-    grid[t.row][t.col] = nullopt;
+    grid[t.row][t.col] = EMPTY_PIECE;
     notifyObservers(t);
 }
 
@@ -19,20 +20,18 @@ void ChessBoard::clearGrid() {
     for (size_t i = 0; i < grid.size(); ++i) {
         auto row = grid[i];
         for (size_t j = 0; j < row.size(); ++j) {
-            removePiece(Tile{(int)i, (int)j});
+            removePiece(Tile{static_cast<int>(i), static_cast<int>(j)});
         }
     }
 }
 
-bool ChessBoard::isOccupied(Tile t) {
-    return grid[t.row][t.col].has_value();
+Piece ChessBoard::getPiece(Tile t) {
+    return grid[t.row][t.col];
 }
 
-Piece ChessBoard::getPiece(Tile t) {
-    if (!isOccupied(t)) {
-        throw DEFAULT_ERROR; // todo: add exception handling
-    }
-    return grid[t.row][t.col].value();
+bool ChessBoard::isOccupied(Tile t) {
+    Piece p = grid[t.row][t.col];
+    return !p.isEmpty() && !p.isInvalid();
 }
 
 Tile ChessBoard::getKing(Colour c) {
@@ -40,10 +39,14 @@ Tile ChessBoard::getKing(Colour c) {
         auto row = grid[i];
         for (size_t j = 0; j < row.size(); ++j) {
             auto piece = row[j];
-            if (piece.has_value() && piece.value().isKing() && piece.value().isColour(c)) {
-                return Tile{(int)i, (int)j};
+            if (piece.isKing() && piece.isColour(c)) {
+                return Tile{static_cast<int>(i), static_cast<int>(j)};
             }
         }
     }
-    throw DEFAULT_ERROR; // todo: add exception handling
+    throw runtime_error("No king? lmao"); // todo: add exception handling
+}
+
+void ChessBoard::printSize(string s) { // debugging
+    cout << &grid << " " << grid.size() << " " << grid[0].size() << " " << s << endl;
 }

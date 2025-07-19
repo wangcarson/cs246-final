@@ -18,8 +18,8 @@ class GameController {
     Mode mode;
     BoardManager boardManager;
     
-    TextDisplay td;
-    GraphicsDisplay gd;
+    TextDisplay *td;
+    // GraphicsDisplay gd;
 
     Player *whitePlayer; // only set when 'game' cmd is run
     Player *blackPlayer; // don't change to unique_ptr yet

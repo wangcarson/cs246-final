@@ -1,8 +1,10 @@
 #include "gamecontroller.h"
+#include <stdexcept>
 using namespace std;
 
-GameController::GameController(): mode{Mode::Normal}, boardManager{}, td{boardManager}, gd{boardManager} { // other fields are default constructed
-    boardManager.init();
+GameController::GameController(): 
+mode{Mode::Normal}, boardManager{}, td{new TextDisplay{boardManager.getBoard()}} /*, gd{boardManager}*/ { // other fields are default constructed
+    boardManager.getBoard().attach(td);
 }
 
 GameController::~GameController() {
@@ -23,12 +25,15 @@ Player *GameController::getPlayer(string s) {
     } else if (s == "computer4") {
         return new Computer(boardManager, 4);
     } else {
-        throw DEFAULT_ERROR;
+        throw invalid_argument("Invalid player type.");
     }
 }
 
 // resets fields for new game
 void GameController::restart() {
+    cout << "White " << whiteScore << " - " << blackScore << " Black" << endl;
+    cout << endl;
+    
     mode = Mode::Normal;
     boardManager.init();
     delete whitePlayer;
@@ -37,9 +42,17 @@ void GameController::restart() {
 
 void GameController::start() {
     string cmd;
-    boardManager.init();
+    try {
+        boardManager.init(); // add error handling
+        cerr << "Board initialized!" << endl;
+    } catch (...) {
+        cerr << "start(): Error with initializing board" << endl;
+    }
+    cout << *td; // print!
 
+    cout << "Normal Mode" << endl;
     while (true) {
+        ///////////////////////////////////////////////////////////////////
         if (mode == Mode::Setup) {
             cin >> cmd;
             if (cin.fail()) break;
@@ -52,18 +65,26 @@ void GameController::start() {
                     Piece piece = parsePiece(p);
                     Tile tile = parseTile(t);
                     boardManager.getBoard().setPiece(tile, piece);
-                } catch (int n) {
-                    cerr << "Invalid piece or square." << endl;
+                    cout << *td;
+                } catch (invalid_argument &r) {
+                    cerr << r.what() << endl;
+                } catch (...) {
+                    cerr << "+: Error" << endl;
                 }
+            
             } else if (cmd == "-") { // removing pieces
                 string s;
                 cin >> s;
                 try {
                     Tile t = parseTile(s);
                     boardManager.getBoard().removePiece(t);
-                } catch (int n) {
-                    cerr << "Invalid square." << endl;
+                    cout << *td;
+                } catch (invalid_argument &r) {
+                    cerr << r.what() << endl;
+                } catch (...) {
+                    cerr << "-: Error" << endl;
                 }
+            
             } else if (cmd == "=") { // changing starting colour
                 string c;
                 cin >> c;
@@ -74,35 +95,43 @@ void GameController::start() {
                 } else {
                     cerr << "Invalid colour." << endl;
                 }
+            
             } else if (cmd == "done") {
                 if (boardManager.getGameStateChecker().isValidBoard()) {
                     mode = Mode::Normal;
+                    cout << "Valid board! Normal Mode" << endl;
                 } else {
                     cerr << "Invalid board!" << endl;
                 }   
             }
+
+        ///////////////////////////////////////////////////////////////////
         } else if (mode == Mode::Game) {
             Colour c = boardManager.getMoveMaker().getTurn();
             Move m;
             if (c == Colour::White) { // get move from player
                 try {
+                    cerr << "White to play." << endl;
                     m = whitePlayer->getLegalMove();
-                } catch (int error) { // EOF or resign
-                    if (error == EOF_ERROR) break;
-                    else if (error == RESIGN_ERROR) {
-                        ++blackScore;
-                        restart();
-                    }
+                } catch (eof_error &r) { // EOF: end game
+                    break;
+                } catch (resign_error &r) {
+                    cerr << "White resigned. Black wins." << endl;
+                    ++blackScore;
+                    restart();
+                    continue;
                 }
             } else {
                 try {
+                    cerr << "Black to play." << endl;
                     m = blackPlayer->getLegalMove();
-                } catch (int error) {
-                    if (error == EOF_ERROR) break;
-                    else if (error == RESIGN_ERROR) {
-                        ++whiteScore;
-                        restart();
-                    }
+                } catch (eof_error &r) { // EOF
+                    break;
+                } catch (resign_error &r) {
+                    cerr << "Black resigned. White wins." << endl;
+                    ++whiteScore;
+                    restart();
+                    continue;
                 }
             }
             boardManager.getMoveMaker().makeMove(m); // m is now a legal move 
@@ -120,6 +149,8 @@ void GameController::start() {
                 blackScore += 0.5;
                 restart();
             }
+        
+        ///////////////////////////////////////////////////////////////////
         } else {
             cin >> cmd;
             if (cin.fail()) break;
@@ -127,15 +158,21 @@ void GameController::start() {
             if (cmd == "game") {
                 string p1, p2;
                 cin >> p1 >> p2;
-                
-                whitePlayer = getPlayer(p1); // pick human or computer
-                blackPlayer = getPlayer(p2);
+                try {
+                    whitePlayer = getPlayer(p1); // pick human or computer
+                    blackPlayer = getPlayer(p2);
+                } catch (invalid_argument &r) {
+                    cerr << r.what() << endl;
+                    continue;
+                }
 
                 mode = Mode::Game;
-                cout << td;
+                cout << "Game Mode" << endl;
+                cout << *td;
 
             } else if (cmd == "setup") {
                 mode = Mode::Setup;
+                cout << "Setup Mode" << endl;
             }
         }
     }

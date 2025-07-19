@@ -1,8 +1,7 @@
 CXX = g++-14
 CXXFLAGS = -std=c++20 -Wall -MMD
 EXEC = chess
-OBJECTS = structs.o subject.o player.o chessboard.o movegenerator.o gamestatechecker.o movemaker.o boardmanager.o window.o textdisplay.o gamecontroller.o main.o 
-# add .o files - graphicsdisplay.o
+OBJECTS = structs.o subject.o player.o chessboard.o movegenerator.o gamestatechecker.o movemaker.o boardmanager.o window.o textdisplay.o graphicsdisplay.o gamecontroller.o main.o 
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
@@ -13,4 +12,4 @@ ${EXEC}: ${OBJECTS}
 .PHONY: clean
 
 clean:
-	rm ${OBJECTS} ${EXEC} ${DEPENDS}
+	rm ${OBJECTS} ${DEPENDS}

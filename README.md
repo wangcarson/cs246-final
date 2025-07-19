@@ -13,6 +13,11 @@ board
 chess
 main
 
+# To test program:
+(1) make
+(2) ./chess
+(3) make clean
+
 # Completed files
 observer (no impl needed)
 subject
