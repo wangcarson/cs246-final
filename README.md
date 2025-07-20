@@ -15,7 +15,7 @@ main
 
 # To test program:
 (1) make
-(2) ./chess
+(2) ./chess-exec
 (3) make clean
 
 # Completed files
