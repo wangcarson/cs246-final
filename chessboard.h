@@ -21,6 +21,7 @@ class ChessBoard: public Subject {
     bool isOccupied(Tile t);
     Piece getPiece(Tile t);
     Tile getKing(Colour c);
+    Colour getColour (Tile t);
 
     void printSize(std::string s);
 };

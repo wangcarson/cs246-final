@@ -26,6 +26,10 @@ void ChessBoard::clearGrid() {
     }
 }
 
+Piece ChessBoard::getPiece(Tile t) {
+    return grid[t.row][t.col];
+}
+
 bool ChessBoard::isOccupied(Tile t) {
     Piece p = getPiece(t);
     return !p.isEmpty() && !p.isInvalid();
@@ -42,6 +46,7 @@ Tile ChessBoard::getKing(Colour c) {
         }
     }
     throw runtime_error("No king? lmao"); // todo: add exception handling
+    //could return tile -1,-1? and we then would know that the king isn't on the board.
 }
 
 void ChessBoard::printSize(string s) { // debugging
