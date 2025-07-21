@@ -4,4 +4,5 @@ movegenerator.cc
 List
 add big 5 ctors to Peice struct since we need move ctor.
 
-
+if a king moves both types of castling are no longer allowed.
+if a rook moves that sides castling is now illigal.

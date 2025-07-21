@@ -123,24 +123,6 @@ vector<Move> MoveGenerator::queenLegalGen(Tile t,Colour c){
 
 }
 
-vector<Move> MoveGenerator::pawnLegalGen(Tile t,Colour c){//todo
-    vector<Move> legalList;
-    
-    //2 squares diagonally, 2 squares infront.
-    //consider promotions + En Passant
-    if (Colour::White==c){
-
-
-
-    }else if (Colour::Black==c){
-
-        
-    }
-
-
-
-}
-
 vector<Move> MoveGenerator::knightLegalGen(Tile t,Colour c){
     //hard code in all 8 squares.
     Piece startingPiece = board.getPiece(t);
@@ -171,9 +153,120 @@ vector<Move> MoveGenerator::knightLegalGen(Tile t,Colour c){
 
 }
 
+vector<Move> MoveGenerator::pawnLegalGen(Tile t,Colour c){//todo
+    vector<Move> legalList;
+    bool promtionAdd = false;
+
+    Piece quickAccess=board.getPiece(t);
+
+    //consider En Passant
+    if (Colour::White==c){
+        if (t.row == 6){
+            promtionAdd = true;
+        }
+
+        if (t.row == 1 && !board.isOccupied(Tile {t.row+1,t.col}) && !board.isOccupied(Tile {t.row+2,t.col})){
+            legalList.push_back(Move (MoveType::DoublePush, quickAccess,t,Tile {t.row+2,t.col}));
+        }
+
+        if (!board.isOccupied(Tile {t.row+1,t.col})){
+            if (!promtionAdd)
+                legalList.push_back(Move (MoveType::Quiet, quickAccess,t,Tile {t.row+1,t.col}));
+            else{
+                legalList.push_back(Move (MoveType::Promotion, quickAccess,t,Tile {t.row+1,t.col}));
+
+            }
+        }
+
+        if (board.isOccupied(Tile {t.row+1,t.col+1}) && board.getColour(Tile {t.row+1,t.col+1})==Colour::Black){
+            if (!promtionAdd)
+                legalList.push_back(Move (MoveType::Capture, quickAccess,t,Tile {t.row+1,t.col+1}));
+            else{
+                legalList.push_back(Move (MoveType::PromotionCapture, quickAccess,t,Tile {t.row+1,t.col+1}));
+            }
+        }
+
+        if (board.isOccupied(Tile {t.row+1,t.col-1}) && board.getColour(Tile {t.row+1,t.col-1})==Colour::Black){
+        
+            if (!promtionAdd)
+                legalList.push_back(Move (MoveType::Capture, quickAccess,t,Tile {t.row+1,t.col-1}));
+            else{
+                legalList.push_back(Move (MoveType::PromotionCapture, quickAccess,t,Tile {t.row+1,t.col-1}));
+            }
+        }
+
+    }else if (Colour::Black==c){
+        
+        if (t.row == 1){
+            promtionAdd = true;
+        }
+
+        if (t.row == 1 && !board.isOccupied(Tile {t.row-1,t.col}) && !board.isOccupied(Tile {t.row-2,t.col})){
+            legalList.push_back(Move (MoveType::DoublePush, quickAccess,t,Tile {t.row-2,t.col}));
+        }
+        if (!board.isOccupied(Tile {t.row-1,t.col})){
+            if (!promtionAdd)
+                legalList.push_back(Move (MoveType::Quiet, quickAccess,t,Tile {t.row-1,t.col}));
+            else{
+                legalList.push_back(Move (MoveType::Promotion, quickAccess,t,Tile {t.row-1,t.col}));
+
+            }
+                
+        }
+        if (board.isOccupied(Tile {t.row-1,t.col+1}) && board.getColour(Tile {t.row-1,t.col+1})==Colour::Black){
+            if (!promtionAdd)
+                legalList.push_back(Move (MoveType::Capture, quickAccess,t,Tile {t.row-1,t.col+1}));
+            else{
+                legalList.push_back(Move (MoveType::PromotionCapture, quickAccess,t,Tile {t.row-1,t.col+1}));
+
+            }
+
+        }
+        if (board.isOccupied(Tile {t.row-1,t.col-1}) && board.getColour(Tile {t.row-1,t.col-1})==Colour::Black){
+            if (!promtionAdd)
+                legalList.push_back(Move (MoveType::Capture, quickAccess,t,Tile {t.row-1,t.col-1}));
+            else{
+                legalList.push_back(Move (MoveType::PromotionCapture, quickAccess,t,Tile {t.row-1,t.col-1}));
+
+            }
+
+        }
+        
+
+    }
+
+}
+
 vector<Move> MoveGenerator::kingLegalGen(Tile t,Colour c){//todo
-    //all around.
-    //consider castling.
+
+    Piece startingPiece = board.getPiece(t);
+    vector<Move> legalList;
+
+
+    vector<int> Drow = {1, 1,-1,-1,1, 1,-1,-1};
+    vector<int> Dcol = {1,-1, 1,-1,1,-1, 1,-1};
+
+    for(int i =0;i<8;++i){
+        Tile temp {t.row + Drow[i],t.col+ Dcol[i]};
+
+        if (temp.col >= 0 && temp.row >= 0 && temp.col < 8 && temp.row < 8){
+
+            if (!board.isOccupied(temp)){
+                legalList.push_back(Move (MoveType::Quiet, startingPiece,t,temp));
+
+            }else if (board.getColour(temp)!=c){
+                legalList.push_back(Move (MoveType::Capture, startingPiece,t,temp));
+            }
+
+        }
+
+    }
+
+    //need to add  a test for castling. Aka casting is still allowed
+
+
+    return legalList;
+
 }
 
 MoveGenerator::MoveGenerator(ChessBoard &b):
