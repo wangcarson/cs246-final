@@ -32,7 +32,6 @@ enum class Mode { Setup, Game, Normal };
 
 enum class Colour { White = 1, Black = -1, None = 0 };
 
-enum class MoveType { Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
 
 ////////////////////////////////////////////////////////////
 
@@ -81,6 +80,7 @@ char getPieceChar(Piece p);
 std::ostream &operator<<(std::ostream &out, const Piece &p);
 
 ////////////////////////////////////////////////////////////
+enum class MoveType { Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
 
 class Move {
     MoveType type;

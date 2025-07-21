@@ -29,6 +29,12 @@ Piece ChessBoard::getPiece(Tile t) {
     return grid[t.row][t.col];
 }
 
+//colour accesor method
+Colour ChessBoard::getColour (Tile t){
+    return grid[t.row][t.col].colour;
+}
+
+
 bool ChessBoard::isOccupied(Tile t) {
     Piece p = grid[t.row][t.col];
     return !p.isEmpty() && !p.isInvalid();
