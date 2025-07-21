@@ -16,31 +16,28 @@ void ChessBoard::removePiece(Tile t) {
     notifyObservers(t);
 }
 
+// other methods should call the three
 void ChessBoard::clearGrid() {
-    for (size_t i = 0; i < grid.size(); ++i) {
+    for (size_t i = 0; i < BOARD_ROWS; ++i) {
         auto row = grid[i];
-        for (size_t j = 0; j < row.size(); ++j) {
+        for (size_t j = 0; j < BOARD_COLS; ++j) {
             removePiece(Tile{static_cast<int>(i), static_cast<int>(j)});
         }
     }
 }
 
-Piece ChessBoard::getPiece(Tile t) {
-    return grid[t.row][t.col];
-}
-
 bool ChessBoard::isOccupied(Tile t) {
-    Piece p = grid[t.row][t.col];
+    Piece p = getPiece(t);
     return !p.isEmpty() && !p.isInvalid();
 }
 
 Tile ChessBoard::getKing(Colour c) {
-    for (size_t i = 0; i < grid.size(); ++i) {
-        auto row = grid[i];
-        for (size_t j = 0; j < row.size(); ++j) {
-            auto piece = row[j];
-            if (piece.isKing() && piece.isColour(c)) {
-                return Tile{static_cast<int>(i), static_cast<int>(j)};
+    for (size_t i = 0; i < BOARD_ROWS; ++i) {
+        for (size_t j = 0; j < BOARD_COLS; ++j) {
+        	Tile t = Tile{static_cast<int>(i), static_cast<int>(j)}; // maybe add different ctor for Tile
+            Piece p = getPiece(t);
+            if (p.isKing() && p.isColour(c)) {
+                return t;
             }
         }
     }
@@ -49,4 +46,12 @@ Tile ChessBoard::getKing(Colour c) {
 
 void ChessBoard::printSize(string s) { // debugging
     cout << &grid << " " << grid.size() << " " << grid[0].size() << " " << s << endl;
+    for (auto r : grid) {
+    	for (auto p : r) {
+    		char ch = getPieceChar(p);
+    		cout << ch;
+    	}
+    	cout << endl;
+    }
 }
+

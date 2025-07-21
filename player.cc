@@ -19,7 +19,7 @@ Move Human::getLegalMove() {
     while (true) {
         in >> cmd;
         if (cmd == "move") {
-            string from, to, promote;
+            string from, to;
             in >> from >> to;
             Tile start, end;
             try {
@@ -34,8 +34,22 @@ Move Human::getLegalMove() {
             for (auto it : moves) {
                 if (it.getTo() == start && it.getFrom() == end) {
                     cerr << "Legal move!" << endl;
+                    
+                    // input for promotion
+                    if (it.isPromotion()) {
+                    	char promote;
+                    	Piece p;
+                    	in >> promote;
+                    	try {
+                    		p = parsePiece(promote);
+                    	} catch (invalid_argument &r) {
+                    		cerr << r.what() << endl;
+                    		continue;
+                    	}
+                    	it.setPromotionPiece(p); // set promotion piece
+                    	// Note: generateMoves() should only generate one move per promotion move (not one for each promotion piece type)
+                    }
                     return it;
-                    // todo: add input for promotion
                 }
             }
             cerr << "Illegal move." << endl;

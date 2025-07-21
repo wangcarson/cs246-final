@@ -42,6 +42,14 @@ struct Tile {
     bool operator==(const Tile &other) const {
         return row == other.row && col == other.col;
     }
+    Tile operator+(const Tile &other) const {
+    	return {row + other.row, col + other.col}; // can instead impl in terms of +=
+    }
+    Tile operator+=(const Tile &other) {
+    	row += other.row;
+    	col += other.col;
+    	return *this;
+    }
 };
 
 ////////////////////////////////////////////////////////////

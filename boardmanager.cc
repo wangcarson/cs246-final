@@ -11,9 +11,10 @@ void BoardManager::init() {
     // initialize state
     moveMaker.initBoardState();
     
-    // initialize grid to defaultx
+    // initialize grid to default
     board.clearGrid();
     int row = 0, col = 0;
+    
     for (char c : DEFAULT_POSITION) {
         if (c == '/') {
             row++;
