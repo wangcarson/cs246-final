@@ -1,0 +1,7 @@
+Currently working on
+movegenerator.cc
+
+List
+add big 5 ctors to Peice struct since we need move ctor.
+
+

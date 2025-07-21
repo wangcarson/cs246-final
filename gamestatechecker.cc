@@ -13,6 +13,10 @@ bool GameStateChecker::isValidBoard() {
 }
 
 bool GameStateChecker::isCheck(Colour c) {
+
+    
+
+
     // Tile ktile = board.getKing(c);
 
     // check if opponent rook on same rank/file

@@ -45,6 +45,7 @@ Tile ChessBoard::getKing(Colour c) {
         }
     }
     throw runtime_error("No king? lmao"); // todo: add exception handling
+    //could return tile -1,-1? and we then would know that the king isn't on the board.
 }
 
 void ChessBoard::printSize(string s) { // debugging
