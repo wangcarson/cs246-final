@@ -1,4 +1,6 @@
 #include "movegenerator.h"
+#include "struct.h"
+
 #include <iostream>
 using namespace std;
 
@@ -304,4 +306,62 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t) {
     } else {
         throw invalid_argument("getLegalMoves: called on empty square.");
     }
+}
+
+bool MoveGenerator::isCheckMG(Tile t,Colour c){
+
+    if (c==Colour::White){
+        //check for black pawn on t.row+1,t.col+1 and t.row+1,t.col-1
+        Piece wingCheckForPawn = board.getPiece(Tile {t.row+1,t.col+1});
+
+        if (wingCheckForPawn==PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
+            return true;
+        }
+        wingCheckForPawn = board.getPiece(Tile {t.row+1,t.col-1});
+        if (wingCheckForPawn==PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
+            return true;
+        }
+    }else if (c==Colour::Black){
+        //check for white pawn on t.row-1,t.col+1 and t.row-1,t.col-1
+        Piece wingCheckForPawn = board.getPiece(Tile {t.row-1,t.col+1});
+
+        if (wingCheckForPawn==PieceType::Pawn && wingCheckForPawn.colour == Colour::White){
+            return true;
+        }
+        wingCheckForPawn = board.getPiece(Tile {t.row-1,t.col-1});
+        if (wingCheckForPawn==PieceType::Pawn && wingCheckForPawn.colour == Colour::White){
+            return true;
+        }
+    }
+
+    vector<Move> bishopSpots = bishopLegalGen(t,c);
+
+    for(auto possiblePos : rookSpots){
+
+
+        if (possiblePos.getType()== MoveType::Capture && (possiblePos.getPiece()==PieceType::Bishop || possiblePos.getPiece()==PieceType::Queen)){
+            return true;
+        }
+    }
+
+    //check for caputre squares and if we see a queen or bishop
+    //check digonal for pawns from other color
+
+    vector<Move> rookSpots = rookLegalGen(t,c);
+
+    for(auto possiblePos : rookSpots){
+        if (possiblePos.getType()== MoveType::Capture && (possiblePos.getPiece()==PieceType::Rook || possiblePos.getPiece()==PieceType::Queen)){
+            return true;
+        }
+    }
+
+    vector<Move> knightSpots = knightLegalGen(t,c);
+
+    for(auto possiblePos : knightSpots){
+        if (possiblePos.getType()== MoveType::Capture && possiblePos.getPiece()==PieceType::Knight){
+            return true;
+        }
+    }
+
+    return false;
 }

@@ -1,5 +1,7 @@
 #include "gamestatechecker.h"
 
+using namespace std;
+
 GameStateChecker::GameStateChecker(ChessBoard &b): board{b} {}
 void GameStateChecker::setMG(MoveGenerator *gsc) { moveGenerator = gsc; }
 
@@ -14,7 +16,10 @@ bool GameStateChecker::isValidBoard() {
 
 bool GameStateChecker::isCheck(Colour c) {
 
-    
+    //getKing
+    Tile kingTile = board.getKing(c);
+    vector<Move> legalList = moveGenerator->allPosibleWaysToGetToTile(kingTile,c);
+
 
 
     // Tile ktile = board.getKing(c);
