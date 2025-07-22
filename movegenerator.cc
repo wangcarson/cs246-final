@@ -259,7 +259,7 @@ vector<Move> MoveGenerator::kingLegalGen(Tile start, Colour c){ // todo
     return legalList;
 }
 
-vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
+vector<Move> MoveGenerator::sudoMovesGen(Colour c) {
     vector<Move> legalList;
 
     for(int i = 0; i < BOARD_ROWS; ++i){
@@ -307,7 +307,8 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t) {
     }
 }
 
-bool MoveGenerator::isCheckMG(Tile t,Colour c){
+bool MoveGenerator::isCheckMG(Colour c){
+    Tile t = board.getKing(c);
 
     if (c==Colour::White){
         //check for black pawn on t.row+1,t.col+1 and t.row+1,t.col-1

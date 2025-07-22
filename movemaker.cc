@@ -72,6 +72,30 @@ void MoveMaker::makeMove(Move m) {
 
 void MoveMaker::undoMove() {
     if (previous.size() == 0) return;
+
+    MoveData lastMove = previous.back();
+    
+    //Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture
+
+
+    if (lastMove.move.getType() == MoveType::Quiet){
+
+    }else if (lastMove.move.getType() == MoveType::DoublePush){
+
+    }else if (lastMove.move.getType() == MoveType::KingSideCastle){
+
+    }else if (lastMove.move.getType() == MoveType::QueenSideCastle){
+
+    }else if (lastMove.move.getType() == MoveType::Capture){
+
+    }else if (lastMove.move.getType() == MoveType::EnPassant){
+
+    }else if (lastMove.move.getType() == MoveType::Promotion){
+
+    }else if (lastMove.move.getType() == MoveType::PromotionCapture){
+
+    }
+    
     // set previous state to current state
     // move piece back
     // revert captured pieces
