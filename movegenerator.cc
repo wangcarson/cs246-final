@@ -268,10 +268,12 @@ vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
     vector<Move> pseudoList = generatePseudoMoves(c);
 
     for (const auto m : pseudoList) {
+        cout << "Making move" << endl;
         moveMaker.makeMove(m);
         if (findCheckMoves(c)) {
             legalList.emplace_back(m);
         }
+        cout << "Undoing move" << endl;
         moveMaker.undoMove();
     }
     return legalList;
