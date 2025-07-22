@@ -1,245 +1,185 @@
 #include "movegenerator.h"
 using namespace std;
 
+// A function which goes down a line and checks if you can keep going or not.
+// Invariant: Called on non-empty `start` tile
+vector<Move> MoveGenerator::lineRunner(Tile start, Tile dirVector, Colour c) {
+    const Piece startPiece = board.getPiece(start);
 
-
-//A function which gose down a line and will check if you can keep going or not.
-std::vector<Move> MoveGenerator::lineRunner(int rowAdd,int colAdd, Tile start, Colour c){
     vector<Move> legalList;
-    
-    Piece startingPiece = board.getPiece(start);
+    Tile end = start;
+    end += dirVector;
 
-    Tile temp = start;
-    temp.row+=rowAdd;
-    temp.col+=colAdd;
+    while (end.inBoard()){
+        const Piece currentPiece = board.getPiece(end);
 
-    while(temp.col >= 0 && temp.row >= 0 && temp.col < 8 && temp.row < 8){
-        Piece currentPiece = board.getPiece(temp);
-
+        // add move depending on current piece.
         if (currentPiece.isColour(c)){
             break;
-        }else if (currentPiece.isColour(Colour::None)){//None
-            legalList.push_back(Move (MoveType::Quiet, startingPiece,start,temp));
-        }else{
-            legalList.push_back(Move (MoveType::Capture, startingPiece,start,temp));
+        
+        } else if (currentPiece.isEmpty()){
+            Move m{MoveType::Quiet, startPiece, start, end};
+            legalList.emplace_back(m);
+        
+        } else { // opposite colour
+            Move m{MoveType::Capture, startPiece, start, end};
+            m.setCapturePiece(currentPiece);
+            legalList.emplace_back(m);
             break;
         }
 
-        temp.row+=rowAdd;
-        temp.col+=colAdd;
-
+        end += dirVector;
     }
-
-
     return legalList;
 }
 
-vector<Move> MoveGenerator::rookLegalGen(Tile t,Colour c){
-    //left, right, up, down
-    vector<Move> temp0 = lineRunner(1,0,t,c);
-    vector<Move> temp1 = lineRunner(-1,0,t,c);
-    vector<Move> temp2 = lineRunner(0,1,t,c);
-    vector<Move> temp3 = lineRunner(0,-1,t,c);
+// VECTOR CONSTANTS FOR DIFFERENT PIECES
+const vector<Tile> ROOK_VECTORS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+const vector<Tile> BISHOP_VECTORS = {{-1, -1}, {1, 1}, {-1, 1}, {1, -1}};
+const vector<Tile> KNIGHT_VECTORS = {
+    {1, -2}, {1, 2}, {-1, -2}, {-1, 2}, 
+    {-2, 1}, {2, 1}, {-2, -1}, {2, -1}
+};
 
+vector<Move> MoveGenerator::rookLegalGen(Tile start, Colour c) {
     vector<Move> legalList;
+    for (const auto dirVector : ROOK_VECTORS) {
+        vector<Move> dirMoves = lineRunner(start, dirVector, c);
 
-    while(!temp0.empty() && !temp1.empty() && !temp2.empty() && !temp3.empty()){
-        if (!temp0.empty()){
-            legalList.push_back(temp0.back());
-            temp0.pop_back();
-        }
-        if (!temp1.empty()){
-            legalList.push_back(temp1.back());
-            temp1.pop_back();
-        }
-        if (!temp2.empty()){
-            legalList.push_back(temp2.back());
-            temp2.pop_back();
-        }
-        if (!temp3.empty()){
-            legalList.push_back(temp3.back());
-            temp3.pop_back();
-        }
-
+        // append items in temp to legalList
+        legalList.insert(legalList.end(), dirMoves.begin(), dirMoves.end());
     }
-
-    return legalList;
-
-
-}
-
-vector<Move> MoveGenerator::bishopLegalGen(Tile t,Colour c){
-    //all diagonals
-    vector<Move> temp0 = lineRunner(1,1,t,c);
-    vector<Move> temp1 = lineRunner(-1,1,t,c);
-    vector<Move> temp2 = lineRunner(-1,1,t,c);
-    vector<Move> temp3 = lineRunner(-1,-1,t,c);
-
-    vector<Move> legalList;
-
-    while(!temp0.empty() && !temp1.empty() && !temp2.empty() && !temp3.empty()){
-        if (!temp0.empty()){
-            legalList.push_back(temp0.back());
-            temp0.pop_back();
-        }
-        if (!temp1.empty()){
-            legalList.push_back(temp1.back());
-            temp1.pop_back();
-        }
-        if (!temp2.empty()){
-            legalList.push_back(temp2.back());
-            temp2.pop_back();
-        }
-        if (!temp3.empty()){
-            legalList.push_back(temp3.back());
-            temp3.pop_back();
-        }
-
-    }
-
     return legalList;
 }
 
-vector<Move> MoveGenerator::queenLegalGen(Tile t,Colour c){
-    //do a legal move check using bishop + rook
-
-    vector<Move> temp0 = rookLegalGen(t,c);
-    vector<Move> temp1 = bishopLegalGen(t,c);
-
+vector<Move> MoveGenerator::bishopLegalGen(Tile t, Colour c){
     vector<Move> legalList;
+    for (const auto lineVector : BISHOP_VECTORS) {
+        vector<Move> dirMoves = lineRunner(t, lineVector, c);
 
-    while(!temp0.empty() && !temp1.empty()){
-        if (!temp0.empty()){
-            legalList.push_back(temp0.back());
-            temp0.pop_back();
-        }
-        if (!temp1.empty()){
-            legalList.push_back(temp1.back());
-            temp1.pop_back();
-        }
+        // append items in temp to legalList
+        legalList.insert(legalList.end(), dirMoves.begin(), dirMoves.end());
     }
-
     return legalList;
-
 }
 
-vector<Move> MoveGenerator::knightLegalGen(Tile t,Colour c){
-    //hard code in all 8 squares.
-    Piece startingPiece = board.getPiece(t);
+vector<Move> MoveGenerator::queenLegalGen(Tile start, Colour c){
+    // add legal moves of rook and bishop
+    vector<Move> rookMoves = rookLegalGen(start, c);
+    vector<Move> bishopMoves = bishopLegalGen(start, c);
+    
     vector<Move> legalList;
-
-
-    vector<int> Drow = { 1, 1, -1, -1,-2, 2, -2, 2};
-    vector<int> Dcol = {-2, 2, -2, 2,  1, 1, -1, -1};
-
-    for(int i =0;i<8;++i){
-        Tile temp {t.row + Drow[i],t.col+ Dcol[i]};
-
-        if (temp.col >= 0 && temp.row >= 0 && temp.col < 8 && temp.row < 8){
-
-            if (!board.isOccupied(temp)){
-                legalList.push_back(Move (MoveType::Quiet, startingPiece,t,temp));
-
-            }else if (board.getColour(temp)!=c){
-                legalList.push_back(Move (MoveType::Capture, startingPiece,t,temp));
-            }
-
-        }
-
-
-    }
-
+    legalList.insert(legalList.end(), rookMoves.begin(), rookMoves.end());
+    legalList.insert(legalList.end(), bishopMoves.begin(), bishopMoves.end());
     return legalList;
-
 }
 
-vector<Move> MoveGenerator::pawnLegalGen(Tile t,Colour c){//todo
+vector<Move> MoveGenerator::knightLegalGen(Tile start, Colour c){
     vector<Move> legalList;
-    bool promtionAdd = false;
+    Piece startPiece = board.getPiece(start);
 
-    Piece quickAccess=board.getPiece(t);
-
-    //consider En Passant
-    if (Colour::White==c){
-        if (t.row == 6){
-            promtionAdd = true;
-        }
-
-        if (t.row == 1 && !board.isOccupied(Tile {t.row+1,t.col}) && !board.isOccupied(Tile {t.row+2,t.col})){
-            legalList.push_back(Move (MoveType::DoublePush, quickAccess,t,Tile {t.row+2,t.col}));
-        }
-
-        if (!board.isOccupied(Tile {t.row+1,t.col})){
-            if (!promtionAdd)
-                legalList.push_back(Move (MoveType::Quiet, quickAccess,t,Tile {t.row+1,t.col}));
-            else{
-                legalList.push_back(Move (MoveType::Promotion, quickAccess,t,Tile {t.row+1,t.col}));
-
-            }
-        }
-
-        if (board.isOccupied(Tile {t.row+1,t.col+1}) && board.getColour(Tile {t.row+1,t.col+1})==Colour::Black){
-            if (!promtionAdd)
-                legalList.push_back(Move (MoveType::Capture, quickAccess,t,Tile {t.row+1,t.col+1}));
-            else{
-                legalList.push_back(Move (MoveType::PromotionCapture, quickAccess,t,Tile {t.row+1,t.col+1}));
-            }
-        }
-
-        if (board.isOccupied(Tile {t.row+1,t.col-1}) && board.getColour(Tile {t.row+1,t.col-1})==Colour::Black){
+    for (const auto moveVector : KNIGHT_VECTORS){
+        Tile end = start + moveVector;
         
-            if (!promtionAdd)
-                legalList.push_back(Move (MoveType::Capture, quickAccess,t,Tile {t.row+1,t.col-1}));
-            else{
-                legalList.push_back(Move (MoveType::PromotionCapture, quickAccess,t,Tile {t.row+1,t.col-1}));
+        if (end.inBoard()){
+            Piece endPiece = board.getPiece(end);
+
+            if (endPiece.isEmpty()) {
+                Move m{MoveType::Quiet, startPiece, start, end};
+                legalList.emplace_back(m);
+
+            } else if (endPiece.isOppositeColour(c)) { // new function just adds exception throwing in case
+                Move m{MoveType::Capture, startPiece, start, end};
+                m.setCapturePiece(endPiece);
+                legalList.emplace_back(m);
             }
         }
+    }
+    return legalList;
+}
 
-    }else if (Colour::Black==c){
+// Constants
+const vector<PieceType> PROMOTION_PIECES = {PieceType::Queen, PieceType::Rook, PieceType::Bishop, PieceType::Knight};
+const int WHITE_FORWARD = 1;
+const int BLACK_FORWARD = -1;
+
+// Invariant: Pawns never appear on rank 0 or 7.
+vector<Move> MoveGenerator::pawnLegalGen(Tile start, Colour c) {
+    vector<Move> legalList;
+    bool promotionAdd = false;
+    bool doublePushAdd = false;
+    int forward = (c == Colour::White) ? WHITE_FORWARD : BLACK_FORWARD;
+    
+    // different end tiles based on colour
+    Tile pushTile = start + Tile{forward, 0};
+    Tile doublePushTile = pushTile + Tile{forward, 0};
+    vector<Tile> captureTiles = {start + Tile{forward, 1}, start + Tile{forward, -1}};
+
+    // conditions based on colour
+    if (c == Colour::White) {
+        if (start.row == 6) {
+            promotionAdd = true;
+        } else if (start.row == 1 && !board.isOccupied(doublePushTile)) {
+            doublePushAdd = true;
+        }
+
+    } else if (c == Colour::Black){
+        if (start.row == 1) {
+            promotionAdd = true;
+        } else if (start.row == 6 && !board.isOccupied(doublePushTile)) {
+            doublePushAdd = true;
+        }
+    }
+
+    Piece startPiece = board.getPiece(start);
+
+    // regular moves.
+    if (!board.isOccupied(pushTile)){
+        if (promotionAdd) {
+            // add a new move for every possible promotion
+            for (const auto pieceType : PROMOTION_PIECES) {
+                Move m{MoveType::Promotion, startPiece, start, pushTile};
+                m.setPromotionPiece(Piece{pieceType, c});
+                legalList.emplace_back(m);
+            }
         
-        if (t.row == 1){
-            promtionAdd = true;
-        }
-
-        if (t.row == 1 && !board.isOccupied(Tile {t.row-1,t.col}) && !board.isOccupied(Tile {t.row-2,t.col})){
-            legalList.push_back(Move (MoveType::DoublePush, quickAccess,t,Tile {t.row-2,t.col}));
-        }
-        if (!board.isOccupied(Tile {t.row-1,t.col})){
-            if (!promtionAdd)
-                legalList.push_back(Move (MoveType::Quiet, quickAccess,t,Tile {t.row-1,t.col}));
-            else{
-                legalList.push_back(Move (MoveType::Promotion, quickAccess,t,Tile {t.row-1,t.col}));
-
-            }
+        } else if (doublePushAdd) {
+            Move m{MoveType::DoublePush, startPiece, start, pushTile};
+            legalList.emplace_back(Move (MoveType::DoublePush, startPiece, start, doublePushTile));
                 
+        } else {
+            Move m{MoveType::Quiet, startPiece, start, pushTile};
+            legalList.emplace_back(Move (MoveType::Quiet, startPiece, start, pushTile));
         }
-        if (board.isOccupied(Tile {t.row-1,t.col+1}) && board.getColour(Tile {t.row-1,t.col+1})==Colour::Black){
-            if (!promtionAdd)
-                legalList.push_back(Move (MoveType::Capture, quickAccess,t,Tile {t.row-1,t.col+1}));
-            else{
-                legalList.push_back(Move (MoveType::PromotionCapture, quickAccess,t,Tile {t.row-1,t.col+1}));
+    }
+    
+    // capture moves.
+    for (auto end : captureTiles) {
+        Piece endPiece = board.getPiece(end);
 
+        if (board.isOccupied(end) && board.getColour(end) == Colour::Black) {
+            if (promotionAdd) {
+                for (const auto pieceType : PROMOTION_PIECES) {
+                    Move m{MoveType::PromotionCapture, startPiece, start, end};
+                    m.setCapturePiece(endPiece);
+                    m.setPromotionPiece(Piece{pieceType, c});
+                    legalList.emplace_back(m);
+                }
+
+            } else {
+                Move m{MoveType::Capture, startPiece, start, end};
+                m.setCapturePiece(endPiece);
+                legalList.emplace_back(m);
             }
-
         }
-        if (board.isOccupied(Tile {t.row-1,t.col-1}) && board.getColour(Tile {t.row-1,t.col-1})==Colour::Black){
-            if (!promtionAdd)
-                legalList.push_back(Move (MoveType::Capture, quickAccess,t,Tile {t.row-1,t.col-1}));
-            else{
-                legalList.push_back(Move (MoveType::PromotionCapture, quickAccess,t,Tile {t.row-1,t.col-1}));
-
-            }
-
-        }
-        
-
     }
 
+    // en passant.
 }
 
-vector<Move> MoveGenerator::kingLegalGen(Tile t,Colour c){//todo
+vector<Move> MoveGenerator::kingLegalGen(Tile t, Colour c){ // todo
 
-    Piece startingPiece = board.getPiece(t);
+    Piece startPiece = board.getPiece(t);
     vector<Move> legalList;
 
 
@@ -251,18 +191,18 @@ vector<Move> MoveGenerator::kingLegalGen(Tile t,Colour c){//todo
 
         if (temp.col >= 0 && temp.row >= 0 && temp.col < 8 && temp.row < 8){
 
-            if (!board.isOccupied(temp)){
-                legalList.push_back(Move (MoveType::Quiet, startingPiece,t,temp));
+            if (!board.isOccupied(temp)) {
+                legalList.emplace_back(Move (MoveType::Quiet, startPiece,t,temp));
 
-            }else if (board.getColour(temp)!=c){
-                legalList.push_back(Move (MoveType::Capture, startingPiece,t,temp));
+            } else if (board.getColour(temp)!=c) {
+                legalList.emplace_back(Move (MoveType::Capture, startPiece,t,temp));
             }
 
         }
 
     }
 
-    //need to add  a test for castling. Aka casting is still allowed
+    // need to add  a test for castling. Aka casting is still allowed
 
 
     return legalList;
@@ -275,18 +215,20 @@ MoveGenerator::MoveGenerator(ChessBoard &b):
 vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
     vector<Move> legalList;
 
-    for(int i =0;i<8;++i){
-        for(int j=0;j<8;++j){
-            vector<Move> currentTileLegalMoves = getLegalMoves(Tile {i,j});
-            
-            while(!currentTileLegalMoves.empty()){
-                legalList.push_back(currentTileLegalMoves.back());
-                currentTileLegalMoves.pop_back();
-            }
+    for(int i = 0; i < BOARD_ROWS; ++i){
+        for(int j = 0; j < BOARD_COLS; ++j) {
+            Tile t{i, j};
+            if (c == board.getColour(t)) {
+                vector<Move> currentTileLegalMoves = getLegalMoves(t);
 
+                // add to legal list
+                while (!currentTileLegalMoves.empty()){
+                    legalList.emplace_back(currentTileLegalMoves.back());
+                    currentTileLegalMoves.pop_back();
+                }
+            }
         }
     }
-
     return legalList;
 }
 
@@ -295,23 +237,22 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t) {
     Piece curP = board.getPiece(t);
 
     if (curP.isPawn()){
-        return pawnLegalGen(t,c);
+        return pawnLegalGen(t, c);
 
-    }else if (curP.isKnight()){
-        return knightLegalGen(t,c);
+    } else if (curP.isKnight()){
+        return knightLegalGen(t, c);
 
-    }else if (curP.isBishop()){
-        return bishopLegalGen(t,c);
+    } else if (curP.isBishop()){
+        return bishopLegalGen(t, c);
 
-    }else if (curP.isQueen()){
-        return queenLegalGen(t,c);
+    } else if (curP.isQueen()){
+        return queenLegalGen(t, c);
 
-    }else if (curP.isRook()){
-        return rookLegalGen(t,c);
+    } else if (curP.isRook()){
+        return rookLegalGen(t, c);
 
-    }else if (curP.isKing()){
-        return kingLegalGen(t,c);
+    } else if (curP.isKing()){
+        return kingLegalGen(t, c);
 
     }
-
 }

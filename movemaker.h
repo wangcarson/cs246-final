@@ -12,12 +12,15 @@ class MoveMaker: public Subject {
     ChessBoard &board;
     GameStateChecker &stateChecker;
 
-    std::vector<BoardState> previous;
+    std::vector<MoveData> previous;
 
     // board state.
     Colour turn;
     std::optional<Tile> enPassant;
-    std::map<Colour, bool> castlingRights; // TODO: update to map (Colour, KingSide) -> bool
+    bool whiteCastleQueen;
+    bool whiteCastleKing;
+    bool blackCastleQueen;
+    bool blackCastleKing;
   
   public:
     MoveMaker(ChessBoard &b, GameStateChecker &gsc);

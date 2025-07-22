@@ -7,19 +7,17 @@
 class MoveGenerator {
     ChessBoard &board;
 
-    std::vector<Move> lineRunner(int rowAdd,int colAdd, Tile start, Colour c);
+    std::vector<Move> lineRunner(Tile start, Tile vector, Colour c);
     
-    std::vector<Move> pawnLegalGen(Tile t,Colour c);//need to know last move so that we can check for en passon
-    std::vector<Move> rookLegalGen(Tile t,Colour c);
-    std::vector<Move> queenLegalGen(Tile t,Colour c);
-    std::vector<Move> knightLegalGen(Tile t,Colour c);
-    std::vector<Move> bishopLegalGen(Tile t,Colour c);
-    std::vector<Move> kingLegalGen(Tile t,Colour c); //need a way to check for castling
+    std::vector<Move> pawnLegalGen(Tile t, Colour c); // need to know last move so that we can check for en passant
+    std::vector<Move> rookLegalGen(Tile t, Colour c);
+    std::vector<Move> queenLegalGen(Tile t, Colour c);
+    std::vector<Move> knightLegalGen(Tile t, Colour c);
+    std::vector<Move> bishopLegalGen(Tile t, Colour c);
+    std::vector<Move> kingLegalGen(Tile t, Colour c); // need a way to check for castling
 
-
-
-    //check castling seperalty
-    //check en passon seperatly
+    // check castling seperalty
+    // check en passon seperatly
 
   public:
     MoveGenerator(ChessBoard &b);

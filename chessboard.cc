@@ -6,6 +6,16 @@ using namespace std;
 ChessBoard::ChessBoard():
     grid{vector<vector<Piece>>(BOARD_ROWS, vector<Piece>(BOARD_COLS, EMPTY_PIECE))} {}
 
+// For consistency, the only methods that should directly
+// access grid are getPiece, setPiece, and removePiece
+Piece ChessBoard::getPiece(Tile t) {
+    return grid[t.row][t.col];
+}
+
+Colour ChessBoard::getColour (Tile t){
+    return getPiece(t).colour;
+}
+
 void ChessBoard::setPiece(Tile t, Piece p) {
     grid[t.row][t.col] = p;
     notifyObservers(t);
@@ -26,19 +36,9 @@ void ChessBoard::clearGrid() {
     }
 }
 
-Piece ChessBoard::getPiece(Tile t) {
-    return grid[t.row][t.col];
-}
-
-//colour accesor method
-Colour ChessBoard::getColour (Tile t){
-    return grid[t.row][t.col].colour;
-}
-
-
 bool ChessBoard::isOccupied(Tile t) {
     Piece p = getPiece(t);
-    return !p.isEmpty() && !p.isInvalid();
+    return !p.isEmpty();
 }
 
 Tile ChessBoard::getKing(Colour c) {
@@ -52,7 +52,8 @@ Tile ChessBoard::getKing(Colour c) {
         }
     }
     throw runtime_error("No king? lmao"); // todo: add exception handling
-    //could return tile -1,-1? and we then would know that the king isn't on the board.
+    // this should never in theory happen
+    // the exception is just to satisfy the compiler
 }
 
 void ChessBoard::printSize(string s) { // debugging

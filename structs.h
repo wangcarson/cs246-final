@@ -23,7 +23,7 @@ class eof_error: public std::runtime_error {
 
 ////////////////////////////////////////////////////////////
 
-enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty, Invalid };
+enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty };
 
 enum class Mode { Setup, Game, Normal };
 // Setup Mode is for when we are setting up a position.
@@ -31,7 +31,6 @@ enum class Mode { Setup, Game, Normal };
 // Normal Mode is defult before we choose what other mode we want to be in.
 
 enum class Colour { White = 1, Black = -1, None = 0 };
-
 
 ////////////////////////////////////////////////////////////
 
@@ -41,13 +40,17 @@ struct Tile {
     bool operator==(const Tile &other) const {
         return row == other.row && col == other.col;
     }
-    Tile operator+(const Tile &other) const {
-    	return {row + other.row, col + other.col}; // can instead impl in terms of +=
-    }
-    Tile operator+=(const Tile &other) {
-    	row += other.row;
+    Tile &operator+=(const Tile &other) {
+        row += other.row;
     	col += other.col;
     	return *this;
+    }
+    Tile operator+(const Tile &other) const {
+        Tile tmp{*this};
+        return tmp += other;
+    }
+    bool inBoard() const {
+        return col >= 0 && row >= 0 && col < BOARD_COLS && row < BOARD_ROWS; 
     }
 };
 
@@ -56,17 +59,25 @@ struct Tile {
 struct Piece {
     PieceType type;
     Colour colour;
-    Tile position; // 
+    // removed Tile
 
-    bool isKing() { return type == PieceType::King; }
-    bool isQueen() { return type == PieceType::Queen; }
-    bool isRook() { return type == PieceType::Rook; }
-    bool isBishop() { return type == PieceType::Bishop; }
-    bool isKnight() { return type == PieceType::Knight; }
-    bool isPawn() { return type == PieceType::Pawn; }
-    bool isEmpty() { return type == PieceType::Empty; }
-    bool isInvalid() { return type == PieceType::Invalid; }
-    bool isColour(Colour c) { return colour == c; }
+    bool isKing() const { return type == PieceType::King; }
+    bool isQueen() const { return type == PieceType::Queen; }
+    bool isRook() const { return type == PieceType::Rook; }
+    bool isBishop() const { return type == PieceType::Bishop; }
+    bool isKnight() const { return type == PieceType::Knight; }
+    bool isPawn() const { return type == PieceType::Pawn; }
+    bool isEmpty() const { return type == PieceType::Empty; }
+    bool isColour(Colour c) const { return colour == c; }
+    
+    bool isOppositeColour(Colour c) const {
+        switch (c) {
+            case Colour::Black: return colour == Colour::White;
+            case Colour::White: return colour == Colour::Black;
+            default:
+                throw std::invalid_argument("oppositeColour: Input colour must be White or Black");
+        }
+    }
 
     bool operator<(const Piece& other) const {
         if (colour != other.colour)
@@ -77,7 +88,6 @@ struct Piece {
 
 // Empty and invalid piece constants
 const Piece EMPTY_PIECE{PieceType::Empty, Colour::None};
-const Piece INVALID_PIECE{PieceType::Invalid, Colour::None};
 
 // Parsing Pieces and Tiles
 Tile parseTile(std::string s);
@@ -88,6 +98,7 @@ char getPieceChar(Piece p);
 std::ostream &operator<<(std::ostream &out, const Piece &p);
 
 ////////////////////////////////////////////////////////////
+
 enum class MoveType { Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
 
 class Move {
@@ -122,9 +133,16 @@ class Move {
 // keeps a move and previous state (for undoing moves)
 struct BoardState {
     Colour turn;
-    Move move;
     std::optional<Tile> enPassant; // nullopt to represent no tile
-    std::map<Colour, bool> castlingRights;
+    bool whiteCastleQueen;
+    bool whiteCastleKing;
+    bool blackCastleQueen;
+    bool blackCastleKing;
+};
+
+struct MoveData {
+    Move move;
+    BoardState oldState;
 };
 
 #endif

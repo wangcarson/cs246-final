@@ -18,10 +18,10 @@ class ChessBoard: public Subject {
     void clearGrid();
 
     // some accessors.
-    bool isOccupied(Tile t);
     Piece getPiece(Tile t);
-    Tile getKing(Colour c);
     Colour getColour (Tile t);
+    bool isOccupied(Tile t);
+    Tile getKing(Colour c);
 
     void printSize(std::string s);
 };
