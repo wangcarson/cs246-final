@@ -72,34 +72,56 @@ void MoveMaker::makeMove(Move m) {
 
 void MoveMaker::undoMove() {
     if (previous.size() == 0) return;
-
-    MoveData lastMove = previous.back();
     
-    //Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture
+    MoveData lastMove = previous.back();
+    previous.pop_back();
+    Move realMove = lastMove.move;
+
+    Tile fromTile = realMove.getFrom();
+    Tile toTile = realMove.getTo();
+    Tile temp;
+
+    board.setPiece(fromTile,realMove.getPiece());
+    board.removePiece(toTile);
+
+     if (realMove.getType() == MoveType::KingSideCastle){
+
+        
+        temp.row = fromTile.row;
+        temp.row = fromTile.col-1;
+
+        board.setPiece(Tile {fromTile.row,7},board.getPiece(temp));
+
+        board.removePiece(temp);
 
 
-    if (lastMove.move.getType() == MoveType::Quiet){
+    }else if (realMove.getType() == MoveType::QueenSideCastle){
+        
+        temp.row = fromTile.row;
+        temp.row = fromTile.col+1;
 
-    }else if (lastMove.move.getType() == MoveType::DoublePush){
+        board.setPiece(Tile {fromTile.row,0},board.getPiece(temp));
 
-    }else if (lastMove.move.getType() == MoveType::KingSideCastle){
+        board.removePiece(temp);
 
-    }else if (lastMove.move.getType() == MoveType::QueenSideCastle){
+    }else if (realMove.getType() == MoveType::Capture || realMove.getType() == MoveType::EnPassant || realMove.getType() == MoveType::PromotionCapture){
 
-    }else if (lastMove.move.getType() == MoveType::Capture){
-
-    }else if (lastMove.move.getType() == MoveType::EnPassant){
-
-    }else if (lastMove.move.getType() == MoveType::Promotion){
-
-    }else if (lastMove.move.getType() == MoveType::PromotionCapture){
+        board.setPiece(fromTile,realMove.getCapturePiece());
 
     }
+
+
+    //turning back of all invisable rules. (en passant/castling)
+    turn = previous.back().oldState.turn;
+    BoardState shortCut = lastMove.oldState;
+    setEnPassant(shortCut.enPassant);
     
-    // set previous state to current state
-    // move piece back
-    // revert captured pieces
-    // change turn
+    setCastlingRights(Colour::White,CastleType::KingSide,shortCut.castlingRights.at(Colour::White).at(CastleType::KingSide));
+    setCastlingRights(Colour::White,CastleType::QueenSide,shortCut.castlingRights.at(Colour::White).at(CastleType::QueenSide));
+    setCastlingRights(Colour::Black,CastleType::KingSide,shortCut.castlingRights.at(Colour::Black).at(CastleType::KingSide));
+    setCastlingRights(Colour::Black,CastleType::QueenSide,shortCut.castlingRights.at(Colour::Black).at(CastleType::QueenSide));
+    
+
 }
 
 // board state accessors.
