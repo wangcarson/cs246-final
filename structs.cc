@@ -53,7 +53,7 @@ const std::map<Piece, char> PIECE_CHAR_MAP = {
     {Piece{PieceType::Rook,   Colour::Black}, 'r'},
     {Piece{PieceType::Queen,  Colour::Black}, 'q'},
     {Piece{PieceType::King,   Colour::Black}, 'k'},
-    {Piece{PieceType::Empty,  Colour::None},  ' '}, // for print only
+    {Piece{PieceType::Empty,  Colour::None},  ' '} // for print only
 };
 
 // Helper functions

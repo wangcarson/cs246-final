@@ -46,6 +46,10 @@ bool GameStateChecker::isMate(Colour c) {
 }
 
 bool GameStateChecker::isDraw(Colour c) {
+    if (isCheck(c)){
+        return false;
+    }
+
     if (!isCheck(c) && moveGenerator->generateLegalMoves(c).size() == 0)
         return true;
     // todo: check for insufficient material
@@ -68,9 +72,6 @@ bool GameStateChecker::isDraw(Colour c) {
             
         }
     }
-
-    bool whiteInSufMat=false;
-    bool blackInSufMat=false;
 
     if ((eachPieceCount[2]==1 && eachPieceCount[3]==1) || (eachPieceCount[9]==1 && eachPieceCount[10]==1)){
         return true;
