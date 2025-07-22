@@ -1,4 +1,5 @@
 #include "movegenerator.h"
+#include <iostream>
 using namespace std;
 
 // Constructor.
@@ -12,6 +13,12 @@ bool MoveGenerator::isLegal(Move m) {
     moveMaker.undoMove();
     return legal;
 }
+
+// VECTOR CONSTANTS FOR DIFFERENT PIECES
+const vector<Tile> ROOK_VECTORS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+const vector<Tile> BISHOP_VECTORS = {{-1, -1}, {1, 1}, {-1, 1}, {1, -1}};
+const vector<Tile> KING_VECTORS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {1, 1}, {-1, 1}, {1, -1}};
+const vector<Tile> KNIGHT_VECTORS = {{1, -2}, {1, 2}, {-1, -2}, {-1, 2}, {-2, 1}, {2, 1}, {-2, -1}, {2, -1}};
 
 // A function which goes down a line and checks if you can keep going or not.
 // Invariant: Called on non-empty `start` tile
@@ -45,20 +52,15 @@ vector<Move> MoveGenerator::lineRunner(Tile start, Tile dirVector, Colour c) {
     return legalList;
 }
 
-// VECTOR CONSTANTS FOR DIFFERENT PIECES
-const vector<Tile> ROOK_VECTORS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-const vector<Tile> BISHOP_VECTORS = {{-1, -1}, {1, 1}, {-1, 1}, {1, -1}};
-const vector<Tile> KNIGHT_VECTORS = {
-    {1, -2}, {1, 2}, {-1, -2}, {-1, 2}, 
-    {-2, 1}, {2, 1}, {-2, -1}, {2, -1}
-};
+// TODO: we can combine rook, bishop, queen into one method that takes vector<Tile>
+// TODO: we can combine knight and king into one method that takes vector<Tile>
 
 vector<Move> MoveGenerator::rookLegalGen(Tile start, Colour c) {
     vector<Move> legalList;
     for (const auto dirVector : ROOK_VECTORS) {
         vector<Move> dirMoves = lineRunner(start, dirVector, c);
 
-        // append items in temp to legalList
+        // append items to legalList
         legalList.insert(legalList.end(), dirMoves.begin(), dirMoves.end());
     }
     return legalList;
@@ -155,13 +157,14 @@ vector<Move> MoveGenerator::pawnLegalGen(Tile start, Colour c) {
                 legalList.emplace_back(m);
             }
         
-        } else if (doublePushAdd) {
-            Move m{MoveType::DoublePush, startPiece, start, pushTile};
-            legalList.emplace_back(Move (MoveType::DoublePush, startPiece, start, doublePushTile));
-                
         } else {
             Move m{MoveType::Quiet, startPiece, start, pushTile};
-            legalList.emplace_back(Move (MoveType::Quiet, startPiece, start, pushTile));
+            legalList.emplace_back(m);
+        }
+
+        if (doublePushAdd) {
+            Move m{MoveType::DoublePush, startPiece, start, doublePushTile};
+            legalList.emplace_back(m);
         }
     }
     
@@ -204,34 +207,53 @@ vector<Move> MoveGenerator::pawnLegalGen(Tile start, Colour c) {
     return legalList;
 }
 
-vector<Move> MoveGenerator::kingLegalGen(Tile t, Colour c){ // todo
-
-    Piece startPiece = board.getPiece(t);
+vector<Move> MoveGenerator::kingLegalGen(Tile start, Colour c){ // todo
     vector<Move> legalList;
+    Piece startPiece = board.getPiece(start);
 
+    // regular moves.
+    for (const auto moveVector : KING_VECTORS){
+        Tile end = start + moveVector;
 
-    vector<int> Drow = {1, 1,-1,-1,1, 1,-1,-1};
-    vector<int> Dcol = {1,-1, 1,-1,1,-1, 1,-1};
+        if (end.inBoard()){
+            Piece endPiece = board.getPiece(end);
 
-    for(int i =0;i<8;++i){
-        Tile temp {t.row + Drow[i],t.col+ Dcol[i]};
+            if (endPiece.isEmpty()) {
+                Move m{MoveType::Quiet, startPiece, start, end};
+                legalList.emplace_back(m);
 
-        if (temp.col >= 0 && temp.row >= 0 && temp.col < 8 && temp.row < 8){
-
-            if (!board.isOccupied(temp)) {
-                legalList.emplace_back(Move (MoveType::Quiet, startPiece,t,temp));
-
-            } else if (board.getColour(temp)!=c) {
-                legalList.emplace_back(Move (MoveType::Capture, startPiece,t,temp));
+            } else if (endPiece.isOppositeColour(c)) { // new function just adds exception throwing in case
+                Move m{MoveType::Capture, startPiece, start, end};
+                m.setCapturePiece(endPiece);
+                legalList.emplace_back(m);
             }
-
         }
-
     }
 
-    // need to add  a test for castling. Aka casting is still allowed
+    // castling.
+    if (moveMaker.getCastlingRights(c, CastleType::QueenSide)) {
+        Tile rookTile = Tile{start.row, 0};
+        
+        if (board.getPiece(rookTile).isRook() && // technically unnecessary
+            board.isEmpty(Tile{start.row, 1}) && 
+            board.isEmpty(Tile{start.row, 2}) && 
+            board.isEmpty(Tile{start.row, 3}) &&
+            start.col == 4)
+        {
+            Move m{MoveType::QueenSideCastle, startPiece, start, rookTile};
+        }
 
-
+    } else if (moveMaker.getCastlingRights(c, CastleType::KingSide)) {
+        Tile rookTile = Tile{start.row, 7};
+        
+        if (board.getPiece(rookTile).isRook() && // technically unnecessary
+            board.isEmpty(Tile{start.row, 6}) && 
+            board.isEmpty(Tile{start.row, 5}) && 
+            start.col == 4)
+        {
+            Move m{MoveType::KingSideCastle, startPiece, start, rookTile};
+        }
+    }
     return legalList;
 }
 
@@ -252,6 +274,8 @@ vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
             }
         }
     }
+    cout << "Generate Legal Moves called:" << endl;
+    cout << legalList;
     return legalList;
 }
 

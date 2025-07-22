@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 // Board size constant
 const int BOARD_ROWS = 8;
@@ -20,7 +21,6 @@ class eof_error: public std::runtime_error {
     explicit eof_error(const std::string& msg = ""): runtime_error(msg) {}
 };
 
-
 ////////////////////////////////////////////////////////////
 
 enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty };
@@ -31,6 +31,7 @@ enum class Mode { Setup, Game, Normal };
 // Normal Mode is defult before we choose what other mode we want to be in.
 
 enum class Colour { White = 1, Black = -1, None = 0 };
+enum class CastleType { KingSide, QueenSide };
 
 ////////////////////////////////////////////////////////////
 
@@ -94,9 +95,6 @@ Tile parseTile(std::string s);
 Piece parsePiece(char s);
 char getPieceChar(Piece p);
 
-// for debugging
-std::ostream &operator<<(std::ostream &out, const Piece &p);
-
 ////////////////////////////////////////////////////////////
 
 enum class MoveType { Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
@@ -110,22 +108,22 @@ class Move {
     Move();
     Move(MoveType type, Piece piece, Tile from, Tile to);
 
-    Tile getFrom();
-    Tile getTo();
-    Colour getColour();
-    MoveType getType();
-    Piece getPiece();
-    Piece getCapturePiece();
-    Piece getPromotionPiece();
+    Tile getFrom() const;
+    Tile getTo() const;
+    Colour getColour() const;
+    MoveType getType() const;
+    Piece getPiece() const;
+    Piece getCapturePiece() const;
+    Piece getPromotionPiece() const;
 
     void setCapturePiece(Piece p);
     void setPromotionPiece(Piece p);
     
-    bool isCapture();
-    bool isPromotion();
-    bool isEnPassant();
-    bool isCastle();
-    bool isDoubleAdvance();
+    bool isCapture() const;
+    bool isPromotion() const;
+    bool isEnPassant() const;
+    bool isCastle() const;
+    bool isDoubleAdvance() const;
 };
 
 ////////////////////////////////////////////////////////////
@@ -134,15 +132,18 @@ class Move {
 struct BoardState {
     Colour turn;
     std::optional<Tile> enPassant; // nullopt to represent no tile
-    bool whiteCastleQueen;
-    bool whiteCastleKing;
-    bool blackCastleQueen;
-    bool blackCastleKing;
+    std::map<Colour, std::map<CastleType, bool>> castlingRights;
 };
 
 struct MoveData {
     Move move;
     BoardState oldState;
 };
+
+// debugging
+std::ostream &operator<<(std::ostream &out, const Piece &p);
+std::ostream &operator<<(std::ostream &out, const Tile &t);
+std::ostream &operator<<(std::ostream &out, const Move &m);
+std::ostream &operator<<(std::ostream &out, const std::vector<Move> &v);
 
 #endif

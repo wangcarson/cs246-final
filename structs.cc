@@ -6,22 +6,22 @@ Move::Move() {}
 Move::Move(MoveType type, Piece piece, Tile from, Tile to): 
     type{type}, piece{piece}, startTile{from}, endTile{to} {}
 
-Tile Move::getTo() { return startTile; }
-Tile Move::getFrom() { return endTile; }
-Colour Move::getColour() { return piece.colour; }
-MoveType Move::getType() { return type; }
-Piece Move::getPiece() { return piece; }
-Piece Move::getCapturePiece() { return capturePiece; }
-Piece Move::getPromotionPiece() { return promotionPiece; }
-
+Tile Move::getFrom() const { return startTile; }
+Tile Move::getTo() const { return endTile; }
+Colour Move::getColour() const { return piece.colour; }
+MoveType Move::getType() const { return type; }
+Piece Move::getPiece() const { return piece; }
+Piece Move::getCapturePiece() const { return capturePiece; }
+Piece Move::getPromotionPiece() const { return promotionPiece; }
+ 
 void Move::setCapturePiece(Piece p) {}
 void Move::setPromotionPiece(Piece p) {}
 
-bool Move::isCapture() { return type == MoveType::Capture || type == MoveType::EnPassant || type == MoveType::PromotionCapture; }
-bool Move::isPromotion() { return type == MoveType::Promotion || type == MoveType::PromotionCapture; }
-bool Move::isEnPassant() { return type == MoveType::EnPassant; }
-bool Move::isCastle() { return type == MoveType::KingSideCastle || type == MoveType::QueenSideCastle; }
-bool Move::isDoubleAdvance() { return type == MoveType::DoublePush; }
+bool Move::isCapture() const { return type == MoveType::Capture || type == MoveType::EnPassant || type == MoveType::PromotionCapture; }
+bool Move::isPromotion() const { return type == MoveType::Promotion || type == MoveType::PromotionCapture; }
+bool Move::isEnPassant() const { return type == MoveType::EnPassant; }
+bool Move::isCastle() const { return type == MoveType::KingSideCastle || type == MoveType::QueenSideCastle; }
+bool Move::isDoubleAdvance() const { return type == MoveType::DoublePush; }
 
 ////////////////// For parsing pieces
 
@@ -85,9 +85,36 @@ char getPieceChar(Piece p) {
     return it->second;
 }
 
+// debugging
 std::ostream &operator<<(std::ostream &out, const Piece &p) {
     std::string s = "";
     s += getPieceChar(p);
     out << s;
     return out;
 }
+
+std::ostream &operator<<(std::ostream &out, const Tile &t) {
+    // Convert col: 0 → 'a', 1 → 'b', etc.
+    out << static_cast<char>('a' + t.col) << (t.row + 1);
+    return out;
+}
+
+std::ostream &operator<<(std::ostream &out, const Move &m) {
+    out << m.getPiece() << " from " << m.getFrom() << " to " << m.getTo();
+    if (m.isCapture()) { out << " capture " << m.getCapturePiece(); }
+    if (m.isPromotion()) { out << " promote " << m.getPromotionPiece(); }
+    if (m.isEnPassant()) { out << " en passant"; }
+    if (m.isCastle()) { out << " castle"; }
+    if (m.isDoubleAdvance()) { out << " double push"; }
+    return out;
+}
+
+std::ostream &operator<<(std::ostream &out, const std::vector<Move> &v) {
+    int n = 0;
+    for (const auto &move : v) {
+        ++n;
+        out << n << ": " << move << endl;
+    }
+    return out;
+}
+

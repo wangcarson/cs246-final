@@ -5,7 +5,7 @@
 #include <optional>
 
 #include "structs.h"
-#include "chessboard.h"
+#include "chessboard.h" 
 
 class MoveMaker: public Subject {
     ChessBoard &board;
@@ -15,10 +15,7 @@ class MoveMaker: public Subject {
     // board state.
     Colour turn;
     std::optional<Tile> enPassant;
-    bool whiteCastleQueen;
-    bool whiteCastleKing;
-    bool blackCastleQueen;
-    bool blackCastleKing;
+    std::map<Colour, std::map<CastleType, bool>> castlingRights;
   
   public:
     MoveMaker(ChessBoard &b);
@@ -32,12 +29,12 @@ class MoveMaker: public Subject {
     // board state accessors.
     Colour getTurn();
     std::optional<Tile> getEnPassant();
-    bool getCastlingRights(Colour c, bool kside);
+    bool getCastlingRights(Colour c, CastleType s);
 
     // // board state mutators.
     void setTurn(Colour c);
     void setEnPassant(std::optional<Tile> t);
-    void setCastlingRights(Colour c, bool kside, bool b);
+    void setCastlingRights(Colour c, CastleType s, bool b);
 };
 
 #endif
