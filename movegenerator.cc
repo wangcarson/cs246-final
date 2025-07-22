@@ -1,5 +1,5 @@
 #include "movegenerator.h"
-#include "struct.h"
+#include "structs.h"
 
 #include <iostream>
 using namespace std;
@@ -314,11 +314,11 @@ bool MoveGenerator::isCheckMG(Tile t,Colour c){
         //check for black pawn on t.row+1,t.col+1 and t.row+1,t.col-1
         Piece wingCheckForPawn = board.getPiece(Tile {t.row+1,t.col+1});
 
-        if (wingCheckForPawn==PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
+        if (wingCheckForPawn == PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
             return true;
         }
         wingCheckForPawn = board.getPiece(Tile {t.row+1,t.col-1});
-        if (wingCheckForPawn==PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
+        if (wingCheckForPawn == PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
             return true;
         }
     }else if (c==Colour::Black){
