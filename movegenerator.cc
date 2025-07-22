@@ -249,6 +249,7 @@ vector<Move> MoveGenerator::generatePseudoMoves(Colour c) {
         for(int j = 0; j < BOARD_COLS; ++j) {
             Tile t{i, j};
             if (c == board.getColour(t)) {
+                cout << "Testing tile " << t << endl;
                 vector<Move> currentTileLegalMoves = getPseudoMoves(t);
 
                 // add to legal list
@@ -273,6 +274,8 @@ vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
         if (!findCheckMoves(c)) {
             cout << " Legal!";
             legalList.emplace_back(m);
+        } else {
+            cout << " Not legal.";
         }
         cout << endl;
         moveMaker.undoMove();
