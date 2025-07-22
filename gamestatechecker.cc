@@ -38,7 +38,6 @@ bool GameStateChecker::isDraw(Colour c) {
     
     //insufficent matiral is 1 bishop/1 knight.
 
-    vector<Piece> matrialInPlay;
     vector <int> eachPieceCount;
     eachPieceCount.reserve(14);
 
@@ -46,12 +45,26 @@ bool GameStateChecker::isDraw(Colour c) {
         for(int j=0;j<8;++j){
             Tile temp {i,j};
 
-            eachPieceCount[(int) board.getPiece(temp).type]++;
+            if (board.getColour(temp)==Colour::White){
+                eachPieceCount[(int) board.getPiece(temp).type]++;
+            }else if (board.getColour(temp)==Colour::Black){
+                eachPieceCount[(int) board.getPiece(temp).type+7]++;
+            }
             
             
         }
     }
-//enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty };
+
+    bool whiteInSufMat=false;
+    bool blackInSufMat=false;
+
+    if ((eachPieceCount[2]==1 && eachPieceCount[3]==1) || (eachPieceCount[9]==1 && eachPieceCount[10]==1)){
+        return true;
+    }
+
+    return  eachPieceCount[0]==0 && eachPieceCount[1]==0 && eachPieceCount[2]<=1 && eachPieceCount[3]<=1 && eachPieceCount[5]==0 &&
+            eachPieceCount[7]==0 && eachPieceCount[8]==0 && eachPieceCount[9]<=1 && eachPieceCount[10]<=1 && eachPieceCount[11]==0;
+
 
     
 
