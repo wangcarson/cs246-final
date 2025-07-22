@@ -79,7 +79,9 @@ bool MoveMaker::getCastlingRights(Colour c, bool kside) {
 
 // board state mutators.
 void MoveMaker::setTurn(Colour c) { turn = c; }
+
 void MoveMaker::setEnPassant(std::optional<Tile> t) { enPassant = t; }
+
 void MoveMaker::setCastlingRights(Colour c, bool kside, bool b) {
     // TODO
 }
