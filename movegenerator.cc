@@ -314,32 +314,32 @@ bool MoveGenerator::isCheckMG(Tile t,Colour c){
         //check for black pawn on t.row+1,t.col+1 and t.row+1,t.col-1
         Piece wingCheckForPawn = board.getPiece(Tile {t.row+1,t.col+1});
 
-        if (wingCheckForPawn == PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
+        if (wingCheckForPawn.type == PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
             return true;
         }
         wingCheckForPawn = board.getPiece(Tile {t.row+1,t.col-1});
-        if (wingCheckForPawn == PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
+        if (wingCheckForPawn.type == PieceType::Pawn && wingCheckForPawn.colour == Colour::Black){
             return true;
         }
     }else if (c==Colour::Black){
         //check for white pawn on t.row-1,t.col+1 and t.row-1,t.col-1
         Piece wingCheckForPawn = board.getPiece(Tile {t.row-1,t.col+1});
 
-        if (wingCheckForPawn==PieceType::Pawn && wingCheckForPawn.colour == Colour::White){
+        if (wingCheckForPawn.type==PieceType::Pawn && wingCheckForPawn.colour == Colour::White){
             return true;
         }
         wingCheckForPawn = board.getPiece(Tile {t.row-1,t.col-1});
-        if (wingCheckForPawn==PieceType::Pawn && wingCheckForPawn.colour == Colour::White){
+        if (wingCheckForPawn.type==PieceType::Pawn && wingCheckForPawn.colour == Colour::White){
             return true;
         }
     }
 
     vector<Move> bishopSpots = bishopLegalGen(t,c);
 
-    for(auto possiblePos : rookSpots){
+    for(auto possiblePos : bishopSpots){
 
 
-        if (possiblePos.getType()== MoveType::Capture && (possiblePos.getPiece()==PieceType::Bishop || possiblePos.getPiece()==PieceType::Queen)){
+        if (possiblePos.getType()== MoveType::Capture && (possiblePos.getPiece().type==PieceType::Bishop || possiblePos.getPiece().type==PieceType::Queen)){
             return true;
         }
     }
@@ -350,7 +350,7 @@ bool MoveGenerator::isCheckMG(Tile t,Colour c){
     vector<Move> rookSpots = rookLegalGen(t,c);
 
     for(auto possiblePos : rookSpots){
-        if (possiblePos.getType()== MoveType::Capture && (possiblePos.getPiece()==PieceType::Rook || possiblePos.getPiece()==PieceType::Queen)){
+        if (possiblePos.getType()== MoveType::Capture && (possiblePos.getPiece().type==PieceType::Rook || possiblePos.getPiece().type==PieceType::Queen)){
             return true;
         }
     }
@@ -358,7 +358,7 @@ bool MoveGenerator::isCheckMG(Tile t,Colour c){
     vector<Move> knightSpots = knightLegalGen(t,c);
 
     for(auto possiblePos : knightSpots){
-        if (possiblePos.getType()== MoveType::Capture && possiblePos.getPiece()==PieceType::Knight){
+        if (possiblePos.getType()== MoveType::Capture && possiblePos.getPiece().type==PieceType::Knight){
             return true;
         }
     }

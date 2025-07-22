@@ -17,8 +17,7 @@ bool GameStateChecker::isValidBoard() {
 bool GameStateChecker::isCheck(Colour c) {
 
     //getKing
-    Tile kingTile = board.getKing(c);
-    vector<Move> legalList = moveGenerator->allPosibleWaysToGetToTile(kingTile,c);
+    
 
 
 
