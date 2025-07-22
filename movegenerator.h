@@ -9,6 +9,7 @@
 class GameStateChecker; // forward declaration
 
 class MoveGenerator {
+  
     ChessBoard &board;
     MoveMaker &moveMaker;
     GameStateChecker *gameStateChecker = nullptr;
