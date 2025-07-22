@@ -67,6 +67,6 @@ Move Human::getLegalMove() {
 
 Computer::Computer(BoardManager &bm, int level): Player{bm}, level{level} {}
 Move Computer::getLegalMove() {
-    // Actual implementation of bot goes here
+    // TODO: Actual implementation of bot goes here
     return Move();
 }

@@ -13,26 +13,28 @@ class MoveGenerator {
     MoveMaker &moveMaker;
     GameStateChecker *gameStateChecker = nullptr;
 
-    std::vector<Move> lineRunner(Tile start, Tile vector, Colour c);
+    std::vector<Move> lineRunner(Tile start, Tile dirVector, Colour c);
+
+    std::vector<Move> multiLineRunner(Tile start, std::vector<Tile> dirVectors, Colour c);
+    std::vector<Move> multiMoveRunner(Tile start, std::vector<Tile> moveVectors, Colour c);
     
-    std::vector<Move> pawnLegalGen(Tile t, Colour c); // need to know last move so that we can check for en passant
-    std::vector<Move> rookLegalGen(Tile t, Colour c);
-    std::vector<Move> queenLegalGen(Tile t, Colour c);
-    std::vector<Move> knightLegalGen(Tile t, Colour c);
-    std::vector<Move> bishopLegalGen(Tile t, Colour c);
-    std::vector<Move> kingLegalGen(Tile t, Colour c); // need a way to check for castling
+    std::vector<Move> pawnMoveGen(Tile t, Colour c); // need to know last move so that we can check for en passant
+    std::vector<Move> kingMoveGen(Tile t, Colour c); // need a way to check for castling
 
   public:
     MoveGenerator(ChessBoard &b, MoveMaker &mm);
     void setGSC(GameStateChecker *gsc);
 
-    bool isLegal(Move m);
+    // bool isLegal(Move m);
 
     // generating moves.
-    std::vector<Move> sudoMovesGen(Colour c); //without castling or en passon.
-    std::vector<Move> getLegalMoves(Tile t);
+    std::vector<Move> getPseudoMoves(Tile t);
+    std::vector<Move> generatePseudoMoves(Colour c);
+    
+    // for colour.
+    std::vector<Move> generateLegalMoves(Colour c);
 
-    bool isCheckMG(Colour c);
+    bool findCheckMoves(Colour c);
 
 };
 
