@@ -31,8 +31,8 @@ Move Human::getLegalMove() {
             }
 
             auto moves = boardManager.getMoveGenerator()->generateLegalMoves(boardManager.getMoveMaker().getTurn());
-            cout << "Generate Legal Moves called:" << endl;
-            cout << moves;
+            cout << endl << "Generate Legal Moves!" << endl;
+            cout << moves.size() << " total moves" << endl;
 
             for (auto it : moves) {
                 if (it.getFrom() == start && it.getTo() == end) {

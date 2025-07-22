@@ -14,7 +14,7 @@ GameController::~GameController() {
 
 // Get player object corresponding to s. Allocates dynamic memory.
 Player *GameController::getPlayer(string s) {
-    if (s == "human") {
+    if (s == "h") {
         return new Human(boardManager, cin);
     } else if (s == "computer1") {
         return new Computer(boardManager, 1);

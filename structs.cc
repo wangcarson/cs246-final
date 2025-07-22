@@ -82,7 +82,7 @@ char getPieceChar(Piece p) {
     return it->second;
 }
 
-// debugging
+// print functions for debugging
 std::ostream &operator<<(std::ostream &out, const Piece &p) {
     std::string s = "";
     s += getPieceChar(p);
@@ -91,7 +91,6 @@ std::ostream &operator<<(std::ostream &out, const Piece &p) {
 }
 
 std::ostream &operator<<(std::ostream &out, const Tile &t) {
-    // Convert col: 0 → 'a', 1 → 'b', etc.
     out << static_cast<char>('a' + t.col) << (t.row + 1);
     return out;
 }

@@ -15,7 +15,6 @@ void MoveMaker::initBoardState() {
 
 // assumes m is a legal move
 void MoveMaker::makeMove(Move m) {
-    cout << "Move: ";
     previous.emplace_back(MoveData{m, BoardState{turn, enPassant, castlingRights}});
 
     // add and remove pieces.
