@@ -1,8 +1,7 @@
 #include "movemaker.h"
 using namespace std;
 
-// Makes and undos moves on the board while keeping track of state.
-MoveMaker::MoveMaker(ChessBoard &b, GameStateChecker &gsc): board{b}, stateChecker{gsc} { initBoardState(); }
+MoveMaker::MoveMaker(ChessBoard &b): board{b} { initBoardState(); }
 
 void MoveMaker::initBoardState() {
     turn = Colour::White;
@@ -11,14 +10,6 @@ void MoveMaker::initBoardState() {
     whiteCastleKing = true;
     blackCastleQueen = true;
     blackCastleKing = true;
-}
-
-// making moves (add to previous)
-bool MoveMaker::isLegal(Move m) {
-    makeMove(m);
-    bool legal = !stateChecker.isCheck(m.getColour());
-    undoMove();
-    return legal;
 }
 
 // assumes m is a legal move

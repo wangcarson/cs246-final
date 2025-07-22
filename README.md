@@ -13,6 +13,38 @@ board
 chess
 main
 
+# Explanation:
+
+`Chessboard` is just the board representation.
+It gives functionality for adding and removing pieces, as well as accessing board information.
+
+The board is a vector of `Piece` objects.
+Each `Piece` object contains a `PieceType` and `Colour`.
+To help with board representation, a `Tile` structure containing an integer pair 
+is used to represent a position on the board.
+
+`MoveMaker` gives functionality for making and undoing movings.
+It handles board state (castling rights, en passant) and keeps track of previous moves.
+The only other class it requires is `Chessboard`.
+
+`GameStateChecker` maintains the game state.
+It searches for checks, checkmate, stalemate.
+To find checks, it requires the `Chessboard`.
+To find stalemate and checkmate, it needs to determine when a player has no legal moves.
+So, this class also requires `MoveGenerator`.
+
+`MoveGenerator` gives methods for generating legal moves.
+Each move generated is represented by a `Move` object, which contains all the information
+required for making and undoing the move (starting and ending tiles, pieces involved).
+It contains the logic for piece movement and legality checks.
+To check for legality, it needs to check for checks using `GameStateChecker`.
+For move generation, it requires the `Chessboard` and the board state stored in `MoveMaker`.
+This is because castling and en passant are state-based moves.
+
+
+`generateLegalMoves()` needs `isCheck()`
+`isMate()` needs `generateLegalMoves()`
+
 # To test program:
 (1) make
 (2) ./chess-exec

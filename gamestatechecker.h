@@ -5,12 +5,15 @@
 #include "chessboard.h"
 #include "movegenerator.h"
 
+class MoveGenerator; // forward declaration
+
 class GameStateChecker {
     ChessBoard &board;
-    MoveGenerator &moveGenerator;
+    MoveGenerator *moveGenerator = nullptr;
   
   public:
-    GameStateChecker(ChessBoard &b, MoveGenerator &mg);
+    GameStateChecker(ChessBoard &b);
+    void setMG(MoveGenerator *mg);
 
     // checking game states.
     bool isValidBoard();    // verify one king each, no pawns on last rank, no checks

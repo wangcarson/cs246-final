@@ -97,7 +97,7 @@ void GameController::start() {
                 }
             
             } else if (cmd == "done") {
-                if (boardManager.getGameStateChecker().isValidBoard()) {
+                if (boardManager.getGameStateChecker()->isValidBoard()) {
                     mode = Mode::Normal;
                     cout << "Valid board! Normal Mode" << endl;
                 } else {
@@ -136,7 +136,7 @@ void GameController::start() {
             }
             boardManager.getMoveMaker().makeMove(m); // m is now a legal move 
             cout << td;
-            if (boardManager.getGameStateChecker().isMate(c)) {
+            if (boardManager.getGameStateChecker()->isMate(c)) {
                 if (c == Colour::White) {
                     ++whiteScore;
                 } else {
@@ -144,7 +144,7 @@ void GameController::start() {
                 }
                 restart();
                 
-            } else if (boardManager.getGameStateChecker().isDraw(c)) {
+            } else if (boardManager.getGameStateChecker()->isDraw(c)) {
                 whiteScore += 0.5;
                 blackScore += 0.5;
                 restart();

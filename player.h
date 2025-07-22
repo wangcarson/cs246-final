@@ -10,7 +10,7 @@
 
 class Player {
   protected:
-    BoardManager boardManager;
+    BoardManager &boardManager;
 
 public:
     Player(BoardManager &bm);

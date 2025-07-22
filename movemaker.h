@@ -6,11 +6,9 @@
 
 #include "structs.h"
 #include "chessboard.h"
-#include "gamestatechecker.h"
 
 class MoveMaker: public Subject {
     ChessBoard &board;
-    GameStateChecker &stateChecker;
 
     std::vector<MoveData> previous;
 
@@ -23,12 +21,11 @@ class MoveMaker: public Subject {
     bool blackCastleKing;
   
   public:
-    MoveMaker(ChessBoard &b, GameStateChecker &gsc);
+    MoveMaker(ChessBoard &b);
     
     void initBoardState();
 
     // making moves (add to previous)
-    bool isLegal(Move m);
     void makeMove(Move m); // should be called on legal moves
     void undoMove();
 

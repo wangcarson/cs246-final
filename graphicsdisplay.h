@@ -7,7 +7,7 @@
 #include "window.h"
 
 class GraphicsDisplay: public Observer {
-    BoardManager boardManager;
+    BoardManager &boardManager;
     Xwindow *window; // X11 graphical display
 
   public:

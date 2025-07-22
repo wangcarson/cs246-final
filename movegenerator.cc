@@ -1,6 +1,18 @@
 #include "movegenerator.h"
 using namespace std;
 
+// Constructor.
+MoveGenerator::MoveGenerator(ChessBoard &b, MoveMaker &mm): board{b}, moveMaker{mm} {}
+void MoveGenerator::setGSC(GameStateChecker *gsc) { gameStateChecker = gsc; }
+
+// making moves (add to previous)
+bool MoveGenerator::isLegal(Move m) {
+    moveMaker.makeMove(m);
+    bool legal = !gameStateChecker->isCheck(m.getColour());
+    moveMaker.undoMove();
+    return legal;
+}
+
 // A function which goes down a line and checks if you can keep going or not.
 // Invariant: Called on non-empty `start` tile
 vector<Move> MoveGenerator::lineRunner(Tile start, Tile dirVector, Colour c) {
@@ -175,6 +187,7 @@ vector<Move> MoveGenerator::pawnLegalGen(Tile start, Colour c) {
     }
 
     // en passant.
+    return legalList;
 }
 
 vector<Move> MoveGenerator::kingLegalGen(Tile t, Colour c){ // todo
@@ -206,11 +219,7 @@ vector<Move> MoveGenerator::kingLegalGen(Tile t, Colour c){ // todo
 
 
     return legalList;
-
 }
-
-MoveGenerator::MoveGenerator(ChessBoard &b):
-    board{b} {}
 
 vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
     vector<Move> legalList;
@@ -254,5 +263,7 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t) {
     } else if (curP.isKing()){
         return kingLegalGen(t, c);
 
+    } else {
+        throw invalid_argument("getLegalMoves: called on empty square.");
     }
 }

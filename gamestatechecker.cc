@@ -1,7 +1,7 @@
 #include "gamestatechecker.h"
 
-GameStateChecker::GameStateChecker(ChessBoard &b, MoveGenerator &mg):
-    board{b}, moveGenerator{mg} {}
+GameStateChecker::GameStateChecker(ChessBoard &b): board{b} {}
+void GameStateChecker::setMG(MoveGenerator *gsc) { moveGenerator = gsc; }
 
 // checking game states.
 bool GameStateChecker::isValidBoard() {
@@ -26,9 +26,9 @@ bool GameStateChecker::isCheck(Colour c) {
 }
 
 bool GameStateChecker::isMate(Colour c) {
-    return isCheck(c) && moveGenerator.generateLegalMoves(c).size() == 0;
+    return isCheck(c) && moveGenerator->generateLegalMoves(c).size() == 0;
 }
 bool GameStateChecker::isDraw(Colour c) {
-    return !isCheck(c) && moveGenerator.generateLegalMoves(c).size() == 0;
+    return !isCheck(c) && moveGenerator->generateLegalMoves(c).size() == 0;
     // todo: check for insufficient material
 }

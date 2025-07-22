@@ -5,7 +5,14 @@ using namespace std;
 
 const string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-BoardManager::BoardManager(): board{ChessBoard{}}, moveGenerator{board}, gameStateChecker{board, moveGenerator}, moveMaker{board, gameStateChecker} {}
+BoardManager::BoardManager(): 
+    board{}, 
+    moveMaker{board}, 
+    moveGenerator{make_unique<MoveGenerator>(board, moveMaker)}, 
+    gameStateChecker{make_unique<GameStateChecker>(board)} {
+    moveGenerator->setGSC(gameStateChecker.get());
+    gameStateChecker->setMG(moveGenerator.get());
+}
 
 void BoardManager::init() {
     // initialize state
@@ -29,6 +36,8 @@ void BoardManager::init() {
 }
 
 ChessBoard &BoardManager::getBoard() { return board; }
-GameStateChecker &BoardManager::getGameStateChecker() { return gameStateChecker; }
 MoveMaker &BoardManager::getMoveMaker() { return moveMaker; }
-MoveGenerator &BoardManager::getMoveGenerator() { return moveGenerator; }
+
+// gives copy of raw pointer.
+MoveGenerator *BoardManager::getMoveGenerator() { return moveGenerator.get(); }
+GameStateChecker *BoardManager::getGameStateChecker() { return gameStateChecker.get(); }

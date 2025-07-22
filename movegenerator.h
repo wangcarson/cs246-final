@@ -3,9 +3,15 @@
 
 #include "structs.h"
 #include "chessboard.h"
+#include "movemaker.h"
+#include "gamestatechecker.h"
+
+class GameStateChecker; // forward declaration
 
 class MoveGenerator {
     ChessBoard &board;
+    MoveMaker &moveMaker;
+    GameStateChecker *gameStateChecker = nullptr;
 
     std::vector<Move> lineRunner(Tile start, Tile vector, Colour c);
     
@@ -20,7 +26,10 @@ class MoveGenerator {
     // check en passon seperatly
 
   public:
-    MoveGenerator(ChessBoard &b);
+    MoveGenerator(ChessBoard &b, MoveMaker &mm);
+    void setGSC(GameStateChecker *gsc);
+
+    bool isLegal(Move m);
 
     // generating moves.
     std::vector<Move> generateLegalMoves(Colour c); //without castling or en passon.

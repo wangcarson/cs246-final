@@ -30,7 +30,7 @@ Move Human::getLegalMove() {
                 continue;
             }
 
-            auto moves = boardManager.getMoveGenerator().generateLegalMoves(boardManager.getMoveMaker().getTurn());
+            auto moves = boardManager.getMoveGenerator()->generateLegalMoves(boardManager.getMoveMaker().getTurn());
             for (auto it : moves) {
                 if (it.getTo() == start && it.getFrom() == end) {
                     cerr << "Legal move!" << endl;
