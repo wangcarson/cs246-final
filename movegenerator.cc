@@ -187,6 +187,20 @@ vector<Move> MoveGenerator::pawnLegalGen(Tile start, Colour c) {
     }
 
     // en passant.
+    // Invariant: epPiece is always opponent colour (should be true)
+    if (moveMaker.getEnPassant().has_value()) {
+        Tile epTile = moveMaker.getEnPassant().value();
+        Piece epPiece = board.getPiece(epTile);
+
+        Tile leftTile = start + Tile{0, -1};
+        Tile rightTile = start + Tile{0, 1};
+        if (epTile == leftTile || epTile == rightTile) {
+            Move m{MoveType::EnPassant, startPiece, start, epTile};
+            m.setCapturePiece(epPiece);
+            legalList.emplace_back(m);
+        }
+    }
+
     return legalList;
 }
 
