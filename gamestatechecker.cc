@@ -24,16 +24,16 @@ bool GameStateChecker::isCheck(Colour c) {
     // bishop on diagonal
     // similar to move generation 
 
-    return moveGenerator->isCheckMG(c);
+    return moveGenerator->findCheckMoves(c);
 }
 
 bool GameStateChecker::isMate(Colour c) {
     cout << "Checking mate" << endl;
-    return isCheck(c) && moveGenerator->sudoMovesGen(c).size() == 0;
+    return isCheck(c) && moveGenerator->generateLegalMoves(c).size() == 0;
 }
 
 bool GameStateChecker::isDraw(Colour c) {
-    return !isCheck(c) && moveGenerator->sudoMovesGen(c).size() == 0;
+    return !isCheck(c) && moveGenerator->generateLegalMoves(c).size() == 0;
     // todo: check for insufficient material
     
     //insufficent matiral is 1 bishop/1 knight.
