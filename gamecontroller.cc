@@ -31,8 +31,7 @@ Player *GameController::getPlayer(string s) {
 
 // resets fields for new game
 void GameController::restart() {
-    cout << "White " << whiteScore << " - " << blackScore << " Black" << endl;
-    cout << endl;
+    cout << "White " << whiteScore << " - " << blackScore << " Black" << endl << endl;
     
     mode = Mode::Normal;
     boardManager.init();
@@ -48,7 +47,7 @@ void GameController::start() {
     } catch (...) {
         cerr << "start(): Error with initializing board" << endl;
     }
-    cout << *td; // print!
+    cout << *td  << endl;
 
     cout << "Normal Mode" << endl;
     while (true) {
@@ -65,7 +64,7 @@ void GameController::start() {
                     Piece piece = parsePiece(p);
                     Tile tile = parseTile(t);
                     boardManager.getBoard().setPiece(tile, piece);
-                    cout << *td;
+                    cout << *td << endl;
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
                 } catch (...) {
@@ -78,7 +77,7 @@ void GameController::start() {
                 try {
                     Tile t = parseTile(s);
                     boardManager.getBoard().removePiece(t);
-                    cout << *td;
+                    cout << *td << endl;
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
                 } catch (...) {
@@ -135,7 +134,8 @@ void GameController::start() {
                 }
             }
             boardManager.getMoveMaker().makeMove(m); // m is now a legal move 
-            cout << td;
+            cout << *td << endl;
+
             if (boardManager.getGameStateChecker()->isMate(c)) {
                 if (c == Colour::White) {
                     ++whiteScore;
@@ -168,7 +168,7 @@ void GameController::start() {
 
                 mode = Mode::Game;
                 cout << "Game Mode" << endl;
-                cout << *td;
+                cout << *td << endl;
 
             } else if (cmd == "setup") {
                 mode = Mode::Setup;

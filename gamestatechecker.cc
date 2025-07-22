@@ -1,4 +1,6 @@
 #include "gamestatechecker.h"
+#include <iostream>
+using namespace std;
 
 GameStateChecker::GameStateChecker(ChessBoard &b): board{b} {}
 void GameStateChecker::setMG(MoveGenerator *gsc) { moveGenerator = gsc; }
@@ -13,10 +15,6 @@ bool GameStateChecker::isValidBoard() {
 }
 
 bool GameStateChecker::isCheck(Colour c) {
-
-    
-
-
     // Tile ktile = board.getKing(c);
 
     // check if opponent rook on same rank/file
@@ -26,6 +24,7 @@ bool GameStateChecker::isCheck(Colour c) {
 }
 
 bool GameStateChecker::isMate(Colour c) {
+    cout << "Checking mate" << endl;
     return isCheck(c) && moveGenerator->generateLegalMoves(c).size() == 0;
 }
 bool GameStateChecker::isDraw(Colour c) {

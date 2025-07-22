@@ -274,8 +274,7 @@ vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
             }
         }
     }
-    cout << "Generate Legal Moves called:" << endl;
-    cout << legalList;
+    // actually call isLegal() here
     return legalList;
 }
 

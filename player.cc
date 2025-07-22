@@ -31,8 +31,11 @@ Move Human::getLegalMove() {
             }
 
             auto moves = boardManager.getMoveGenerator()->generateLegalMoves(boardManager.getMoveMaker().getTurn());
+            cout << "Generate Legal Moves called:" << endl;
+            cout << moves;
+
             for (auto it : moves) {
-                if (it.getTo() == start && it.getFrom() == end) {
+                if (it.getFrom() == start && it.getTo() == end) {
                     cerr << "Legal move!" << endl;
                     
                     // input for promotion

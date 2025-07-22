@@ -59,19 +59,17 @@ const std::map<Piece, char> PIECE_CHAR_MAP = {
 // Helper functions
 Tile parseTile(std::string s) {
     if (s.size() != 2 || s[0] < 'a' || s[0] > 'h' || s[1] < '1' || s[1] > '8') {
-        // cerr << "Invalid tile: " + s;
-        throw std::invalid_argument("Invalid tile.");
+        throw std::invalid_argument("parseTile: Invalid tile " + s);
     }
-    int col = s[0] - 'a'; // 'a' → 0, ..., 'h' → 7
-    int row = s[1] - '1'; // '1' → 0, ..., '8' → 7
+    int col = s[0] - 'a'; // 'a' is 0
+    int row = s[1] - '1'; // '1' is 0
     return Tile{row, col};
 }
 
 Piece parsePiece(char s) {
     auto it = CHAR_PIECE_MAP.find(s);
     if (it == CHAR_PIECE_MAP.end()) {
-        // cerr << "parsePiece: Invalid piece: " + s;
-        throw std::invalid_argument("parsePiece: Invalid piece.");
+        throw std::invalid_argument("parsePiece: Invalid piece " + s);
     }
     return it->second;
 }
@@ -79,7 +77,6 @@ Piece parsePiece(char s) {
 char getPieceChar(Piece p) {
     auto it = PIECE_CHAR_MAP.find(p);
     if (it == PIECE_CHAR_MAP.end()) {
-        // cerr << "getPieceChar: Invalid Piece object" << endl;
         throw std::invalid_argument("getPieceChar: Invalid Piece object.");
     }
     return it->second;
