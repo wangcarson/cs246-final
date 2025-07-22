@@ -21,7 +21,6 @@ void MoveMaker::makeMove(Move m) {
     // add and remove pieces.
     board.removePiece(m.getFrom());
     if (m.isPromotion()) {
-        cout << "Promotion." << endl;
         board.setPiece(m.getTo(), m.getPromotionPiece());
     } else {
         board.setPiece(m.getTo(), m.getPiece());
@@ -31,26 +30,22 @@ void MoveMaker::makeMove(Move m) {
     auto [r, c] = m.getFrom();
     auto [nr, nc] = m.getTo();
     if (m.isCastle()) {
-        cout << "Castle." << endl;
         Tile oldRookTile = c < nc ? Tile{r, 7} : Tile{r, 1};
         Tile newRookTile{r, (c+nc)/2};
         board.removePiece(oldRookTile);
         board.setPiece(newRookTile, Piece{PieceType::Rook, turn});
     
     } else if (m.isEnPassant()) {
-        cout << "En Passant." << endl;
         Tile captureTile{r, nc};
         board.removePiece(captureTile);
     }
 
     // castling states.
     if (m.getPiece().isKing()) {
-        cout << "King moved. No castling" << endl;
         castlingRights.at(turn).at(CastleType::KingSide) = false;
         castlingRights.at(turn).at(CastleType::QueenSide) = false;
 
     } else if (m.getPiece().isRook()) {
-        cout << "Rook moved. No castling" << endl;
         if (m.getTo().col == 0) {
             castlingRights.at(turn).at(CastleType::QueenSide) = false;
         } else if (m.getTo().col == 7) {
@@ -60,7 +55,6 @@ void MoveMaker::makeMove(Move m) {
 
     // en passant state.
     if (m.isDoubleAdvance()) {
-        cout << "Double push." << endl;
         enPassant = m.getTo();
     } else {
         enPassant = nullopt;
@@ -71,20 +65,20 @@ void MoveMaker::makeMove(Move m) {
 }
 
 void MoveMaker::undoMove() {
+    // get previous move.
     if (previous.size() == 0) return;
-    
-    MoveData lastMove = previous.back();
+    MoveData lastMoveData = previous.back();
     previous.pop_back();
-    Move realMove = lastMove.move;
 
-    Tile fromTile = realMove.getFrom();
-    Tile toTile = realMove.getTo();
+    Move lastMove = lastMoveData.move;
+    Tile fromTile = lastMove.getFrom();
+    Tile toTile = lastMove.getTo();
     Tile temp;
 
-    board.setPiece(fromTile,realMove.getPiece());
+    board.setPiece(fromTile, lastMove.getPiece());
     board.removePiece(toTile);
 
-     if (realMove.getType() == MoveType::KingSideCastle){
+     if (lastMove.getType() == MoveType::KingSideCastle){
 
         
         temp.row = fromTile.row;
@@ -95,7 +89,7 @@ void MoveMaker::undoMove() {
         board.removePiece(temp);
 
 
-    }else if (realMove.getType() == MoveType::QueenSideCastle){
+    }else if (lastMove.getType() == MoveType::QueenSideCastle){
         
         temp.row = fromTile.row;
         temp.row = fromTile.col+1;
@@ -104,24 +98,16 @@ void MoveMaker::undoMove() {
 
         board.removePiece(temp);
 
-    }else if (realMove.getType() == MoveType::Capture || realMove.getType() == MoveType::EnPassant || realMove.getType() == MoveType::PromotionCapture){
+    } else if (lastMove.isCapture()) {
 
-        board.setPiece(fromTile,realMove.getCapturePiece());
+        board.setPiece(fromTile, lastMove.getCapturePiece());
 
     }
-
-
-    //turning back of all invisable rules. (en passant/castling)
-    turn = previous.back().oldState.turn;
-    BoardState shortCut = lastMove.oldState;
-    setEnPassant(shortCut.enPassant);
     
-    setCastlingRights(Colour::White,CastleType::KingSide,shortCut.castlingRights.at(Colour::White).at(CastleType::KingSide));
-    setCastlingRights(Colour::White,CastleType::QueenSide,shortCut.castlingRights.at(Colour::White).at(CastleType::QueenSide));
-    setCastlingRights(Colour::Black,CastleType::KingSide,shortCut.castlingRights.at(Colour::Black).at(CastleType::KingSide));
-    setCastlingRights(Colour::Black,CastleType::QueenSide,shortCut.castlingRights.at(Colour::Black).at(CastleType::QueenSide));
-    
-
+    // reverting all invisible board states. (en passant/castling)
+    BoardState lastState = lastMoveData.oldState;
+    setEnPassant(lastState.enPassant);
+    setCastlingRights(lastState.castlingRights);
 }
 
 // board state accessors.
@@ -134,6 +120,9 @@ bool MoveMaker::getCastlingRights(Colour c, CastleType s) {
 // board state mutators.
 void MoveMaker::setTurn(Colour c) { turn = c; }
 void MoveMaker::setEnPassant(std::optional<Tile> t) { enPassant = t; }
+void MoveMaker::setCastlingRights(std::map<Colour, std::map<CastleType, bool>> c) {
+    castlingRights = c;
+}
 void MoveMaker::setCastlingRights(Colour c, CastleType s, bool b) {
     castlingRights.at(c).at(s) = b;
 }

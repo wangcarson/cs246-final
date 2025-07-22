@@ -34,6 +34,7 @@ class MoveMaker: public Subject {
     // // board state mutators.
     void setTurn(Colour c);
     void setEnPassant(std::optional<Tile> t);
+    void setCastlingRights(std::map<Colour, std::map<CastleType, bool>> castlingRights);
     void setCastlingRights(Colour c, CastleType s, bool b);
 };
 
