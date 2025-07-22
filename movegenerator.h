@@ -31,6 +31,9 @@ class MoveGenerator {
     // generating moves.
     std::vector<Move> generateLegalMoves(Colour c); //without castling or en passon.
     std::vector<Move> getLegalMoves(Tile t);
+
+    bool isCheckMG(Tile t,Colour c);
+
 };
 
 #endif

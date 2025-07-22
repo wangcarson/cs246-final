@@ -2,6 +2,8 @@
 #include <iostream>
 using namespace std;
 
+using namespace std;
+
 GameStateChecker::GameStateChecker(ChessBoard &b): board{b} {}
 void GameStateChecker::setMG(MoveGenerator *gsc) { moveGenerator = gsc; }
 
@@ -15,6 +17,12 @@ bool GameStateChecker::isValidBoard() {
 }
 
 bool GameStateChecker::isCheck(Colour c) {
+
+    //getKing
+    
+
+
+
     // Tile ktile = board.getKing(c);
 
     // check if opponent rook on same rank/file
