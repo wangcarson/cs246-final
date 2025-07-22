@@ -90,6 +90,8 @@ vector<Move> MoveGenerator::multiMoveRunner(Tile start, vector<Tile> moveVectors
     return legalList;
 }
 
+////////////////// Moves for specific pieces ////////////////////////
+
 vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){ // todo
     // regular moves.
     Piece startPiece = board.getPiece(start);
