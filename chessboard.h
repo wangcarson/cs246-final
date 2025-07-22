@@ -19,8 +19,9 @@ class ChessBoard: public Subject {
 
     // some accessors.
     Piece getPiece(Tile t);
-    Colour getColour (Tile t);
+    Colour getColour(Tile t);
     bool isOccupied(Tile t);
+    bool isEmpty(Tile t);
     Tile getKing(Colour c);
 
     void printSize(std::string s);

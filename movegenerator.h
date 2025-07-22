@@ -22,9 +22,6 @@ class MoveGenerator {
     std::vector<Move> bishopLegalGen(Tile t, Colour c);
     std::vector<Move> kingLegalGen(Tile t, Colour c); // need a way to check for castling
 
-    // check castling seperalty
-    // check en passon seperatly
-
   public:
     MoveGenerator(ChessBoard &b, MoveMaker &mm);
     void setGSC(GameStateChecker *gsc);

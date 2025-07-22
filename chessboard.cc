@@ -37,8 +37,11 @@ void ChessBoard::clearGrid() {
 }
 
 bool ChessBoard::isOccupied(Tile t) {
-    Piece p = getPiece(t);
-    return !p.isEmpty();
+    return !getPiece(t).isEmpty();
+}
+
+bool ChessBoard::isEmpty(Tile t) {
+    return getPiece(t).isEmpty();
 }
 
 Tile ChessBoard::getKing(Colour c) {
