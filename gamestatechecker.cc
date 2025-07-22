@@ -19,15 +19,11 @@ bool GameStateChecker::isValidBoard() {
 bool GameStateChecker::isCheck(Colour c) {
     
     //getKing
-    
-
-
-
     // Tile ktile = board.getKing(c);
-
     // check if opponent rook on same rank/file
     // bishop on diagonal
     // similar to move generation 
+
     return moveGenerator->isCheckMG(c);
 }
 
@@ -35,7 +31,29 @@ bool GameStateChecker::isMate(Colour c) {
     cout << "Checking mate" << endl;
     return isCheck(c) && moveGenerator->sudoMovesGen(c).size() == 0;
 }
+
 bool GameStateChecker::isDraw(Colour c) {
     return !isCheck(c) && moveGenerator->sudoMovesGen(c).size() == 0;
     // todo: check for insufficient material
+    
+    //insufficent matiral is 1 bishop/1 knight.
+
+    vector<Piece> matrialInPlay;
+    vector <int> eachPieceCount;
+    eachPieceCount.reserve(14);
+
+    for(int i =0;i<8;++i){
+        for(int j=0;j<8;++j){
+            Tile temp {i,j};
+
+            eachPieceCount[(int) board.getPiece(temp).type]++;
+            
+            
+        }
+    }
+//enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty };
+
+    
+
+
 }
