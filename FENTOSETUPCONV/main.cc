@@ -56,7 +56,7 @@ int main() {
         string fullFenString;
         cin >> fullFenString;
 
-        cout << "PUZZLESTART"<<endl;
+        // cout << "PUZZLESTART"<<endl;
 
 
         for(int i =1;i<=8;++i){
