@@ -10,7 +10,7 @@
 #include "gamestatechecker.h"
 #include "movegenerator.h"
 
-const std::string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+const std::string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
 
 class BoardManager {
     ChessBoard board;
@@ -20,7 +20,7 @@ class BoardManager {
   
   public:
     BoardManager();
-    void init(std::string position=DEFAULT_POSITION, Colour starting=Colour::White); // init board and state to defaults
+    void init(std::string position=DEFAULT_POSITION); // init board and state to defaults
 
     // accessors.
     ChessBoard &getBoard();
