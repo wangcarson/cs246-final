@@ -2,6 +2,7 @@
 #include "player-human.h"
 #include "player-computer.h"
 #include <stdexcept>
+#include "evaluation.h"
 using namespace std;
 
 GameController::GameController(istream &in, bool debug): in{in}, debug{debug} { // other fields are default constructed
@@ -228,6 +229,7 @@ void GameController::printData(const vector<Move> &moves) {
         cout << "Castle Black Q: " << cr.at(Colour::Black).at(CastleType::QueenSide) << endl;
         cout << bar << endl;
     }
-
+    
     cout << *td << endl << endl;
+    cout << "Evaluation: " << getEvaluationValue(boardManager.getBoard()) << endl;
 }
