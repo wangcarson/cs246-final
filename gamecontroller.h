@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "structs.h"
+#include "puzzle.h"
 #include "textdisplay.h"
 #include "graphicsdisplay.h"
 #include "boardmanager.h"
@@ -35,6 +36,10 @@ class GameController {
     std::map<Colour, std::unique_ptr<Player>> players;
     std::map<Colour, float> scores;
     // Players are null until the 'game' cmd is run (so must be pointers)
+
+    // Puzzle objects.
+    std::unique_ptr<Player> puzzlePlayer;
+    std::unique_ptr<Puzzle> puzzle;
 
     // Creates a Player object corresponding to string `s`.
     // Returns as a smart pointer (transfers ownership).

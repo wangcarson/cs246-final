@@ -3,8 +3,6 @@
 #include <iostream>
 using namespace std;
 
-const string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-
 // Constructor.
 BoardManager::BoardManager(): 
     moveMaker{board}, 
@@ -12,14 +10,14 @@ BoardManager::BoardManager():
     gameStateChecker{board, moveGenerator} {}
 
 // Initializing state and board.
-void BoardManager::init() {
+void BoardManager::init(string position, Colour starting) {
     // initialize state
-    moveMaker.initBoardState();
+    moveMaker.initBoardState(starting);
     
     // initialize grid to default
     board.clearGrid();
     int row = 0, col = 0;
-    for (char c : DEFAULT_POSITION) {
+    for (char c : position) {
         if (c == '/') {
             row++;
             col = 0;
