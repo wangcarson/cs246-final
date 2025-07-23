@@ -31,12 +31,12 @@ int getPositionValue(Piece p, Tile t) {
 }
 
 // positive for white, negative for black.
-int getEvaluationValue(ChessBoard &b) {
+int getEvaluationValue(BoardManager &b) {
     int eval = 0;
     for (int i = 0; i < BOARD_ROWS; ++i) {
         for (int j = 0; j < BOARD_COLS; ++j) {
             Tile t{i, j};
-            Piece p = b.getPiece(t);
+            Piece p = b.getBoard().getPiece(t);
             eval += getPieceValue(p);
             eval += getPositionValue(p, t);
         }

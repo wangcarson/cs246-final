@@ -10,8 +10,7 @@ class Engine: public Player {
     int max_depth = 2; // around 10,000 moves
     BoardManager &bm;
 
-    int maxi(int depth) const;
-    int mini(int depth) const;
+    int alphaBeta(int depth, int alpha, int beta, Colour c) const;
 
   public:
     Engine(BoardManager &bm);
