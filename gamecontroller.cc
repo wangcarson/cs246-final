@@ -178,11 +178,34 @@ void GameController::runGame() {
                 continue;
             }
         
-        // normal mode.
-        } else if (mode == Mode::Normal){
+        // puzzle mode.
+        } else if (mode == Mode::Puzzle) {
+            // setup new position
+            cout << "Setting up puzzle..." << endl;
+            string p = puzzle.getPosition();
+            Colour c = puzzle.getStartColour();
+            boardManager.init(p, c);
+
+            auto moves = boardManager.getMoveGenerator().generateLegalMoves();
+            Move play;
+            while (true) {
+                play = puzzlePlayer->getLegalMove(moves);
+                if (puzzle.isCorrectMove(play)) {
+                    break;
+                }
+                cout << "Incorrect move! Try again." << endl;
+            }
+            boardManager.getMoveMaker().makeMove(play);
+
+            Move response = puzzle.getResponse(moves);
+            boardManager.getMoveMaker().makeMove(response);
+        
+        // default mode
+        } else if (mode == Mode::Normal) {
             in >> cmd;
             if (in.fail()) break;
 
+            // starting a new game.
             if (cmd == "game") {
                 string p1, p2;
                 in >> p1 >> p2;
@@ -199,9 +222,14 @@ void GameController::runGame() {
             } else if (cmd == "setup") {
                 cout << endl << ">>> Setup Mode <<<" << endl;
                 mode = Mode::Setup;
-            }
-        }else if (mode == Mode::Puzzle){
             
+            // starting a new puzzle.
+            } else if (cmd == "puzzle") {
+                cout << endl << ">>> Puzzle Mode <<<" << endl;
+                puzzlePlayer = make_unique<Human>(in);
+                puzzle = make_unique<Puzzle>();
+                mode = Mode::Puzzle;
+            }
         }
     } // while loop breaks on EOF
 

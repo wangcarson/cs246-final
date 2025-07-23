@@ -20,7 +20,7 @@ class MoveMaker: public Subject {
   public:
     MoveMaker(ChessBoard &b);
     
-    void initBoardState();
+    void initBoardState(Colour starting=Colour::White);
 
     // making moves (add to previous)
     void makeMove(Move m); // should be called on legal moves

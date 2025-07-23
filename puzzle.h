@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-class puzzle{
+class Puzzle {
 
     fstream puzzleFile {"puzzle.txt"};
 
@@ -12,6 +12,6 @@ class puzzle{
         
 
 
-}
+};
 
 #endif

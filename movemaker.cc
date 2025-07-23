@@ -4,8 +4,8 @@ using namespace std;
 
 MoveMaker::MoveMaker(ChessBoard &b): board{b} { initBoardState(); }
 
-void MoveMaker::initBoardState() {
-    turn = Colour::White;
+void MoveMaker::initBoardState(Colour starting) {
+    turn = starting;
     enPassant = std::nullopt;
     castlingRights = {
         {Colour::White, {{CastleType::KingSide, true}, {CastleType::QueenSide, true}}}, 
