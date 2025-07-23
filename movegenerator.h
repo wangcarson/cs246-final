@@ -27,8 +27,8 @@ class MoveGenerator {
   public:
     MoveGenerator(ChessBoard &b, MoveMaker &mm);
     
-    // for colour.
-    std::vector<Move> generateLegalMoves(Colour c);
+    // for current colour.
+    std::vector<Move> generateLegalMoves();
 
     // used by GameStateChecker.
     bool isAttacked(Tile t); // used by check and isSafeMove()

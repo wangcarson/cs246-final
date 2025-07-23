@@ -53,3 +53,4 @@ two kings
 
 checks
 
+promotion check

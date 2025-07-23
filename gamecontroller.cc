@@ -118,7 +118,7 @@ void GameController::runGame() {
         } else if (mode == Mode::Game) {
             Colour turn = boardManager.getMoveMaker().getTurn();
             Colour opponent = oppositeColour(turn);
-            auto legalMoves = boardManager.getMoveGenerator().generateLegalMoves(turn);
+            auto legalMoves = boardManager.getMoveGenerator().generateLegalMoves();
             
             // output board and debug info
             printData(legalMoves);
@@ -232,5 +232,5 @@ void GameController::printData(const vector<Move> &moves) {
     }
     
     cout << *td << endl << endl;
-    cout << "Evaluation: " << getEvaluationValue(boardManager.getBoard()) << endl;
+    cout << "Evaluation: " << getEvaluationValue(boardManager) << endl;
 }

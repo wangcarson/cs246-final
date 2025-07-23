@@ -8,7 +8,7 @@ ChessBoard::ChessBoard():
 
 // For consistency, the only methods that should directly
 // access grid are these 2
-Piece ChessBoard::getPiece(Tile t) {
+Piece ChessBoard::getPiece(Tile t) { // O(1)
     try { return grid.at(t.row).at(t.col); }
     catch (std::out_of_range &r) {
         cerr << "getPiece(): Tile out of range: " << t.row << " " << t.col << endl;
@@ -16,16 +16,16 @@ Piece ChessBoard::getPiece(Tile t) {
     }
 }
 
-void ChessBoard::setPiece(Tile t, Piece p) {
+void ChessBoard::setPiece(Tile t, Piece p) { // O(1)
     grid.at(t.row).at(t.col) = p;
     notifyObservers(t);
 }
 
-void ChessBoard::removePiece(Tile t) {
+void ChessBoard::removePiece(Tile t) { // O(1)
     setPiece(t, EMPTY_PIECE);
 }
 
-Colour ChessBoard::getColour (Tile t) {
+Colour ChessBoard::getColour (Tile t) { // O(1)
     return getPiece(t).colour;
 }
 

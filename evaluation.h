@@ -2,12 +2,12 @@
 #define __EVALUATION_H__
 #include <map>
 #include "structs.h"
-#include "chessboard.h"
+#include "boardmanager.h"
 
 // Evaluation functions.
 int getPieceValue(Piece p);
 int getPositionValue(Piece p, Tile t);
-int getEvaluationValue(ChessBoard &);
+int getEvaluationValue(BoardManager &);
 
 // Evaluation values from:
 // https://www.chessprogramming.org/Simplified_Evaluation_Function
