@@ -210,7 +210,9 @@ void GameController::runGame() {
             ++turnNumber;
             boardManager.getMoveMaker().makeMove(play);
 
-            string responseString = puzzle.getFileInput(moves);
+            // puzzle response.
+            moves = boardManager.getMoveGenerator().generateLegalMoves();
+            Move response = puzzle->getFileInput();
             boardManager.getMoveMaker().makeMove(response);
         
         // default mode
