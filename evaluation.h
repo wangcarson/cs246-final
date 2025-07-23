@@ -11,6 +11,7 @@ int getEvaluationValue(ChessBoard &);
 
 // Evaluation values from:
 // https://www.chessprogramming.org/Simplified_Evaluation_Function
+const int MAX_EVAL = 32000; // approximate
 
 // Position values
 const std::vector<int> PAWN_VALUES = {

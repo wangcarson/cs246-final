@@ -30,6 +30,7 @@ int getPositionValue(Piece p, Tile t) {
     }
 }
 
+// positive for white, negative for black.
 int getEvaluationValue(ChessBoard &b) {
     int eval = 0;
     for (int i = 0; i < BOARD_ROWS; ++i) {

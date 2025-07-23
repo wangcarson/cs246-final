@@ -3,6 +3,7 @@
 #include "player-computer.h"
 #include <stdexcept>
 #include "evaluation.h"
+#include "player-engine.h"
 using namespace std;
 
 GameController::GameController(istream &in, bool debug): in{in}, debug{debug} { // other fields are default constructed
@@ -28,7 +29,7 @@ unique_ptr<Player> GameController::getPlayer(string s) {
     } else if (s == "computer3" || s == "3") {
         return make_unique<Computer>(3, boardManager);
     } else if (s == "computer4" || s == "4") {
-        return make_unique<Computer>(4, boardManager);
+        return make_unique<Engine>(boardManager);
     } else {
         throw invalid_argument("Invalid player: " + s);
     }
