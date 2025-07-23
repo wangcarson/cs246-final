@@ -182,22 +182,35 @@ void GameController::runGame() {
         } else if (mode == Mode::Puzzle) {
             // setup new position
             cout << "Setting up puzzle..." << endl;
-            string p = puzzle.getPosition();
-            Colour c = puzzle.getStartColour();
-            boardManager.init(p, c);
+            string p = puzzle->getFileInput();
+            boardManager.init(p);
 
             auto moves = boardManager.getMoveGenerator().generateLegalMoves();
             Move play;
-            while (true) {
+            try {
                 play = puzzlePlayer->getLegalMove(moves);
-                if (puzzle.isCorrectMove(play)) {
-                    break;
-                }
-                cout << "Incorrect move! Try again." << endl;
+            } catch (eof_error &r) {
+                break;
+            } catch (input_resign &r) {
+                resetState();
+                continue;
+            } catch (input_undo &r) {
+                --turnNumber;
+                --turnNumber;
+                boardManager.getMoveMaker().undoMove(); // response move
+                boardManager.getMoveMaker().undoMove(); // player move
+                continue;
             }
+            // verify correct move.
+            if (!puzzle->isCorrectMove(play)) {
+                cout << "Incorrect move! Try again." << endl;
+                continue;
+            }
+            // make move.
+            ++turnNumber;
             boardManager.getMoveMaker().makeMove(play);
 
-            Move response = puzzle.getResponse(moves);
+            string responseString = puzzle.getFileInput(moves);
             boardManager.getMoveMaker().makeMove(response);
         
         // default mode

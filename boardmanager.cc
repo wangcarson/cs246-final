@@ -10,9 +10,14 @@ BoardManager::BoardManager():
     gameStateChecker{board, moveGenerator} {}
 
 // Initializing state and board.
-void BoardManager::init(string position, Colour starting) {
+void BoardManager::init(string position) {
     // initialize state
-    moveMaker.initBoardState(starting);
+    char ch = position.back();
+    Colour c;
+    if (ch == 'w') c = Colour::White;
+    else if (ch == 'b') c = Colour::Black;
+    else throw invalid_argument("FEN string has invalid colour.");
+    moveMaker.initBoardState(c);
     
     // initialize grid to default
     board.clearGrid();
