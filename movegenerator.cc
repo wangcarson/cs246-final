@@ -179,7 +179,7 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
     for (auto end : captureTiles) {
         Piece endPiece = board.getPiece(end);
 
-        if (board.isOccupied(end) && board.getColour(end) == Colour::Black) {
+        if (board.isOccupied(end) && endPiece.isOppositeColour(c)) {
             if (promotionAdd) {
                 for (const auto pieceType : PROMOTION_PIECES) {
                     Move m{MoveType::PromotionCapture, startPiece, start, end};
@@ -205,7 +205,7 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
         Tile leftTile = start + Tile{0, -1};
         Tile rightTile = start + Tile{0, 1};
         if (epTile == leftTile || epTile == rightTile) {
-            Move m{MoveType::EnPassant, startPiece, start, epTile};
+            Move m{MoveType::EnPassant, startPiece, start, epTile + Tile{forward, 0}};
             m.setCapturePiece(epPiece);
             legalList.emplace_back(m);
         }
@@ -249,7 +249,6 @@ vector<Move> MoveGenerator::generatePseudoMoves(Colour c) {
         for(int j = 0; j < BOARD_COLS; ++j) {
             Tile t{i, j};
             if (c == board.getColour(t)) {
-                cout << "Testing tile " << t << endl;
                 vector<Move> currentTileLegalMoves = getPseudoMoves(t);
 
                 // add to legal list
@@ -268,17 +267,19 @@ vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
     vector<Move> legalList;
     vector<Move> pseudoList = generatePseudoMoves(c);
 
-    for (const auto m : pseudoList) {
-        cout << "Test move: " << m;
-        moveMaker.makeMove(m);
-        if (!findCheckMoves(c)) {
-            cout << " Legal!";
-            legalList.emplace_back(m);
-        } else {
-            cout << " Not legal.";
+    try {
+        for (const auto m : pseudoList) {
+            moveMaker.makeMove(m);
+            if (!findCheckMoves(c)) {
+                legalList.emplace_back(m);
+            } else {
+            }
+            moveMaker.undoMove();
         }
-        cout << endl;
-        moveMaker.undoMove();
+    } catch (invalid_argument &r) {
+        cerr << r.what() << endl;
+        cerr << "In undoMove()" << endl;
+        throw;
     }
     return legalList;
 }

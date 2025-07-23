@@ -1,12 +1,20 @@
 # Currently working on
 movegenerator.cc
 
+# NEW! Bug fixes:
+- setCapturePiece() in move did nothing before - changed
+- fixed capture and castle restoration in undoMove()
+- added en passant restoration in undoMove()
+- bug in capture moves for pawn in MoveGenerator
+
 # Things to do
-- add big 5 ctors to Piece struct since we need move ctor.
-- GameStateChecker::isValidBoard()
-- Bot::getLegalMove()
+- Add case in generateLegalMoves() where the move is castling. For this case, make sure the king isn't in check at any point in path. 
 
 # Finished tasks
+- add big 5 ctors to Piece struct since we need move ctor. (we just use default move ctor since Piece has no fields with dynamic memory)
+
+- GameStateChecker::isValidBoard()
+- Bot::getLegalMove()
 if a king moves both types of castling are no longer allowed. (DONE)
 if a rook moves that sides castling is now illegal. (DONE)
 - GameStateChecker::isCheck()

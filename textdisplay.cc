@@ -15,8 +15,15 @@ void TextDisplay::notify(Tile t) {
     // cerr << "TextDisplay notified: Tile(" << t.row << ", " << t.col << ")" << endl; // debug
 
     if (board.isOccupied(t)) {
-        Piece c = board.getPiece(t);
-        display[t.row][t.col] = getPieceChar(c);
+        Piece p = board.getPiece(t);
+        char ch;
+        try { ch = getPieceChar(p); }
+        catch (invalid_argument &r) {
+            cerr << r.what() << endl;
+            cerr << "called with tile " << t << endl;
+            throw;
+        }
+        display[t.row][t.col] = ch;
     
     } else {
         display[t.row][t.col] = (t.row+t.col) % 2 == 0 ? '_' : ' ';

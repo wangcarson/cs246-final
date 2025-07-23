@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-const string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+const string DEFAULT_POSITION = "rnbqkbnr/ppppbppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR";
 
 BoardManager::BoardManager(): 
     board{}, 

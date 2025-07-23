@@ -108,35 +108,41 @@ void GameController::start() {
         } else if (mode == Mode::Game) {
             Colour c = boardManager.getMoveMaker().getTurn();
             Move m;
-            if (c == Colour::White) { // get move from player
-                try {
-                    cerr << "White to play." << endl;
-                    m = whitePlayer->getLegalMove();
-                } catch (eof_error &r) { // EOF: end game
-                    break;
-                } catch (resign_error &r) {
-                    cerr << "White resigned. Black wins." << endl;
+            try {
+                cerr << c << " to play." << endl;
+                m = (c == Colour::White) ? whitePlayer->getLegalMove() : blackPlayer->getLegalMove();
+            } catch (eof_error &r) { // EOF: end game
+                break;
+            } catch (resign_error &r) {
+                cerr << c << " resigned." << endl;
+                if (c == Colour::White) {
                     ++blackScore;
-                    restart();
-                    continue;
-                }
-            } else {
-                try {
-                    cerr << "Black to play." << endl;
-                    m = blackPlayer->getLegalMove();
-                } catch (eof_error &r) { // EOF
-                    break;
-                } catch (resign_error &r) {
-                    cerr << "Black resigned. White wins." << endl;
+                } else {
                     ++whiteScore;
-                    restart();
-                    continue;
                 }
+                restart();
+                continue;
+            } catch (undo_error &r) {
+                boardManager.getMoveMaker().undoMove();
+                
+                debug(); // debugging
+                cout << *td << endl;
+                continue;
             }
-            boardManager.getMoveMaker().makeMove(m); // m is now a legal move 
+
+            boardManager.getMoveMaker().makeMove(m);
+
+            debug(); // debugging
             cout << *td << endl;
 
+            // colour is now switched.
+            c = boardManager.getMoveMaker().getTurn();
+            if (boardManager.getGameStateChecker()->isCheck(c)) {
+                cout << c << " is in check." << endl;
+            }
+
             if (boardManager.getGameStateChecker()->isMate(c)) {
+                cout << "Checkmate! " << c << " wins!" << endl;
                 if (c == Colour::White) {
                     ++whiteScore;
                 } else {
@@ -145,6 +151,7 @@ void GameController::start() {
                 restart();
                 
             } else if (boardManager.getGameStateChecker()->isDraw(c)) {
+                cout << "Stalemate!" << endl;
                 whiteScore += 0.5;
                 blackScore += 0.5;
                 restart();
@@ -183,3 +190,16 @@ void GameController::start() {
     cout << "Black: " << blackScore << endl;
 }
 
+void GameController::debug() {
+    cout << "------------------------------------" << endl;
+    auto ep = boardManager.getMoveMaker().getEnPassant();
+    if (ep.has_value()) cout << "En Passant: " << ep.value() << endl;
+    else cout << "En Passant: None" << endl;
+    
+    auto cr = boardManager.getMoveMaker().getCastlingRights();
+    cout << "Castle White K: " << cr.at(Colour::White).at(CastleType::KingSide) << endl;
+    cout << "Castle White Q: " << cr.at(Colour::White).at(CastleType::QueenSide) << endl;
+    cout << "Castle Black K: " << cr.at(Colour::Black).at(CastleType::KingSide) << endl;
+    cout << "Castle Black Q: " << cr.at(Colour::Black).at(CastleType::QueenSide) << endl;
+    cout << "------------------------------------" << endl;
+}

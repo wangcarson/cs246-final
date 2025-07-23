@@ -34,6 +34,7 @@ class GameController {
   public:
     GameController();
     ~GameController();
+    void debug();
     void start();
 };
 

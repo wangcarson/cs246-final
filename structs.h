@@ -16,6 +16,11 @@ class resign_error: public std::runtime_error {
     explicit resign_error(const std::string& msg = ""): runtime_error(msg) {}
 };
 
+class undo_error: public std::runtime_error {
+  public:
+    explicit undo_error(const std::string& msg = ""): runtime_error(msg) {}
+};
+
 class eof_error: public std::runtime_error {
   public:
     explicit eof_error(const std::string& msg = ""): runtime_error(msg) {}
@@ -80,6 +85,10 @@ struct Piece {
         }
     }
 
+    bool operator==(const Piece& other) const {
+        return (colour == other.colour) && (type == other.type);
+    }
+    // required for map
     bool operator<(const Piece& other) const {
         if (colour != other.colour)
             return colour < other.colour;
@@ -124,6 +133,8 @@ class Move {
     bool isEnPassant() const;
     bool isCastle() const;
     bool isDoubleAdvance() const;
+    bool isQCastle() const;
+    bool isKCastle() const;
 };
 
 ////////////////////////////////////////////////////////////
@@ -141,6 +152,9 @@ struct MoveData {
 };
 
 // debugging
+std::ostream &operator<<(std::ostream &out, const PieceType &p);
+std::ostream &operator<<(std::ostream &out, const Colour &c);
+
 std::ostream &operator<<(std::ostream &out, const Piece &p);
 std::ostream &operator<<(std::ostream &out, const Tile &t);
 std::ostream &operator<<(std::ostream &out, const Move &m);

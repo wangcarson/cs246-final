@@ -15,6 +15,7 @@ void MoveMaker::initBoardState() {
 
 // assumes m is a legal move
 void MoveMaker::makeMove(Move m) {
+    // cout << "Make move: " << m << endl;
     previous.emplace_back(MoveData{m, BoardState{turn, enPassant, castlingRights}});
 
     // add and remove pieces.
@@ -29,10 +30,10 @@ void MoveMaker::makeMove(Move m) {
     auto [r, c] = m.getFrom();
     auto [nr, nc] = m.getTo();
     if (m.isCastle()) {
-        Tile oldRookTile = c < nc ? Tile{r, 7} : Tile{r, 1};
+        Tile oldRookTile = c < nc ? Tile{r, 7} : Tile{r, 0};
         Tile newRookTile{r, (c+nc)/2};
+        board.setPiece(newRookTile, board.getPiece(oldRookTile));
         board.removePiece(oldRookTile);
-        board.setPiece(newRookTile, Piece{PieceType::Rook, turn});
     
     } else if (m.isEnPassant()) {
         Tile captureTile{r, nc};
@@ -45,10 +46,12 @@ void MoveMaker::makeMove(Move m) {
         castlingRights.at(turn).at(CastleType::QueenSide) = false;
 
     } else if (m.getPiece().isRook()) {
-        if (m.getTo().col == 0) {
+        if (m.getFrom().col == 0) {
             castlingRights.at(turn).at(CastleType::QueenSide) = false;
-        } else if (m.getTo().col == 7) {
+        } else if (m.getFrom().col == 7) {
             castlingRights.at(turn).at(CastleType::KingSide) = false;
+        } else {
+            throw runtime_error("makeMove(): ???"); // should never in theory happen
         }
     }
 
@@ -60,58 +63,54 @@ void MoveMaker::makeMove(Move m) {
     }
 
     // change turn
-    turn = turn == Colour::White ? Colour::Black : Colour::White;
+    turn = (turn == Colour::White) ? Colour::Black : Colour::White;
 }
 
 void MoveMaker::undoMove() {
     // get previous move.
     if (previous.size() == 0) return;
     MoveData lastMoveData = previous.back();
-    previous.pop_back();
-
     Move lastMove = lastMoveData.move;
+
     Tile fromTile = lastMove.getFrom();
     Tile toTile = lastMove.getTo();
-    Tile temp;
+    previous.pop_back();
+    // cout << "UNDO move: " << lastMove << endl;
 
+    // revert piece to original tile
     board.setPiece(fromTile, lastMove.getPiece());
     board.removePiece(toTile);
 
-     if (lastMove.getType() == MoveType::KingSideCastle){
+    auto [r, c] = lastMove.getFrom();
+    auto [nr, nc] = lastMove.getTo();
 
-        
-        temp.row = fromTile.row;
-        temp.row = fromTile.col-1;
+    if (lastMove.isCastle()){
+        Tile oldRookTile = c < nc ? Tile{r, 7} : Tile{r, 0};
+        Tile newRookTile{r, (c+nc)/2};
+        board.setPiece(oldRookTile, board.getPiece(newRookTile));
+        board.removePiece(newRookTile);
 
-        board.setPiece(Tile {fromTile.row,7},board.getPiece(temp));
-
-        board.removePiece(temp);
-
-
-    }else if (lastMove.getType() == MoveType::QueenSideCastle){
-        
-        temp.row = fromTile.row;
-        temp.row = fromTile.col+1;
-
-        board.setPiece(Tile {fromTile.row,0},board.getPiece(temp));
-
-        board.removePiece(temp);
+    } else if (lastMove.isEnPassant()) {
+        Tile captureTile{r, nc};
+        board.setPiece(captureTile, lastMove.getCapturePiece());
 
     } else if (lastMove.isCapture()) {
-
-        board.setPiece(fromTile, lastMove.getCapturePiece());
-
+        board.setPiece(toTile, lastMove.getCapturePiece());
     }
     
     // reverting all invisible board states. (en passant/castling)
     BoardState lastState = lastMoveData.oldState;
-    setEnPassant(lastState.enPassant);
-    setCastlingRights(lastState.castlingRights);
+    turn = lastState.turn;
+    enPassant = lastState.enPassant;
+    castlingRights = lastState.castlingRights;
 }
 
 // board state accessors.
 Colour MoveMaker::getTurn() { return turn; }
 std::optional<Tile> MoveMaker::getEnPassant() { return enPassant; }
+std::map<Colour, std::map<CastleType, bool>> MoveMaker::getCastlingRights() {
+    return castlingRights;
+}
 bool MoveMaker::getCastlingRights(Colour c, CastleType s) {
     return castlingRights.at(c).at(s);
 }

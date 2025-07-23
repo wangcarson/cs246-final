@@ -3,13 +3,14 @@ checkmate
 stalemate
 pinned piece
 
-en passant
-move e2 e4
-move h7 h6
-move e4 e5
-move d7 d5
+    # of legal moves
+             v 
+move e2 e4 # 20
+move h7 h6 # 20
+move e4 e5 # 30
+move d7 d5 #
 move e5 d6 # en passant
-move e7 e6
+move e7 e6 #
 move d6 d7 # check
 
 move b8 d7 # knight capture
@@ -26,5 +27,6 @@ move d7 d8 # promotion
 
 
 promotion
+castling + states
 
 checkmate with pinned piece

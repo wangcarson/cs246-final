@@ -29,6 +29,7 @@ class MoveMaker: public Subject {
     // board state accessors.
     Colour getTurn();
     std::optional<Tile> getEnPassant();
+    std::map<Colour, std::map<CastleType, bool>> getCastlingRights();
     bool getCastlingRights(Colour c, CastleType s);
 
     // // board state mutators.

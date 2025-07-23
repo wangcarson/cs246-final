@@ -31,12 +31,16 @@ Move Human::getLegalMove() {
             }
 
             auto moves = boardManager.getMoveGenerator()->generateLegalMoves(boardManager.getMoveMaker().getTurn());
-            cout << endl << "Generate Legal Moves!" << endl;
-            cout << moves.size() << " total moves" << endl;
+            
+            // Debugging
+            cout << "------------------------------------" << endl;
+            cout << "Legal moves:" << endl;
+            cout << moves;
+            cout << "------------------------------------" << endl;
 
             for (auto it : moves) {
                 if (it.getFrom() == start && it.getTo() == end) {
-                    cerr << "Legal move!" << endl;
+                    cout << "Legal move!" << endl;
                     
                     // input for promotion
                     if (it.isPromotion()) {
@@ -55,10 +59,12 @@ Move Human::getLegalMove() {
                     return it;
                 }
             }
-            cerr << "Illegal move." << endl;
+            cout << "Illegal move." << endl;
 
         } else if (cmd == "resign") {
             throw resign_error();
+        } else if (cmd == "undo") {
+            throw undo_error();
         }
     }
 }
