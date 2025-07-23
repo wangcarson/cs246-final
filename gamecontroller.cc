@@ -3,6 +3,8 @@
 #include "player-computer.h"
 #include <stdexcept>
 #include "evaluation.h"
+#include "puzzle.h"
+
 #include "player-engine.h"
 using namespace std;
 
@@ -177,7 +179,7 @@ void GameController::runGame() {
             }
         
         // normal mode.
-        } else {
+        } else if (mode == Mode::Normal){
             in >> cmd;
             if (in.fail()) break;
 
@@ -198,6 +200,8 @@ void GameController::runGame() {
                 cout << endl << ">>> Setup Mode <<<" << endl;
                 mode = Mode::Setup;
             }
+        }else if (mode == Mode::Puzzle){
+            
         }
     } // while loop breaks on EOF
 
