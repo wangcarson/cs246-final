@@ -1,7 +1,7 @@
 #include "player-human.h"
 using namespace std;
 
-Human::Human(istream &input): in{input} {}
+Human::Human(istream &input,Colour color): in{input},color{color} {}
 
 // Gets a legal move from standard input.
 Move Human::getLegalMove(const vector<Move> &legalMoves) const {
@@ -36,6 +36,14 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
                         char promote;
                     	Piece p;
                     	in >> promote;
+
+                        if (color==Colour::Black && promote>96){
+                            promote-=32;
+                        }else if (color==Colour::White && promote<91){
+                            promote+=32;
+                        }
+
+
                     	try {
                             p = parsePiece(promote);
                     	} catch (invalid_argument &r) {

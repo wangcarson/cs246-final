@@ -36,3 +36,9 @@ if a rook moves that sides castling is now illegal. (DONE)
 - GameStateChecker::isCheck()
 - GameStateChecker::isDraw() - check for insufficient material
 - MoveMaker::undoMove()
+
+
+
+-----
+en passonat changes to the wrong color
+pawn no detect checks
