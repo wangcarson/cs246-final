@@ -30,8 +30,9 @@ int getPositionValue(Piece p, Tile t) {
     }
 }
 
-// positive for white, negative for black.
+// positive for how good position is the current player is.
 int getEvaluationValue(BoardManager &b) {
+    int n = static_cast<int>(b.getMoveMaker().getTurn());
     int eval = 0;
     for (int i = 0; i < BOARD_ROWS; ++i) {
         for (int j = 0; j < BOARD_COLS; ++j) {
@@ -41,5 +42,5 @@ int getEvaluationValue(BoardManager &b) {
             eval += getPositionValue(p, t);
         }
     }
-    return eval;
+    return n*eval;
 }

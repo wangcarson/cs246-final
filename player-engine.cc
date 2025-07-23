@@ -5,9 +5,9 @@ using namespace std;
 
 Engine::Engine(BoardManager &bm): bm{bm} {}
 
-// returns negative for better positives
+// returns negative for better positions
 int Engine::alphaBeta(int depth, int alpha, int beta, Colour c) const {
-    if (depth == 0) return static_cast<int>(c)*getEvaluationValue(bm);
+    if (depth == 0) return getEvaluationValue(bm);
 
     auto legalMoves = bm.getMoveGenerator().generateLegalMoves();
     if (legalMoves.empty()) {
