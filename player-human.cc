@@ -52,10 +52,10 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
         
         // we have to be a bit creative with handling resign.
         } else if (cmd == "resign") {
-            throw resign_error();
+            throw input_resign();
         
         } else if (cmd == "undo") {
-            throw undo_error();
+            throw input_undo();
         }
     }
 }

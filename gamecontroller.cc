@@ -4,92 +4,93 @@
 #include <stdexcept>
 using namespace std;
 
-GameController::GameController(bool debug): 
-debug{debug}, td{new TextDisplay{boardManager.getBoard()}} /*, gd{boardManager}*/ { // other fields are default constructed
+GameController::GameController(istream &in, bool debug): in{in}, debug{debug} { // other fields are default constructed
+    td = new TextDisplay{boardManager.getBoard()};
     boardManager.getBoard().attach(td);
+
+    players.emplace(Colour::White, nullptr);
+    players.emplace(Colour::Black, nullptr);
 }
 
-GameController::~GameController() {
-    delete whitePlayer;
-    delete blackPlayer;
-}
-
-// Get player object corresponding to s. Allocates dynamic memory.
-Player *GameController::getPlayer(string s) {
+// Creates a Player object corresponding to string `s`.
+// Returns as a smart pointer (transfers ownership).
+unique_ptr<Player> GameController::getPlayer(string s) {
     if (s == "h" || s == "human") {
-        return new Human(cin);
+        return make_unique<Human>(in);
     } else if (s == "computer1" || s == "1") {
-        return new Computer(1);
+        return make_unique<Computer>(1);
     } else if (s == "computer2" || s == "2") {
-        return new Computer(2);
+        return make_unique<Computer>(2);
     } else if (s == "computer3" || s == "3") {
-        return new Computer(3);
+        return make_unique<Computer>(3);
     } else if (s == "computer4" || s == "4") {
-        return new Computer(4);
+        return make_unique<Computer>(4);
     } else {
-        throw invalid_argument("Invalid player type.");
+        throw invalid_argument("Invalid player: " + s);
     }
 }
 
-// resets fields for new game
-void GameController::restart() {
-    cout << "White " << whiteScore << " - " << blackScore << " Black" << endl << endl;
+// Resets states for new game.
+void GameController::resetState() {
+    cout << "White " << scores.at(Colour::White) << " - " << scores.at(Colour::Black) << " Black" << endl << endl;
     
+    // reset states.
+    players.at(Colour::White).reset(); // deallocates memory
+    players.at(Colour::Black).reset();
     turnNumber = 1;
     mode = Mode::Normal;
     boardManager.init();
-    delete whitePlayer;
-    delete blackPlayer;
 }
 
-void GameController::start() {
-    string cmd;
-    try {
-        boardManager.init(); // add error handling
-        cerr << endl << "Starting program..." << endl;
-        cout << *td  << endl;
-    } catch (...) {
+// Input management and error handling for program.
+void GameController::runGame() {
+    // initialize board and print.
+    try { boardManager.init(); }
+    catch (...) {
         throw runtime_error("GameController::start(): Error with initializing board");
     }
-
+    cout << endl << "Starting program..." << endl;
+    cout << *td  << endl;
     cout << endl << ">>> Normal Mode <<<" << endl;
+    
+    string cmd;
     while (true) {
-        ///////////////////////////////////////////////////////////////////
+        // setup mode.
         if (mode == Mode::Setup) {
-            cin >> cmd;
-            if (cin.fail()) break;
+            in >> cmd;
+            if (in.fail()) break;
 
             if (cmd == "+") { // adding pieces
                 char p;
                 string t;
-                cin >> p >> t;
+                in >> p >> t;
                 try {
                     Piece piece = parsePiece(p);
                     Tile tile = parseTile(t);
                     boardManager.getBoard().setPiece(tile, piece);
-                    cout << *td << endl;
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
                 } catch (...) {
                     cerr << "+: Error" << endl;
                 }
-            
+                cout << *td << endl;
+                
             } else if (cmd == "-") { // removing pieces
                 string s;
-                cin >> s;
+                in >> s;
                 try {
                     Tile t = parseTile(s);
                     boardManager.getBoard().removePiece(t);
-                    cout << *td << endl;
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
                 } catch (...) {
                     cerr << "-: Error" << endl;
                 }
+                cout << *td << endl;
             
             } else if (cmd == "=") { // changing starting colour
                 string c;
-                cin >> c;
+                in >> c;
                 if (c == "white") {
                     boardManager.getMoveMaker().setTurn(Colour::White);
                 } else if (c == "black") {
@@ -104,95 +105,94 @@ void GameController::start() {
                     cout << endl << ">>> Normal Mode <<<" << endl;
                 } else {
                     cerr << "Invalid board. Please correct before exiting setup." << endl;
-                }   
+                }
             }
 
-        ///////////////////////////////////////////////////////////////////
+        // game mode.
         } else if (mode == Mode::Game) {
-            auto moves = boardManager.getMoveGenerator().generateLegalMoves(boardManager.getMoveMaker().getTurn());
-            if (debug) debugBoard(moves); // debugging
-            cout << *td << endl;
+            Colour turn = boardManager.getMoveMaker().getTurn();
+            Colour opponent = oppositeColour(turn);
+            auto legalMoves = boardManager.getMoveGenerator().generateLegalMoves(turn);
 
-            Colour c = boardManager.getMoveMaker().getTurn();
+            // output board and debug info
+            if (debug) debugBoard(legalMoves);
+            cout << *td << endl << endl;
+            cerr << turn << " to play." << endl;
+            auto player = players.at(turn).get();
+            
             Move m;
             try {
-                cerr << endl << c << " to play." << endl;
-                m = (c == Colour::White) ? whitePlayer->getLegalMove(moves) : blackPlayer->getLegalMove(moves);
-
-            } catch (eof_error &r) { // EOF: end game
+                m = player->getLegalMove(legalMoves);
+            } catch (eof_error &r) {
                 break;
-            } catch (resign_error &r) {
-                cerr << c << " resigned." << endl;
-                if (c == Colour::White) {
-                    ++blackScore;
-                } else {
-                    ++whiteScore;
-                }
-                restart();
+
+            } catch (input_resign &r) {
+                cerr << turn << " resigned." << endl;
+                ++scores.at(opponent);
+                resetState();
                 continue;
-            } catch (undo_error &r) {
+            
+            } catch (input_undo &r) {
                 --turnNumber;             
                 boardManager.getMoveMaker().undoMove();
                 continue;
             }
 
+            // make the move.
             ++turnNumber;
             boardManager.getMoveMaker().makeMove(m);
 
             // colour is now switched.
-            c = boardManager.getMoveMaker().getTurn();
-            if (boardManager.getGameStateChecker().isCheck(c)) {
-                cout << c << " is in check." << endl;
+            if (boardManager.getGameStateChecker().isCheck(opponent)) {
+                cout << turn << " is in check." << endl;
             }
 
-            if (boardManager.getGameStateChecker().isMate(c)) {
-                cout << "Checkmate! " << c << " wins!" << endl;
-                if (c == Colour::White) {
-                    ++whiteScore;
-                } else {
-                    ++blackScore;
-                }
-                restart();
+            if (boardManager.getGameStateChecker().isMate(opponent)) {
+                cout << "Checkmate! " << turn << " wins!" << endl;
+                ++scores.at(turn);
+                resetState();
+                continue;
                 
-            } else if (boardManager.getGameStateChecker().isDraw(c)) {
+            } else if (boardManager.getGameStateChecker().isDraw(opponent)) {
                 cout << "Stalemate!" << endl;
-                whiteScore += 0.5;
-                blackScore += 0.5;
-                restart();
+                scores.at(turn) += 0.5;
+                scores.at(opponent) += 0.5;
+                resetState();
+                continue;
             }
         
-        ///////////////////////////////////////////////////////////////////
+        // normal mode.
         } else {
-            cin >> cmd;
-            if (cin.fail()) break;
+            in >> cmd;
+            if (in.fail()) break;
 
             if (cmd == "game") {
                 string p1, p2;
-                cin >> p1 >> p2;
+                in >> p1 >> p2;
                 try {
-                    whitePlayer = getPlayer(p1); // pick human or computer
-                    blackPlayer = getPlayer(p2);
+                    players.at(Colour::White) = getPlayer(p1); // gets either human or computer
+                    players.at(Colour::Black) = getPlayer(p2);
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
                     continue;
                 }
-
-                mode = Mode::Game;
                 cout << endl << ">>> Game Mode <<<" << endl;
+                mode = Mode::Game;
 
             } else if (cmd == "setup") {
-                mode = Mode::Setup;
                 cout << endl << ">>> Setup Mode <<<" << endl;
+                mode = Mode::Setup;
             }
         }
-    }
+    } // while loop breaks on EOF
 
-    // print scores on break
+    // print scores
     cout << "Final Score:" << endl;
-    cout << "White: " << whiteScore << endl;
-    cout << "Black: " << blackScore << endl;
+    cout << "White: " << scores.at(Colour::White) << endl;
+    cout << "Black: " << scores.at(Colour::Black) << endl;
 }
 
+//  Prints board info for debugging.
 void GameController::debugBoard(const vector<Move> &moves) {
     cout << endl << "====================================" << endl;
     cout << "              TURN " << turnNumber << endl;

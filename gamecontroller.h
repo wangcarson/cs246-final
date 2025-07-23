@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <optional>
+#include <map>
 #include <memory>
 
 #include "structs.h"
@@ -21,30 +21,41 @@ enum class Mode { Setup, Game, Normal };
 // implementation included as well (remove later)
 // for input and output (maybe change this)
 class GameController {
-    int turnNumber = 1;
-    bool debug = false;
-    Mode mode = Mode::Normal;
-
     BoardManager boardManager;
-    
-    TextDisplay *td;
+
+    std::istream &in;
+    TextDisplay *td = nullptr;
     // GraphicsDisplay gd;
 
-    Player *whitePlayer; // only set when 'game' cmd is run (so can't be reference)
-    Player *blackPlayer; // don't change to unique_ptr yet
+    Mode mode = Mode::Normal;
+    int turnNumber = 1;
+    bool debug = false;
 
-    int whiteScore = 0; // TODO: Change to map
-    int blackScore = 0;
+    // Players are null until the 'game' cmd is run (so must be pointers)
+    std::map<Colour, std::unique_ptr<Player>> players;
 
-    // private helper functions
-    Player *getPlayer(std::string s);
-    void restart();
+    std::map<Colour, int> scores = {
+        {Colour::White, 0}, 
+        {Colour::Black, 0}
+    };
+
+    // Creates a Player object corresponding to string `s`.
+    // Returns as a smart pointer (transfers ownership).
+    std::unique_ptr<Player> getPlayer(std::string s);
+
+    // Restarts the game by resetting states.
+    void resetState();
+
+    // Private method for debugging only (prints board info).
+    void debugBoard(const std::vector<Move> &moves);
 
   public:
-    GameController(bool debug);
-    ~GameController();
-    void debugBoard(const std::vector<Move> &moves);
-    void start();
+    GameController(std::istream &in, bool debug);
+
+    // Main function for controlling the program. Should be called by `main()`.
+    // Manages input and error handling.
+    void runGame();
+
 };
 
 #endif

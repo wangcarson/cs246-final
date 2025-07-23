@@ -27,9 +27,9 @@ class MoveMaker: public Subject {
     void undoMove();
 
     // board state accessors.
-    Colour getTurn() const;
-    std::optional<Tile> getEnPassant() const;
-    std::map<Colour, std::map<CastleType, bool>> getCastlingRights() const;
+    Colour getTurn() const noexcept;
+    std::optional<Tile> getEnPassant() const noexcept;
+    std::map<Colour, std::map<CastleType, bool>> getCastlingRights() const noexcept;
     bool getCastlingRights(Colour c, CastleType s) const;
 
     // // board state mutators.

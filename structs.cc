@@ -2,6 +2,15 @@
 #include <iostream>
 using namespace std;
 
+Colour oppositeColour(Colour c) {
+    switch (c) {
+        case Colour::Black: return Colour::White;
+        case Colour::White: return Colour::Black;
+        default:
+            throw std::invalid_argument("oppositeColour(): Input colour must be White or Black");
+    }
+}
+
 Move::Move() {}
 Move::Move(MoveType type, Piece piece, Tile from, Tile to): 
     type{type}, piece{piece}, startTile{from}, endTile{to} {}

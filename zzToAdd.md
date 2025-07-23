@@ -13,11 +13,12 @@ movegenerator.cc
 - bug in capture moves for pawn in MoveGenerator
 
 # Things to do
+- check no memory is leaked
 - change player pointers to smart pointers (and remove dtors - extra credit)
+- Add case in generateLegalMoves() where the move is castling. For this case, make sure the king isn't in check at any point in path. 
 - go over every method we wrote and set them to `const` or `noexcept`
 - computer
-- Add case in generateLegalMoves() where the move is castling. For this case, make sure the king isn't in check at any point in path. 
-- check no memory is leaked
+- graphics display
 
 # Finished tasks
 - separate players.cc and players.h into 6 files

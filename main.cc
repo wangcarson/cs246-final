@@ -12,6 +12,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    GameController g{debug};
-    g.start();
+    GameController g(std::cin, debug);
+    g.runGame();
 }

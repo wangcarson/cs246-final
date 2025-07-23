@@ -6,31 +6,22 @@
 #include <stdexcept>
 #include <vector>
 
-// Board size constant
+// board size constants.
 const int BOARD_ROWS = 8;
 const int BOARD_COLS = 8;
 
-// errors
-class resign_error: public std::runtime_error {
-  public:
-    explicit resign_error(const std::string& msg = ""): runtime_error(msg) {}
-};
-
-class undo_error: public std::runtime_error {
-  public:
-    explicit undo_error(const std::string& msg = ""): runtime_error(msg) {}
-};
-
-class eof_error: public std::runtime_error {
-  public:
-    explicit eof_error(const std::string& msg = ""): runtime_error(msg) {}
-};
+// new exception classes.
+class eof_error: public std::exception {};
+class input_resign: public std::exception {};
+class input_undo: public std::exception {};
 
 ////////////////////////////////////////////////////////////
 
 enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty };
 
 enum class Colour { White = 1, Black = -1, None = 0 };
+Colour oppositeColour(Colour c);
+
 enum class CastleType { KingSide, QueenSide };
 
 ////////////////////////////////////////////////////////////
@@ -69,16 +60,9 @@ struct Piece {
     bool isKnight() const { return type == PieceType::Knight; }
     bool isPawn() const { return type == PieceType::Pawn; }
     bool isEmpty() const { return type == PieceType::Empty; }
+
     bool isColour(Colour c) const { return colour == c; }
-    
-    bool isOppositeColour(Colour c) const {
-        switch (c) {
-            case Colour::Black: return colour == Colour::White;
-            case Colour::White: return colour == Colour::Black;
-            default:
-                throw std::invalid_argument("oppositeColour: Input colour must be White or Black");
-        }
-    }
+    bool isOppositeColour(Colour c) const { return colour == oppositeColour(c); }
 
     bool operator==(const Piece& other) const {
         return (colour == other.colour) && (type == other.type);
