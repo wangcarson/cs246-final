@@ -111,7 +111,7 @@ int main() {
 
         while(cin >> moveToMake && moveToMake!= "*"){
 
-            cout << "move " << moveToMake.substr(0, 2) << " " << moveToMake.substr(2, 2) << endl;
+            cout << moveToMake.substr(0, 2) << " " << moveToMake.substr(2, 2) << endl;
         }
         cout << "PUZZLEEND"<<endl;
     }
