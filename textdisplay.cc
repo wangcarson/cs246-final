@@ -42,7 +42,7 @@ void TextDisplay::print(ostream &out) const {
         }
         cout << endl;
     }
-    cout << "  abcdefgh" << endl;
+    cout << "  abcdefgh";
 }
 
 std::ostream &operator<<(ostream &out, const TextDisplay &s) {

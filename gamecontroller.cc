@@ -2,8 +2,8 @@
 #include <stdexcept>
 using namespace std;
 
-GameController::GameController(): 
-mode{Mode::Normal}, boardManager{}, td{new TextDisplay{boardManager.getBoard()}} /*, gd{boardManager}*/ { // other fields are default constructed
+GameController::GameController(bool debug): 
+debug{debug}, td{new TextDisplay{boardManager.getBoard()}} /*, gd{boardManager}*/ { // other fields are default constructed
     boardManager.getBoard().attach(td);
 }
 
@@ -44,13 +44,13 @@ void GameController::start() {
     string cmd;
     try {
         boardManager.init(); // add error handling
-        cerr << "Board initialized!" << endl;
+        cerr << endl << "Starting program..." << endl;
+        cout << *td  << endl;
     } catch (...) {
-        cerr << "start(): Error with initializing board" << endl;
+        throw runtime_error("GameController::start(): Error with initializing board");
     }
-    cout << *td  << endl;
 
-    cout << "Normal Mode" << endl;
+    cout << endl << ">>> Normal Mode <<<" << endl;
     while (true) {
         ///////////////////////////////////////////////////////////////////
         if (mode == Mode::Setup) {
@@ -99,23 +99,22 @@ void GameController::start() {
             } else if (cmd == "done") {
                 if (boardManager.getGameStateChecker()->isValidBoard()) {
                     mode = Mode::Normal;
-                    cout << "Valid board! Normal Mode" << endl;
+                    cout << endl << ">>> Normal Mode <<<" << endl;
                 } else {
-                    cerr << "Invalid board!" << endl;
+                    cerr << "Invalid board. Please correct before exiting setup." << endl;
                 }   
             }
 
         ///////////////////////////////////////////////////////////////////
         } else if (mode == Mode::Game) {
             auto moves = boardManager.getMoveGenerator()->generateLegalMoves(boardManager.getMoveMaker().getTurn());
-
-            debug(moves); // debugging
+            if (debug) debugBoard(moves); // debugging
             cout << *td << endl;
 
             Colour c = boardManager.getMoveMaker().getTurn();
             Move m;
             try {
-                cerr << c << " to play." << endl;
+                cerr << endl << c << " to play." << endl;
                 m = (c == Colour::White) ? whitePlayer->getLegalMove(moves) : blackPlayer->getLegalMove(moves);
 
             } catch (eof_error &r) { // EOF: end game
@@ -130,8 +129,8 @@ void GameController::start() {
                 restart();
                 continue;
             } catch (undo_error &r) {
-                boardManager.getMoveMaker().undoMove();                
-                cout << *td << endl;
+                --turnNumber;             
+                boardManager.getMoveMaker().undoMove();
                 continue;
             }
 
@@ -177,12 +176,11 @@ void GameController::start() {
                 }
 
                 mode = Mode::Game;
-                cout << "Game Mode" << endl;
-                cout << *td << endl;
+                cout << endl << ">>> Game Mode <<<" << endl;
 
             } else if (cmd == "setup") {
                 mode = Mode::Setup;
-                cout << "Setup Mode" << endl;
+                cout << endl << ">>> Setup Mode <<<" << endl;
             }
         }
     }
@@ -193,8 +191,8 @@ void GameController::start() {
     cout << "Black: " << blackScore << endl;
 }
 
-void GameController::debug(const vector<Move> &moves) {
-    cout << "====================================" << endl;
+void GameController::debugBoard(const vector<Move> &moves) {
+    cout << endl << "====================================" << endl;
     cout << "              TURN " << turnNumber << endl;
     cout << "====================================" << endl;
     cout << "All Legal Moves:" << endl;

@@ -50,8 +50,6 @@ void MoveMaker::makeMove(Move m) {
             castlingRights.at(turn).at(CastleType::QueenSide) = false;
         } else if (m.getFrom().col == 7) {
             castlingRights.at(turn).at(CastleType::KingSide) = false;
-        } else {
-            throw runtime_error("makeMove(): ???"); // should never in theory happen
         }
     }
 

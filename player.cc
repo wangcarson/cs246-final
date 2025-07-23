@@ -64,5 +64,8 @@ Move Human::getLegalMove(const vector<Move> &moves) const {
 Computer::Computer(BoardManager &bm, int level): Player{bm}, level{level} {}
 Move Computer::getLegalMove(const vector<Move> &moves) const {
     // TODO: Actual implementation of bot goes here
-    return moves.at(0);
+    // Maybe make a different class for each type of bot
+    Move move = moves.at(0);
+    cout << move << endl;
+    return move;
 }

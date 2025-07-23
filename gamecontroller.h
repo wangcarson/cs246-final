@@ -15,7 +15,10 @@
 // implementation included as well (remove later)
 // for input and output (maybe change this)
 class GameController {
-    Mode mode;
+    int turnNumber = 1;
+    bool debug = false;
+    Mode mode = Mode::Normal;
+
     BoardManager boardManager;
     
     TextDisplay *td;
@@ -27,16 +30,14 @@ class GameController {
     int whiteScore = 0; // TODO: Change to map
     int blackScore = 0;
 
-    int turnNumber = 1;
-
     // private helper functions
     Player *getPlayer(std::string s);
     void restart();
 
   public:
-    GameController();
+    GameController(bool debug);
     ~GameController();
-    void debug(const std::vector<Move> &moves);
+    void debugBoard(const std::vector<Move> &moves);
     void start();
 };
 

@@ -2,6 +2,7 @@
 movegenerator.cc
 
 # NEW! Bug fixes:
+#### USE -d TAG FOR DEBUGGING ####
 - getLegalMove() for players now takes a vector argument for all legal moves (optimizes it a bit since it prevents generateLegalMoves() from being called more than once every round)
 
 - setCapturePiece() in move did nothing before - changed
