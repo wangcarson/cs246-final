@@ -117,11 +117,10 @@ void GameController::runGame() {
             Colour turn = boardManager.getMoveMaker().getTurn();
             Colour opponent = oppositeColour(turn);
             auto legalMoves = boardManager.getMoveGenerator().generateLegalMoves(turn);
-
+            
             // output board and debug info
-            if (debug) debugBoard(legalMoves);
-            cout << *td << endl << endl;
-            cerr << turn << " to play." << endl;
+            printData(legalMoves);
+            cout << turn << " to play." << endl;
             auto player = players.at(turn).get();
             
             Move m;
@@ -208,22 +207,27 @@ void GameController::runGame() {
 }
 
 //  Prints board info for debugging.
-void GameController::debugBoard(const vector<Move> &moves) {
+void GameController::printData(const vector<Move> &moves) {
     cout << endl << "====================================" << endl;
     cout << "              TURN " << turnNumber << endl;
     cout << "====================================" << endl;
-    cout << "All Legal Moves:" << endl;
-    cout << moves;
-    cout << "====================================" << endl;
-    cout << "Current Board States:" << endl;
-    auto ep = boardManager.getMoveMaker().getEnPassant();
-    if (ep.has_value()) cout << "En Passant: " << ep.value() << endl;
-    else cout << "En Passant: None" << endl;
-    
-    auto cr = boardManager.getMoveMaker().getCastlingRights();
-    cout << "Castle White K: " << cr.at(Colour::White).at(CastleType::KingSide) << endl;
-    cout << "Castle White Q: " << cr.at(Colour::White).at(CastleType::QueenSide) << endl;
-    cout << "Castle Black K: " << cr.at(Colour::Black).at(CastleType::KingSide) << endl;
-    cout << "Castle Black Q: " << cr.at(Colour::Black).at(CastleType::QueenSide) << endl;
-    cout << "====================================" << endl;
+
+    if (debug) {
+        cout << "All Legal Moves:" << endl;
+        cout << moves;
+        cout << "====================================" << endl;
+        cout << "Current Board States:" << endl;
+        auto ep = boardManager.getMoveMaker().getEnPassant();
+        if (ep.has_value()) cout << "En Passant: " << ep.value() << endl;
+        else cout << "En Passant: None" << endl;
+        
+        auto cr = boardManager.getMoveMaker().getCastlingRights();
+        cout << "Castle White K: " << cr.at(Colour::White).at(CastleType::KingSide) << endl;
+        cout << "Castle White Q: " << cr.at(Colour::White).at(CastleType::QueenSide) << endl;
+        cout << "Castle Black K: " << cr.at(Colour::Black).at(CastleType::KingSide) << endl;
+        cout << "Castle Black Q: " << cr.at(Colour::Black).at(CastleType::QueenSide) << endl;
+        cout << "====================================" << endl;
+    }
+
+    cout << *td << endl << endl;
 }

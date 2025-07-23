@@ -189,7 +189,7 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
     
     // capture moves.
     for (auto end : captureTiles) {
-        if (!end.inBoard()) { throw tile_out_of_board("pawnMoveGen end"); } // should never be true if invariants hold
+        if (!end.inBoard()) { throw tile_out_of_board("pawnMoveGen end"); } // should never throw if invariants hold
         Piece endPiece = board.getPiece(end);
 
         if (board.isOccupied(end) && endPiece.isOppositeColour(c)) {
@@ -210,10 +210,10 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
     }
 
     // en passant.
-    // Invariant: epPiece is always opponent colour (should be true)
+    // Invariant: epPiece is always opponent colour (should be true) and epTile is in board
     if (moveMaker.getEnPassant().has_value()) {
         Tile epTile = moveMaker.getEnPassant().value();
-        if (!epTile.inBoard()) { throw tile_out_of_board("pawnMoveGen en passant"); }
+        if (!epTile.inBoard()) { throw tile_out_of_board("pawnMoveGen en passant"); } // should never throw if invariants hold
         Piece epPiece = board.getPiece(epTile);
 
         Tile leftTile = start + Tile{0, -1};
@@ -232,7 +232,6 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
 // Invariant: `start` tile is non-empty and in board. 
 vector<Move> MoveGenerator::getPseudoMoves(Tile t) {
     Colour c = board.getColour(t);
-    if (!t.inBoard()) { throw tile_out_of_board("getPseudoMoves"); }
     Piece curP = board.getPiece(t);
         
     if (curP.isRook()) {

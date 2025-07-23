@@ -44,7 +44,7 @@ class GameController {
     void resetState();
 
     // Private method for debugging only (prints board info).
-    void debugBoard(const std::vector<Move> &moves);
+    void printData(const std::vector<Move> &moves);
 
   public:
     GameController(std::istream &in, bool debug);
@@ -52,7 +52,6 @@ class GameController {
     // Main function for controlling the program. Should be called by `main()`.
     // Manages input and error handling.
     void runGame();
-
 };
 
 #endif

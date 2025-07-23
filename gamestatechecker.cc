@@ -71,7 +71,9 @@ bool GameStateChecker::isMaterialDraw() {
     for (int i = 0; i < BOARD_ROWS; ++i) {
         for (int j = 0; j < BOARD_COLS; ++j) {
             Piece p = board.getPiece({i,j});
+            
             // Not draw when one side has a rook, queen, or pawn.
+            if (p.isEmpty()) continue;
             if (!p.isKing() && !p.isBishop() && !p.isKnight()) return false;
             ++pieceCounts[getPieceChar(p)];
         }
