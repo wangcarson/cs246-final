@@ -13,12 +13,8 @@ movegenerator.cc
 - bug in capture moves for pawn in MoveGenerator
 
 # Things to do
-- check no memory is leaked
-- change player pointers to smart pointers (and remove dtors - extra credit)
-- Add case in generateLegalMoves() where the move is castling. For this case, make sure the king isn't in check at any point in path. 
-- computer
 - graphics display
-
+- puzzle shuffle
 
 # optimizations
 - go over every method we wrote and set them to `const` or `noexcept`
@@ -36,9 +32,3 @@ if a rook moves that sides castling is now illegal. (DONE)
 - GameStateChecker::isCheck()
 - GameStateChecker::isDraw() - check for insufficient material
 - MoveMaker::undoMove()
-
-
-
------
-en passonat changes to the wrong color
-pawn no detect checks
