@@ -7,15 +7,25 @@ using namespace std;
 
 
 string Puzzle::getfileInput(){
+
+    ifstream inFile;
+    inFile.open(fileName);
+
     string stringResponse;
-    getline(puzzleFile,stringResponse);
+    getline(inFile,stringResponse);
+
+    inFile.close();   
     return stringResponse;
 }
 
 bool Puzzle::isCorrectMove(Move inputMove){
 
+    ifstream inFile;
+    inFile.open(fileName);
     string stringResponse;
-    getline(puzzleFile,stringResponse);
+    getline(inFile,stringResponse);
+    inFile.close(); 
+
     stringstream iss {stringResponse};
 
     string temp;

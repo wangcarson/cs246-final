@@ -5,7 +5,7 @@
 
 class Puzzle{
 
-    fstream puzzleFile {"puzzle.txt"};
+    string fileName = "puzzle.txt";
 
     public:
 
