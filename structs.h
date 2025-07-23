@@ -14,6 +14,10 @@ const int BOARD_COLS = 8;
 class eof_error: public std::exception {};
 class input_resign: public std::exception {};
 class input_undo: public std::exception {};
+class tile_out_of_board: public std::out_of_range {
+    public:
+        tile_out_of_board(const std::string &s): out_of_range(s) {}
+};
 
 ////////////////////////////////////////////////////////////
 

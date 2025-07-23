@@ -20,6 +20,8 @@ movegenerator.cc
 - computer
 - graphics display
 
+- for debugging: rewrite Tile ctor to force row and col in [0, 7] - exception otherwise (to 100% make sure we never segmentation fault)
+
 # Finished tasks
 - separate players.cc and players.h into 6 files
 - add big 5 ctors to Piece struct since we need move ctor. (we just use default move ctor since Piece has no fields with dynamic memory)

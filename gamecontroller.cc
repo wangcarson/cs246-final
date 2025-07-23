@@ -132,6 +132,7 @@ void GameController::runGame() {
 
             } catch (input_resign &r) {
                 cerr << turn << " resigned." << endl;
+                cout << *td << endl;
                 ++scores.at(opponent);
                 resetState();
                 continue;
@@ -151,14 +152,24 @@ void GameController::runGame() {
                 cout << opponent << " is in check." << endl;
             }
 
-            if (boardManager.getGameStateChecker().isMate(opponent)) {
+            if (boardManager.getGameStateChecker().isCheckmate(opponent)) {
+                cout << *td << endl;
                 cout << "Checkmate! " << turn << " wins!" << endl;
                 ++scores.at(turn);
                 resetState();
                 continue;
                 
-            } else if (boardManager.getGameStateChecker().isDraw(opponent)) {
+            } else if (boardManager.getGameStateChecker().isStalemate(opponent)) {
+                cout << *td << endl;
                 cout << "Stalemate!" << endl;
+                scores.at(turn) += 0.5;
+                scores.at(opponent) += 0.5;
+                resetState();
+                continue;
+            
+            } else if (boardManager.getGameStateChecker().isMaterialDraw()) {
+                cout << *td << endl;
+                cout << "Draw by insufficient material!" << endl;
                 scores.at(turn) += 0.5;
                 scores.at(opponent) += 0.5;
                 resetState();

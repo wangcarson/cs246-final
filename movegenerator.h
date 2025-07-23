@@ -20,12 +20,12 @@ class MoveGenerator {
     std::vector<Move> pawnMoveGen(Tile t, Colour c); // need to know last move so that we can check for en passant
     std::vector<Move> kingMoveGen(Tile t, Colour c); // need a way to check for castling
 
-  public:
-    MoveGenerator(ChessBoard &b, MoveMaker &mm);
-
     // generating moves.
     std::vector<Move> getPseudoMoves(Tile t);
     std::vector<Move> getLegalMoves(Tile t, Colour c);
+
+  public:
+    MoveGenerator(ChessBoard &b, MoveMaker &mm);
     
     // for colour.
     std::vector<Move> generateLegalMoves(Colour c);

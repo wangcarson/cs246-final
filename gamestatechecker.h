@@ -15,10 +15,11 @@ class GameStateChecker {
     GameStateChecker(ChessBoard &b, MoveGenerator &mg);
     
     // checking game states.
-    bool isValidBoard();    // verify one king each, no pawns on last rank, no checks
-    bool isCheck(Colour c); // check
-    bool isMate(Colour c);  // checkmate (no moves, check)
-    bool isDraw(Colour c);  // stalemate (no moves, no check) or no material
+    bool isValidBoard();         // verify one king each, no pawns on last rank, no checks
+    bool isCheck(Colour c);      // check
+    bool isCheckmate(Colour c);  // checkmate (no moves, check)
+    bool isStalemate(Colour c);  // stalemate (no moves, no check) or no material
+    bool isMaterialDraw();       // insufficient material
 };
 
 #endif

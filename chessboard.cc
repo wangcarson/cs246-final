@@ -7,23 +7,26 @@ ChessBoard::ChessBoard():
     grid{vector<vector<Piece>>(BOARD_ROWS, vector<Piece>(BOARD_COLS, EMPTY_PIECE))} {}
 
 // For consistency, the only methods that should directly
-// access grid are getPiece, setPiece, and removePiece
+// access grid are these 2
 Piece ChessBoard::getPiece(Tile t) {
-    return grid[t.row][t.col];
-}
-
-Colour ChessBoard::getColour (Tile t){
-    return getPiece(t).colour;
+    try { return grid.at(t.row).at(t.col); }
+    catch (std::out_of_range &r) {
+        cerr << "getPiece(): Tile out of range: " << t.row << " " << t.col << endl;
+        throw;
+    }
 }
 
 void ChessBoard::setPiece(Tile t, Piece p) {
-    grid[t.row][t.col] = p;
+    grid.at(t.row).at(t.col) = p;
     notifyObservers(t);
 }
 
 void ChessBoard::removePiece(Tile t) {
-    grid[t.row][t.col] = EMPTY_PIECE;
-    notifyObservers(t);
+    setPiece(t, EMPTY_PIECE);
+}
+
+Colour ChessBoard::getColour (Tile t) {
+    return getPiece(t).colour;
 }
 
 // other methods should call the three

@@ -20,7 +20,7 @@ const int WHITE_FORWARD = 1;
 const int BLACK_FORWARD = -1;
 
 // A function which goes down a line and checks if you can keep going or not.
-// Invariant: Called on non-empty `start` tile
+// Invariant: `start` tile is non-empty and in board. 
 vector<Move> MoveGenerator::lineRunner(Tile start, Tile dirVector, Colour c) {
     const Piece startPiece = board.getPiece(start);
 
@@ -28,7 +28,7 @@ vector<Move> MoveGenerator::lineRunner(Tile start, Tile dirVector, Colour c) {
     Tile end = start;
     end += dirVector;
 
-    while (end.inBoard()){
+    while (end.inBoard()) {
         const Piece currentPiece = board.getPiece(end);
 
         // add move depending on current piece.
@@ -53,6 +53,7 @@ vector<Move> MoveGenerator::lineRunner(Tile start, Tile dirVector, Colour c) {
 
 // For every direction vector, goes down a line and adds moves until a piece is encountered.
 // Used for rook, bishop, queen.
+// Invariant: `start` tile is non-empty and in board. 
 vector<Move> MoveGenerator::multiLineRunner(Tile start, vector<Tile> dirVectors, Colour c) {
     vector<Move> legalList;
     for (const auto dirVector : dirVectors) {
@@ -66,6 +67,7 @@ vector<Move> MoveGenerator::multiLineRunner(Tile start, vector<Tile> dirVectors,
 
 // For every move vector, adds a move if square is empty or capturable. 
 // Used for knight, king.
+// Invariant: `start` tile is non-empty and in board. 
 vector<Move> MoveGenerator::multiMoveRunner(Tile start, vector<Tile> moveVectors, Colour c){
     vector<Move> legalList;
     Piece startPiece = board.getPiece(start);
@@ -73,7 +75,7 @@ vector<Move> MoveGenerator::multiMoveRunner(Tile start, vector<Tile> moveVectors
     for (const auto moveVector : moveVectors){
         Tile end = start + moveVector;
         
-        if (end.inBoard()){
+        if (end.inBoard()) {
             Piece endPiece = board.getPiece(end);
 
             if (endPiece.isEmpty()) {
@@ -92,9 +94,11 @@ vector<Move> MoveGenerator::multiMoveRunner(Tile start, vector<Tile> moveVectors
 
 ////////////////// Moves for specific pieces ////////////////////////
 
+// Invariant: `start` tile is non-empty and in board. 
 vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){ // todo
     // regular moves.
     Piece startPiece = board.getPiece(start);
+
     vector<Move> legalList = multiMoveRunner(start, ALL_VECTORS, c);
 
     // castling.
@@ -125,16 +129,24 @@ vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){ // todo
 }
 
 // Invariant: Pawns never appear on rank 0 or 7.
+// Invariant: `start` tile is non-empty and in board. 
 vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
     vector<Move> legalList;
     bool promotionAdd = false;
     bool doublePushAdd = false;
     int forward = (c == Colour::White) ? WHITE_FORWARD : BLACK_FORWARD;
     
-    // different end tiles based on colour
+    // different end tiles based on colour.
     Tile pushTile = start + Tile{forward, 0};
     Tile doublePushTile = pushTile + Tile{forward, 0};
-    vector<Tile> captureTiles = {start + Tile{forward, 1}, start + Tile{forward, -1}};
+
+    // capture tiles.
+    vector<Tile> captureTiles;
+    Tile tmp = start + Tile{forward, 1};
+    if (tmp.inBoard()) captureTiles.emplace_back(tmp); // write with exceptions?
+
+    tmp = start + Tile{forward, -1};
+    if (tmp.inBoard()) captureTiles.emplace_back(tmp);
 
     // conditions based on colour
     if (c == Colour::White) {
@@ -177,6 +189,7 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
     
     // capture moves.
     for (auto end : captureTiles) {
+        if (!end.inBoard()) { throw tile_out_of_board("pawnMoveGen end"); } // should never be true if invariants hold
         Piece endPiece = board.getPiece(end);
 
         if (board.isOccupied(end) && endPiece.isOppositeColour(c)) {
@@ -200,6 +213,7 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
     // Invariant: epPiece is always opponent colour (should be true)
     if (moveMaker.getEnPassant().has_value()) {
         Tile epTile = moveMaker.getEnPassant().value();
+        if (!epTile.inBoard()) { throw tile_out_of_board("pawnMoveGen en passant"); }
         Piece epPiece = board.getPiece(epTile);
 
         Tile leftTile = start + Tile{0, -1};
@@ -215,8 +229,10 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
 }
 
 // Gets all pseudo-legal moves for a piece on a tile.
+// Invariant: `start` tile is non-empty and in board. 
 vector<Move> MoveGenerator::getPseudoMoves(Tile t) {
     Colour c = board.getColour(t);
+    if (!t.inBoard()) { throw tile_out_of_board("getPseudoMoves"); }
     Piece curP = board.getPiece(t);
         
     if (curP.isRook()) {
@@ -263,10 +279,10 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
 
 vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
     vector<Move> legalList;
-    for (int i = 0; i < BOARD_ROWS; ++i) {
+    for (int i = 0; i < BOARD_ROWS; ++i) { // guarantees invariant that tile is in board
         for(int j = 0; j < BOARD_COLS; ++j) {
             Tile t{i, j};
-            if (c == board.getColour(t)) {
+            if (c == board.getColour(t)) { // guarantees invariant that tile is nonempty
                 // add legal moves for tile
                 vector<Move> curLegalMoves = getLegalMoves(t, c);
                 legalList.insert(legalList.end(), curLegalMoves.begin(), curLegalMoves.end());
@@ -295,14 +311,20 @@ bool MoveGenerator::checkCheck(Colour c) {
     int forward = (c == Colour::White) ? WHITE_FORWARD : BLACK_FORWARD;
 
     // check for opponent pawn on forward left and right tiles.
-    Piece wingCheckForPawn = board.getPiece(Tile {t.row+forward,t.col+1});
-    if (wingCheckForPawn.isPawn() && wingCheckForPawn.isOppositeColour(c)){
-        return true;
+    Tile tr{t.row+forward, t.col+1};
+    if (tr.inBoard()) {
+        Piece trPiece = board.getPiece(tr);
+        if (trPiece.isPawn() && trPiece.isOppositeColour(c)){
+            return true;
+        }
     }
 
-    wingCheckForPawn = board.getPiece(Tile {t.row+forward,t.col-1});
-    if (wingCheckForPawn.isPawn() && wingCheckForPawn.isOppositeColour(c)){
-        return true;
+    Tile tl{t.row+forward, t.col-1};
+    if (tl.inBoard()) {
+        Piece tlPiece = board.getPiece(tl);
+        if (tlPiece.isPawn() && tlPiece.isOppositeColour(c)){
+            return true;
+        }
     }
 
     // Possible bishop (and queen) spots.
@@ -325,6 +347,14 @@ bool MoveGenerator::checkCheck(Colour c) {
     vector<Move> knightSpots = multiMoveRunner(t, KNIGHT_VECTORS, c);
     for (auto possibleMove : knightSpots) {
         if (possibleMove.isCapture() && possibleMove.getCapturePiece().isKnight()) {
+            return true;
+        }
+    }
+
+    // Possible king spots.
+    vector<Move> kingSpots = multiMoveRunner(t, ALL_VECTORS, c);
+    for (auto possibleMove : kingSpots) {
+        if (possibleMove.isCapture() && possibleMove.getCapturePiece().isKing()) {
             return true;
         }
     }

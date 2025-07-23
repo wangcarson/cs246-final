@@ -33,7 +33,7 @@ class GameController {
 
     // Maps for player objects and scores.
     std::map<Colour, std::unique_ptr<Player>> players;
-    std::map<Colour, int> scores;
+    std::map<Colour, float> scores;
     // Players are null until the 'game' cmd is run (so must be pointers)
 
     // Creates a Player object corresponding to string `s`.

@@ -57,41 +57,33 @@ bool GameStateChecker::isCheck(Colour c) {
     return moveGenerator.checkCheck(c);
 }
 
-bool GameStateChecker::isMate(Colour c) {
+bool GameStateChecker::isCheckmate(Colour c) {
     return (isCheck(c) && moveGenerator.checkNoMoves(c));
 }
 
-bool GameStateChecker::isDraw(Colour c) {
-    if (isCheck(c)) return false;
-    if (moveGenerator.checkNoMoves(c)) return true;
-    
-    // insufficent material is 1 bishop/1 knight.
-    vector <int> eachPieceCount;
-    eachPieceCount.reserve(14);
+bool GameStateChecker::isStalemate(Colour c) {
+    return (!isCheck(c) && moveGenerator.checkNoMoves(c));
+}
 
-    for(int i =0;i<8;++i){
-        for(int j=0;j<8;++j){
-            Tile temp {i,j};
+bool GameStateChecker::isMaterialDraw() {
+    std::map<char, int> pieceCounts;
 
-            if (board.getColour(temp)==Colour::White){
-                eachPieceCount[(int) board.getPiece(temp).type]++;
-            }else if (board.getColour(temp)==Colour::Black){
-                eachPieceCount[(int) board.getPiece(temp).type+7]++;
-            }
-            
-            
+    for (int i = 0; i < BOARD_ROWS; ++i) {
+        for (int j = 0; j < BOARD_COLS; ++j) {
+            Piece p = board.getPiece({i,j});
+            // Not draw when one side has a rook, queen, or pawn.
+            if (!p.isKing() && !p.isBishop() && !p.isKnight()) return false;
+            ++pieceCounts[getPieceChar(p)];
         }
     }
 
-    if ((eachPieceCount[2]==1 && eachPieceCount[3]==1) || (eachPieceCount[9]==1 && eachPieceCount[10]==1)){
-        return true;
+    // Not draw when one side has two bishops or bishop + knight.
+    if (pieceCounts['B'] >= 2 || // Use [] and not .at() since there may be no bishops
+        pieceCounts['b'] >= 2 ||
+        (pieceCounts['B'] == 1 && pieceCounts['N'] >= 1) ||
+        (pieceCounts['b'] == 1 && pieceCounts['n'] >= 1)
+    ) {
+        return false;
     }
-
-    return  eachPieceCount[0]==0 && eachPieceCount[1]==0 && eachPieceCount[2]<=1 && eachPieceCount[3]<=1 && eachPieceCount[5]==0 &&
-            eachPieceCount[7]==0 && eachPieceCount[8]==0 && eachPieceCount[9]<=1 && eachPieceCount[10]<=1 && eachPieceCount[11]==0;
-
-
-    
-
-
+    return true;
 }
