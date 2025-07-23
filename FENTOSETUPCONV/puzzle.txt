@@ -1,98 +1,14 @@
 PUZZLESTART
-- a1
-- b1
-- c1
-- d1
-- e1
-- f1
-- g1
-- h1
-- a2
-- b2
-- c2
-- d2
-- e2
-- f2
-- g2
-- h2
-- a3
-- b3
-- c3
-- d3
-- e3
-- f3
-- g3
-- h3
-- a4
-- b4
-- c4
-- d4
-- e4
-- f4
-- g4
-- h4
-- a5
-- b5
-- c5
-- d5
-- e5
-- f5
-- g5
-- h5
-- a6
-- b6
-- c6
-- d6
-- e6
-- f6
-- g6
-- h6
-- a7
-- b7
-- c7
-- d7
-- e7
-- f7
-- g7
-- h7
-- a8
-- b8
-- c8
-- d8
-- e8
-- f8
-- g8
-- h8
-+ r a8
-+ k h8
-+ p a7
-+ p b7
-+ r e7
-+ p h7
-+ R e6
-+ p f6
-+ Q h6
-+ p d5
-+ N b3
-+ P d3
-+ R g3
-+ P a2
-+ q b2
-+ P c2
-+ b f2
-+ P g2
-+ P h2
-+ K h1
-= black
+
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move f2 g3
-move e6 e7
-move b2 b1
-move b3 c1
-move b1 c1
-move h6 c1
+f2 g3
+e6 e7
+b2 b1
+b3 c1
+b1 c1
+h6 c1
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -181,10 +97,10 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move d3 d6
-move f8 d8
-move d6 d8
-move f6 d8
+d3 d6
+f8 d8
+d6 d8
+f6 d8
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -266,10 +182,10 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move e7 f7
-move f5 e5
-move e2 f1
-move e5 e6
+e7 f7
+f5 e5
+e2 f1
+e5 e6
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -370,10 +286,10 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move b6 c5
-move e2 g4
-move h3 g4
-move d1 g4
+b6 c5
+e2 g4
+h3 g4
+d1 g4
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -461,12 +377,12 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move g6 f5
-move d5 c5
-move c2 e4
-move h5 g5
-move g7 h8
-move g5 f6
+g6 f5
+d5 c5
+c2 e4
+h5 g5
+g7 h8
+g5 f6
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -545,12 +461,12 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move g4 h5
-move g6 h5
-move f4 f5
-move e6 e5
-move f5 f6
-move e5 f6
+g4 h5
+g6 h5
+f4 f5
+e6 e5
+f5 f6
+e5 f6
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -638,10 +554,10 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move e5 f6
-move e8 e1
-move g1 f2
-move e1 f1
+e5 f6
+e8 e1
+g1 f2
+e1 f1
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -738,10 +654,10 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move g5 e7
-move a5 c3
-move b2 c3
-move c6 e7
+g5 e7
+a5 c3
+b2 c3
+c6 e7
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -838,10 +754,10 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move e8 f7
-move e2 e6
-move f7 f8
-move e6 f7
+e8 f7
+e2 e6
+f7 f8
+e6 f7
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -934,10 +850,10 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move d1 d6
-move d7 d6
-move b7 b6
-move a7 b6
+d1 d6
+d7 d6
+b7 b6
+a7 b6
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1027,10 +943,10 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move e3 g3
-move f7 f4
-move e5 f4
-move f8 f4
+e3 g3
+f7 f4
+e5 f4
+f8 f4
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1113,10 +1029,10 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move e7 d6
-move d3 d4
-move g6 g5
-move f4 g5
+e7 d6
+d3 d4
+g6 g5
+f4 g5
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1195,12 +1111,12 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move f2 f1
-move f4 f3
-move f1 e1
-move c2 c1
-move e1 d2
-move c1 g1
+f2 f1
+f4 f3
+f1 e1
+c2 c1
+e1 d2
+c1 g1
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1280,10 +1196,10 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move a6 a5
-move e5 c7
-move a5 b4
-move c7 d8
+a6 a5
+e5 c7
+a5 b4
+c7 d8
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1381,8 +1297,8 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move d4 e6
-move d6 h2
+d4 e6
+d6 h2
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1476,10 +1392,10 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move d8 f6
-move d1 h5
-move h7 h6
-move h5 c5
+d8 f6
+d1 h5
+h7 h6
+h5 c5
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1578,12 +1494,12 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move e5 c4
-move d3 c4
-move b6 c4
-move d1 a4
-move d8 d7
-move a4 c4
+e5 c4
+d3 c4
+b6 c4
+d1 a4
+d8 d7
+a4 c4
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1674,10 +1590,10 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move b7 b6
-move d4 a1
-move a7 a5
-move f1 c1
+b7 b6
+d4 a1
+a7 a5
+f1 c1
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1766,14 +1682,14 @@ PUZZLESTART
 PUZZLESETUP
 White to move
 PUZZLESOLUTION
-move c8 c7
-move d4 e2
-move g1 h2
-move a4 f4
-move h2 h1
-move e2 g3
-move f2 g3
-move f4 f1
+c8 c7
+d4 e2
+g1 h2
+a4 f4
+h2 h1
+e2 g3
+f2 g3
+f4 f1
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1866,12 +1782,12 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move b6 d4
-move f4 f6
-move d4 f2
-move f6 f2
-move d2 f2
-move g1 f2
+b6 d4
+f4 f6
+d4 f2
+f6 f2
+d2 f2
+g1 f2
 PUZZLEEND
 PUZZLESTART
 - a1
@@ -1961,6 +1877,6 @@ PUZZLESTART
 PUZZLESETUP
 Black to move
 PUZZLESOLUTION
-move h8 g8
-move f1 f8
+h8 g8
+f1 f8
 PUZZLEEND
