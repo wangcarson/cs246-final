@@ -107,7 +107,7 @@ void GameController::runGame() {
                     mode = Mode::Normal;
                     cout << endl << ">>> Normal Mode <<<" << endl;
                 } else {
-                    cerr << "Invalid board. Please correct before exiting setup." << endl;
+                    cerr << "Please correct the board before exiting setup." << endl;
                 }
             }
 

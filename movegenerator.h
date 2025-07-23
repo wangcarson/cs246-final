@@ -25,12 +25,13 @@ class MoveGenerator {
 
     // generating moves.
     std::vector<Move> getPseudoMoves(Tile t);
-    std::vector<Move> generatePseudoMoves(Colour c);
+    std::vector<Move> getLegalMoves(Tile t, Colour c);
     
     // for colour.
     std::vector<Move> generateLegalMoves(Colour c);
 
-    bool findCheckMoves(Colour c);
+    bool checkCheck(Colour c);
+    bool checkNoMoves(Colour c);
 
 };
 

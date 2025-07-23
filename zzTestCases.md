@@ -30,3 +30,26 @@ promotion
 castling + states
 
 checkmate with pinned piece
+
+
+# setup tests
+just basic uses of `+` `-` `=`
+
+# isValidBoard() tests
+
+pawns on first or last ranks
++ p a1
++ p a8
++ P a1
++ P a8
+
+no kings
+- e1
+- e8
+
+two kings
++ K d1
++ k d8
+
+checks
+

@@ -7,46 +7,63 @@ using namespace std;
 GameStateChecker::GameStateChecker(ChessBoard &b, MoveGenerator &mg): 
     board{b}, moveGenerator{mg} {}
 
-// checking game states.
-bool GameStateChecker::isValidBoard() {
-    // loop through pieces:
-    
+// Checks board is valid (for setup). Outputs to standard error if invalid.
+bool GameStateChecker::isValidBoard() {   
+    bool whiteKing = false;
+    bool blackKing = false;
 
-
-    for(int i =0;i<8;++i){// if pawn: check none on rank 0 or 7
-
-        if (board.getPiece(Tile {0,i}).type == PieceType::Pawn || board.getPiece(Tile  {7,i}).type == PieceType::Pawn){
-            throw runtime_error("Pawn is on either rank 0 or 7"); // todo: add exception handling
-
+    for (int i = 0; i < BOARD_COLS; ++i) {
+        // check no pawns on first or last rank.
+        if (board.getPiece(Tile{0, i}).isPawn() || board.getPiece(Tile{BOARD_ROWS-1, i}).isPawn()) {
+            cerr << "Invalid board: Pawn is on either rank 0 or 7." << endl;
             return false;
         }
 
+        // check no duplicate kings
+        for (int j = 0; j < BOARD_ROWS; ++j) {
+            Piece p = board.getPiece(Tile{i, j});
+            if (p.isKing()) {
+                if (p.isColour(Colour::White)) {
+                    if (whiteKing) {
+                        cerr << "Invalid board: Duplicate kings." << endl;
+                        return false;
+                    }
+                    whiteKing = true;
+                    
+                } else if (p.isColour(Colour::Black)) {
+                    if (blackKing) {
+                        cerr << "Invalid board: Duplicate kings." << endl;
+                        return false;
+                    }
+                    blackKing = true;
+                }
+            }
+        }
     }
 
-    board.getKing(Colour::White);// if king: ensure one king of each colour
-    board.getKing(Colour::Black);
-
-    return !(isCheck(Colour::White) && isCheck(Colour::Black)); // check isCheck(Colour::White) and isCheck(Colour::Black)
-
-
+    // check kings exist
+    if (!whiteKing || !blackKing) {
+        cerr << "Invalid board: Missing king." << endl;
+        return false;
+    
+    // check kings aren't in check.
+    } else if (isCheck(Colour::White) || isCheck(Colour::Black)) {
+        cerr << "Invalid board: King in check." << endl;
+        return false;
+    }
+    return true;
 }
 
 bool GameStateChecker::isCheck(Colour c) {
-
-    return moveGenerator.findCheckMoves(c);
+    return moveGenerator.checkCheck(c);
 }
 
 bool GameStateChecker::isMate(Colour c) {
-    if (isCheck(c) && moveGenerator.generateLegalMoves(c).size() == 0){
-        cout << "Checking mate" << endl;
-        return true;
-    }
-    return false;
-    
+    return (isCheck(c) && moveGenerator.generateLegalMoves(c).size() == 0);
 }
 
 bool GameStateChecker::isDraw(Colour c) {
-    if (isCheck(c)){
+    if (isCheck(c)) {
         return false;
     }
 

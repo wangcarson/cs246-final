@@ -238,41 +238,18 @@ vector<Move> MoveGenerator::getPseudoMoves(Tile t) {
         return pawnMoveGen(t, c);
 
     } else {
-        throw invalid_argument("getLegalMoves: called on empty square.");
+        throw invalid_argument("getPseudoMoves: called on empty square.");
     }
 }
 
-vector<Move> MoveGenerator::generatePseudoMoves(Colour c) {
+vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
     vector<Move> legalList;
-
-    for(int i = 0; i < BOARD_ROWS; ++i){
-        for(int j = 0; j < BOARD_COLS; ++j) {
-            Tile t{i, j};
-            if (c == board.getColour(t)) {
-                vector<Move> currentTileLegalMoves = getPseudoMoves(t);
-
-                // add to legal list
-                while (!currentTileLegalMoves.empty()){
-                    legalList.emplace_back(currentTileLegalMoves.back());
-                    currentTileLegalMoves.pop_back();
-                }
-            }
-        }
-    }
-    // actually call isLegal() here
-    return legalList;
-}
-
-vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
-    vector<Move> legalList;
-    vector<Move> pseudoList = generatePseudoMoves(c);
-
+    vector<Move> pseudoList = getPseudoMoves(t);
     try {
         for (const auto m : pseudoList) {
             moveMaker.makeMove(m);
-            if (!findCheckMoves(c)) {
+            if (!checkCheck(c)) {
                 legalList.emplace_back(m);
-            } else {
             }
             moveMaker.undoMove();
         }
@@ -284,7 +261,27 @@ vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
     return legalList;
 }
 
-bool MoveGenerator::findCheckMoves(Colour c){
+vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
+    vector<Move> legalList;
+    for(int i = 0; i < BOARD_ROWS; ++i){
+        for(int j = 0; j < BOARD_COLS; ++j) {
+            Tile t{i, j};
+            if (c == board.getColour(t)) {
+                // add legal moves for tile
+                vector<Move> curLegalMoves = getLegalMoves(t, c);
+                legalList.insert(legalList.end(), curLegalMoves.begin(), curLegalMoves.end());
+            }
+        }
+    }
+    return legalList;
+}
+
+// same as generatePseudoMoves and generateLegalMoves but breaks on legal move found. 
+bool MoveGenerator::checkNoMoves(Colour c) {
+    return false;
+}
+
+bool MoveGenerator::checkCheck(Colour c) {
     Tile t = board.getKing(c);
     int forward = (c == Colour::White) ? WHITE_FORWARD : BLACK_FORWARD;
 
@@ -302,8 +299,7 @@ bool MoveGenerator::findCheckMoves(Colour c){
     // Possible bishop (and queen) spots.
     vector<Move> bishopSpots = multiLineRunner(t, BISHOP_VECTORS, c);
     for (auto possibleMove : bishopSpots) {
-        Piece possiblePiece = possibleMove.getPiece();
-        if (possibleMove.isCapture() && (possiblePiece.isBishop() || possiblePiece.isQueen())) {
+        if (possibleMove.isCapture() && (possibleMove.getCapturePiece().isBishop() || possibleMove.getCapturePiece().isQueen())) {
             return true;
         }
     }
@@ -312,7 +308,7 @@ bool MoveGenerator::findCheckMoves(Colour c){
     vector<Move> rookSpots = multiLineRunner(t, ROOK_VECTORS, c);
     for (auto possibleMove : rookSpots) {
         Piece possiblePiece = possibleMove.getPiece();
-        if (possibleMove.isCapture() && (possiblePiece.isRook() || possiblePiece.isQueen())) {
+        if (possibleMove.isCapture() && (possibleMove.getCapturePiece().isRook() || possibleMove.getCapturePiece().isQueen())) {
             return true;
         }
     }
@@ -321,7 +317,7 @@ bool MoveGenerator::findCheckMoves(Colour c){
     vector<Move> knightSpots = multiMoveRunner(t, KNIGHT_VECTORS, c);
     for (auto possibleMove : knightSpots) {
         Piece possiblePiece = possibleMove.getPiece();
-        if (possibleMove.isCapture() && possiblePiece.isKnight()) {
+        if (possibleMove.isCapture() && possibleMove.getCapturePiece().isKnight()) {
             return true;
         }
     }
