@@ -14,15 +14,15 @@ GameController::~GameController() {
 
 // Get player object corresponding to s. Allocates dynamic memory.
 Player *GameController::getPlayer(string s) {
-    if (s == "h") {
+    if (s == "h" || s == "human") {
         return new Human(boardManager, cin);
-    } else if (s == "computer1") {
+    } else if (s == "computer1" || s == "1") {
         return new Computer(boardManager, 1);
-    } else if (s == "computer2") {
+    } else if (s == "computer2" || s == "2") {
         return new Computer(boardManager, 2);
-    } else if (s == "computer3") {
+    } else if (s == "computer3" || s == "3") {
         return new Computer(boardManager, 3);
-    } else if (s == "computer4") {
+    } else if (s == "computer4" || s == "4") {
         return new Computer(boardManager, 4);
     } else {
         throw invalid_argument("Invalid player type.");
@@ -33,6 +33,7 @@ Player *GameController::getPlayer(string s) {
 void GameController::restart() {
     cout << "White " << whiteScore << " - " << blackScore << " Black" << endl << endl;
     
+    turnNumber = 1;
     mode = Mode::Normal;
     boardManager.init();
     delete whitePlayer;
@@ -106,11 +107,17 @@ void GameController::start() {
 
         ///////////////////////////////////////////////////////////////////
         } else if (mode == Mode::Game) {
+            auto moves = boardManager.getMoveGenerator()->generateLegalMoves(boardManager.getMoveMaker().getTurn());
+
+            debug(moves); // debugging
+            cout << *td << endl;
+
             Colour c = boardManager.getMoveMaker().getTurn();
             Move m;
             try {
                 cerr << c << " to play." << endl;
-                m = (c == Colour::White) ? whitePlayer->getLegalMove() : blackPlayer->getLegalMove();
+                m = (c == Colour::White) ? whitePlayer->getLegalMove(moves) : blackPlayer->getLegalMove(moves);
+
             } catch (eof_error &r) { // EOF: end game
                 break;
             } catch (resign_error &r) {
@@ -123,17 +130,13 @@ void GameController::start() {
                 restart();
                 continue;
             } catch (undo_error &r) {
-                boardManager.getMoveMaker().undoMove();
-                
-                debug(); // debugging
+                boardManager.getMoveMaker().undoMove();                
                 cout << *td << endl;
                 continue;
             }
 
+            ++turnNumber;
             boardManager.getMoveMaker().makeMove(m);
-
-            debug(); // debugging
-            cout << *td << endl;
 
             // colour is now switched.
             c = boardManager.getMoveMaker().getTurn();
@@ -190,8 +193,14 @@ void GameController::start() {
     cout << "Black: " << blackScore << endl;
 }
 
-void GameController::debug() {
-    cout << "------------------------------------" << endl;
+void GameController::debug(const vector<Move> &moves) {
+    cout << "====================================" << endl;
+    cout << "              TURN " << turnNumber << endl;
+    cout << "====================================" << endl;
+    cout << "All Legal Moves:" << endl;
+    cout << moves;
+    cout << "====================================" << endl;
+    cout << "Current Board States:" << endl;
     auto ep = boardManager.getMoveMaker().getEnPassant();
     if (ep.has_value()) cout << "En Passant: " << ep.value() << endl;
     else cout << "En Passant: None" << endl;
@@ -201,5 +210,5 @@ void GameController::debug() {
     cout << "Castle White Q: " << cr.at(Colour::White).at(CastleType::QueenSide) << endl;
     cout << "Castle Black K: " << cr.at(Colour::Black).at(CastleType::KingSide) << endl;
     cout << "Castle Black Q: " << cr.at(Colour::Black).at(CastleType::QueenSide) << endl;
-    cout << "------------------------------------" << endl;
+    cout << "====================================" << endl;
 }

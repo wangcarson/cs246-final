@@ -15,7 +15,7 @@ class Player {
 public:
     Player(BoardManager &bm);
     virtual ~Player();
-    virtual Move getLegalMove() = 0;
+    virtual Move getLegalMove(const std::vector<Move> &moves) const = 0;
 };
 
 class Human: public Player {
@@ -23,7 +23,7 @@ class Human: public Player {
 
   public:
     Human(BoardManager &bm, std::istream &input);
-    Move getLegalMove() override;
+    Move getLegalMove(const std::vector<Move> &moves) const override;
 }; 
 
 class Computer: public Player {
@@ -31,7 +31,7 @@ class Computer: public Player {
 
   public:
     Computer(BoardManager &bm, int level);
-    Move getLegalMove() override;
+    Move getLegalMove(const std::vector<Move> &moves) const override;
 };
 
 #endif

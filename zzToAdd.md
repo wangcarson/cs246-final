@@ -2,12 +2,16 @@
 movegenerator.cc
 
 # NEW! Bug fixes:
+- getLegalMove() for players now takes a vector argument for all legal moves (optimizes it a bit since it prevents generateLegalMoves() from being called more than once every round)
+
 - setCapturePiece() in move did nothing before - changed
 - fixed capture and castle restoration in undoMove()
 - added en passant restoration in undoMove()
 - bug in capture moves for pawn in MoveGenerator
 
 # Things to do
+- go over every method we wrote and set them to `const` or `noexcept`
+- separate players.cc and players.h into 6 files
 - Add case in generateLegalMoves() where the move is castling. For this case, make sure the king isn't in check at any point in path. 
 
 # Finished tasks

@@ -12,7 +12,7 @@ Player::~Player() {}
 Human::Human(BoardManager &bm, istream &input): Player{bm}, in{input} {}
 
 // Returns a valid move.
-Move Human::getLegalMove() {
+Move Human::getLegalMove(const vector<Move> &moves) const {
     string cmd;
     if (in.fail()) throw eof_error(); // raise exception
 
@@ -30,32 +30,22 @@ Move Human::getLegalMove() {
                 continue;
             }
 
-            auto moves = boardManager.getMoveGenerator()->generateLegalMoves(boardManager.getMoveMaker().getTurn());
-            
-            // Debugging
-            cout << "------------------------------------" << endl;
-            cout << "Legal moves:" << endl;
-            cout << moves;
-            cout << "------------------------------------" << endl;
-
             for (auto it : moves) {
                 if (it.getFrom() == start && it.getTo() == end) {
-                    cout << "Legal move!" << endl;
-                    
                     // input for promotion
                     if (it.isPromotion()) {
-                    	char promote;
+                        char promote;
                     	Piece p;
                     	in >> promote;
                     	try {
-                    		p = parsePiece(promote);
+                            p = parsePiece(promote);
                     	} catch (invalid_argument &r) {
-                    		cerr << r.what() << endl;
+                            cerr << r.what() << endl;
                     		continue;
                     	}
                     	it.setPromotionPiece(p); // set promotion piece
-                    	// Note: generateMoves() should only generate one move per promotion move (not one for each promotion piece type)
                     }
+                    cout << "Legal move!" << endl;
                     return it;
                 }
             }
@@ -72,7 +62,7 @@ Move Human::getLegalMove() {
 ////////////////////////////////////////////////////////////
 
 Computer::Computer(BoardManager &bm, int level): Player{bm}, level{level} {}
-Move Computer::getLegalMove() {
+Move Computer::getLegalMove(const vector<Move> &moves) const {
     // TODO: Actual implementation of bot goes here
-    return Move();
+    return moves.at(0);
 }

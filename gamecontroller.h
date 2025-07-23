@@ -21,11 +21,13 @@ class GameController {
     TextDisplay *td;
     // GraphicsDisplay gd;
 
-    Player *whitePlayer; // only set when 'game' cmd is run
+    Player *whitePlayer; // only set when 'game' cmd is run (so can't be reference)
     Player *blackPlayer; // don't change to unique_ptr yet
 
-    int whiteScore = 0;
+    int whiteScore = 0; // TODO: Change to map
     int blackScore = 0;
+
+    int turnNumber = 1;
 
     // private helper functions
     Player *getPlayer(std::string s);
@@ -34,7 +36,7 @@ class GameController {
   public:
     GameController();
     ~GameController();
-    void debug();
+    void debug(const std::vector<Move> &moves);
     void start();
 };
 

@@ -106,12 +106,12 @@ void MoveMaker::undoMove() {
 }
 
 // board state accessors.
-Colour MoveMaker::getTurn() { return turn; }
-std::optional<Tile> MoveMaker::getEnPassant() { return enPassant; }
-std::map<Colour, std::map<CastleType, bool>> MoveMaker::getCastlingRights() {
+Colour MoveMaker::getTurn() const { return turn; }
+std::optional<Tile> MoveMaker::getEnPassant() const { return enPassant; }
+std::map<Colour, std::map<CastleType, bool>> MoveMaker::getCastlingRights() const {
     return castlingRights;
 }
-bool MoveMaker::getCastlingRights(Colour c, CastleType s) {
+bool MoveMaker::getCastlingRights(Colour c, CastleType s) const {
     return castlingRights.at(c).at(s);
 }
 
