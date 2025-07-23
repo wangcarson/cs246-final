@@ -5,35 +5,23 @@
 
 using namespace std;
 
+Puzzle::Puzzle(): inFile{fileName} {}
 
-string Puzzle::getfileInput(){
-
-    ifstream inFile;
-    inFile.open(fileName);
-
+string Puzzle::getPosition(){
     string stringResponse;
-    getline(inFile,stringResponse);
-
-    inFile.close();   
+    getline(inFile, stringResponse);
     return stringResponse;
 }
 
 Move Puzzle::getResponseMove(vector<Move> &legalMoves) {
-
-    ifstream inFile;
-    inFile.open(fileName);
-
     string stringResponse;
-    getline(inFile,stringResponse);
+    getline(inFile, stringResponse);
 
     stringstream iss {stringResponse};
-
-    string temp;
-
-    iss >> temp;
-    Tile ourStart = parseTile(temp);
-    iss >> temp;
-    Tile ourEnd = parseTile(temp);
+    string a, b;
+    iss >> a >> b;
+    Tile ourStart = parseTile(a);
+    Tile ourEnd = parseTile(b);
 
     for (auto it : legalMoves) {
         if (ourStart == it.getFrom() && ourEnd == it.getTo()) {
@@ -45,22 +33,14 @@ Move Puzzle::getResponseMove(vector<Move> &legalMoves) {
 }
 
 bool Puzzle::isCorrectMove(Move inputMove){
-
-    ifstream inFile;
-    inFile.open(fileName);
     string stringResponse;
-    getline(inFile,stringResponse);
-    inFile.close(); 
+    getline(inFile, stringResponse);
 
     stringstream iss {stringResponse};
-
-    string temp;
-
-    iss >> temp;
-    Tile ourStart = parseTile(temp);
-    iss >> temp;
-    Tile ourEnd = parseTile(temp);
+    string a, b;
+    iss >> a >> b;
+    Tile ourStart = parseTile(a);
+    Tile ourEnd = parseTile(b);
 
     return ourStart == inputMove.getFrom() && ourEnd == inputMove.getTo();
-
 }

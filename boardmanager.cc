@@ -12,14 +12,16 @@ BoardManager::BoardManager():
 // Initializing state and board.
 void BoardManager::init(string position) {
     // initialize state
-    char ch = position.back();
-    Colour c;
-    if (ch == 'w') c = Colour::White;
-    else if (ch == 'b') c = Colour::Black;
+    char c = position.back();
+    Colour starting;
+    if (c == 'w') starting = Colour::White;
+    else if (c == 'b') starting = Colour::Black;
     else throw invalid_argument("FEN string has invalid colour.");
-    moveMaker.initBoardState(c);
+    moveMaker.initBoardState(starting);
     
     // initialize grid to default
+    position.pop_back();
+    position.pop_back();
     board.clearGrid();
     int row = 0, col = 0;
     for (char c : position) {

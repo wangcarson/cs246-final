@@ -4,17 +4,15 @@
 #include <vector>
 #include <fstream>
 
-class Puzzle{
+class Puzzle {
+    std::string fileName = "puzzle.txt";
+    std::ifstream inFile;
 
-    string fileName = "puzzle.txt";
-
-    public:
-
-        Move getResponseMove(std::vector<Move> &legalMoves);
-        std::string getfileInput();
-        bool isCorrectMove(Move inputMove);
-
-    
+  public:
+    Puzzle();
+    std::string getPosition();
+    Move getResponseMove(std::vector<Move> &legalMoves);
+    bool isCorrectMove(Move inputMove);
 };
 
 #endif

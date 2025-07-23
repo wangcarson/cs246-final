@@ -53,6 +53,7 @@ void GameController::resetState() {
 // Input management and error handling for program.
 void GameController::runGame() {
     // initialize board and print.
+    // boardManager.init();
     try { boardManager.init(); }
     catch (...) {
         throw runtime_error("GameController::start(): Error with initializing board");
@@ -182,8 +183,10 @@ void GameController::runGame() {
         } else if (mode == Mode::Puzzle) {
             // setup new position
             cout << "Setting up puzzle..." << endl;
-            string p = puzzle->getFileInput();
+            string p = puzzle->getPosition();
             boardManager.init(p);
+            cout << *td << endl;
+            cout << boardManager.getMoveMaker().getTurn() << endl;
 
             auto moves = boardManager.getMoveGenerator().generateLegalMoves();
             Move play;
@@ -209,11 +212,13 @@ void GameController::runGame() {
             // make move.
             ++turnNumber;
             boardManager.getMoveMaker().makeMove(play);
+            cout << *td << endl;
 
             // puzzle response.
             moves = boardManager.getMoveGenerator().generateLegalMoves();
-            Move response = puzzle->getFileInput();
+            Move response = puzzle->getResponseMove(moves);
             boardManager.getMoveMaker().makeMove(response);
+            cout << *td << endl;
         
         // default mode
         } else if (mode == Mode::Normal) {
