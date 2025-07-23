@@ -114,7 +114,8 @@ vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){ // todo
             legalList.emplace_back(m);
         }
 
-    } else if (moveMaker.getCastlingRights(c, CastleType::KingSide)) {
+    } 
+    if (moveMaker.getCastlingRights(c, CastleType::KingSide)) {
         Tile rookTile = Tile{start.row, 7};
         
         if (board.getPiece(rookTile).isRook() && // technically unnecessary
@@ -126,6 +127,10 @@ vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){ // todo
             legalList.emplace_back(m);
         }
     }
+
+    cout << legalList << endl;
+
+
     return legalList;
 }
 
@@ -263,36 +268,44 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
     vector<Move> pseudoList = getPseudoMoves(t);
     try {
         for (const auto m : pseudoList) {//if it's castling, check it's check to the left + right.
-            moveMaker.makeMove(m);
+
             bool isCleanAlongPath = true;
             if (m.getType()==MoveType::KingSideCastle){
                 //check if you are in check after moving 1 right + 2 right
-                moveMaker.undoMove();
-                if (isAttacked(board.getKing(c))){
-                    isCleanAlongPath=false;
-                }//            Move m{MoveType::EnPassant, startPiece, start, epTile + Tile{forward, 0}};
-                moveMaker.makeMove({MoveType::Quiet, board.getPiece(t), t, Tile {t.row,t.col-1}});
+                
                 if (isAttacked(board.getKing(c))){
                     isCleanAlongPath=false;
                 }
-                moveMaker.undoMove();
                 moveMaker.makeMove(m);
 
+                if (isAttacked(Tile {t.row,t.col+1})){
+                    isCleanAlongPath=false;
+                }
+                if (isAttacked(Tile {t.row,t.col+2})){
+                    isCleanAlongPath=false;
+                }
+                moveMaker.undoMove();
 
             }else if (m.getType()==MoveType::QueenSideCastle){
                 //check if you are in check after moving 1 left + 2 left
-                moveMaker.undoMove();
-                if (isAttacked(board.getKing(c))){
-                    isCleanAlongPath=false;
-                }//            Move m{MoveType::EnPassant, startPiece, start, epTile + Tile{forward, 0}};
-                moveMaker.makeMove({MoveType::Quiet, board.getPiece(t), t, Tile {t.row,t.col+1}});
+
+                
                 if (isAttacked(board.getKing(c))){
                     isCleanAlongPath=false;
                 }
-                moveMaker.undoMove();
                 moveMaker.makeMove(m);
 
+                if (isAttacked(Tile {t.row,t.col-1})){
+                    isCleanAlongPath=false;
+                }
+                if (isAttacked(Tile {t.row,t.col-2})){
+                    isCleanAlongPath=false;
+                }
+                moveMaker.undoMove();
+
             }
+            moveMaker.makeMove(m);
+
 
             if (!isAttacked(board.getKing(c)) && isCleanAlongPath) { // i.e. check for check
                 legalList.emplace_back(m);
