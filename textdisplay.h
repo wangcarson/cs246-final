@@ -15,6 +15,7 @@ class TextDisplay: public Observer {
     TextDisplay(ChessBoard &b); // explicit?
     void notify(Tile t) override;
     void print(std::ostream &out) const;
+    void printLarge(std::ostream &out) const;
 
     friend std::ostream &operator<<(std::ostream &out, const TextDisplay &s);
 };

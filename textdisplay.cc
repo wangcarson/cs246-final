@@ -45,7 +45,22 @@ void TextDisplay::print(ostream &out) const {
     cout << "  abcdefgh";
 }
 
+void TextDisplay::printLarge(ostream &out) const {
+    for (size_t i = 0; i < display.size(); ++i) {
+        auto &row = display[BOARD_ROWS-i-1]; // notice this is not `i`
+        
+        cout << "  +---+---+---+---+---+---+---+---+" << endl;
+        cout << BOARD_ROWS-i; // row number
+        for (size_t j = 0; j < row.size(); ++j) {
+            cout << " | " << row[j];
+        }
+        cout << " | " << endl;
+    }
+    cout << "  +---+---+---+---+---+---+---+---+" << endl;
+    cout << "    a   b   c   d   e   f   g   h";
+}
+
 std::ostream &operator<<(ostream &out, const TextDisplay &s) {
-    s.print(out);
+    s.printLarge(out);
     return out;
 }

@@ -263,7 +263,7 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
     try {
         for (const auto m : pseudoList) {
             moveMaker.makeMove(m);
-            if (!checkCheck(c)) {
+            if (!isAttacked(board.getKing(c))) { // i.e. check for check
                 legalList.emplace_back(m);
             }
             moveMaker.undoMove();
@@ -305,8 +305,8 @@ bool MoveGenerator::checkNoMoves(Colour c) {
     return true;
 }
 
-bool MoveGenerator::checkCheck(Colour c) {
-    Tile t = board.getKing(c);
+bool MoveGenerator::isAttacked(Tile t) {
+    Colour c = board.getColour(t);
     int forward = (c == Colour::White) ? WHITE_FORWARD : BLACK_FORWARD;
 
     // check for opponent pawn on forward left and right tiles.
@@ -359,4 +359,21 @@ bool MoveGenerator::checkCheck(Colour c) {
     }
 
     return false;
+}
+
+
+// m should be a legal move.
+bool MoveGenerator::isCheckMove(Move m) {
+    Colour c = m.getColour();
+    moveMaker.makeMove(m);
+    bool checkMove = isAttacked(board.getKing(oppositeColour(c))); // opponent in check
+    moveMaker.undoMove();
+    return checkMove;
+}
+
+bool MoveGenerator::isSafeMove(Move m) {
+    moveMaker.makeMove(m);
+    bool safeMove = !isAttacked(m.getTo()); // piece attacked
+    moveMaker.undoMove();
+    return safeMove;
 }

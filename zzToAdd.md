@@ -16,11 +16,14 @@ movegenerator.cc
 - check no memory is leaked
 - change player pointers to smart pointers (and remove dtors - extra credit)
 - Add case in generateLegalMoves() where the move is castling. For this case, make sure the king isn't in check at any point in path. 
-- go over every method we wrote and set them to `const` or `noexcept`
 - computer
 - graphics display
 
+
+# optimizations
+- go over every method we wrote and set them to `const` or `noexcept`
 - for debugging: rewrite Tile ctor to force row and col in [0, 7] - exception otherwise (to 100% make sure we never segmentation fault)
+- keep a piece list (or at least vars for kings)
 
 # Finished tasks
 - separate players.cc and players.h into 6 files

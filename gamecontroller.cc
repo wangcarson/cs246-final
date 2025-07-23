@@ -21,13 +21,13 @@ unique_ptr<Player> GameController::getPlayer(string s) {
     if (s == "h" || s == "human") {
         return make_unique<Human>(in);
     } else if (s == "computer1" || s == "1") {
-        return make_unique<Computer>(1);
+        return make_unique<Computer>(1, boardManager);
     } else if (s == "computer2" || s == "2") {
-        return make_unique<Computer>(2);
+        return make_unique<Computer>(2, boardManager);
     } else if (s == "computer3" || s == "3") {
-        return make_unique<Computer>(3);
+        return make_unique<Computer>(3, boardManager);
     } else if (s == "computer4" || s == "4") {
-        return make_unique<Computer>(4);
+        return make_unique<Computer>(4, boardManager);
     } else {
         throw invalid_argument("Invalid player: " + s);
     }
@@ -130,8 +130,7 @@ void GameController::runGame() {
                 break;
 
             } catch (input_resign &r) {
-                cerr << turn << " resigned." << endl;
-                cout << *td << endl;
+                cerr << turn << " resigned. " << opponent << " wins!" << endl;
                 ++scores.at(opponent);
                 resetState();
                 continue;
@@ -207,15 +206,16 @@ void GameController::runGame() {
 }
 
 //  Prints board info for debugging.
+const string &bar = "=====================================";
 void GameController::printData(const vector<Move> &moves) {
-    cout << endl << "====================================" << endl;
+    cout << endl << bar << endl;
     cout << "              TURN " << turnNumber << endl;
-    cout << "====================================" << endl;
+    cout << bar << endl;
 
     if (debug) {
         cout << "All Legal Moves:" << endl;
         cout << moves;
-        cout << "====================================" << endl;
+        cout << bar << endl;
         cout << "Current Board States:" << endl;
         auto ep = boardManager.getMoveMaker().getEnPassant();
         if (ep.has_value()) cout << "En Passant: " << ep.value() << endl;
@@ -226,7 +226,7 @@ void GameController::printData(const vector<Move> &moves) {
         cout << "Castle White Q: " << cr.at(Colour::White).at(CastleType::QueenSide) << endl;
         cout << "Castle Black K: " << cr.at(Colour::Black).at(CastleType::KingSide) << endl;
         cout << "Castle Black Q: " << cr.at(Colour::Black).at(CastleType::QueenSide) << endl;
-        cout << "====================================" << endl;
+        cout << bar << endl;
     }
 
     cout << *td << endl << endl;

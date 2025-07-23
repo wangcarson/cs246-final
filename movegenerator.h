@@ -30,9 +30,13 @@ class MoveGenerator {
     // for colour.
     std::vector<Move> generateLegalMoves(Colour c);
 
-    bool checkCheck(Colour c);
+    // used by GameStateChecker.
+    bool isAttacked(Tile t); // used by check and isSafeMove()
     bool checkNoMoves(Colour c);
 
+    // used by Computer.
+    bool isCheckMove(Move m);
+    bool isSafeMove(Move m);
 };
 
 #endif

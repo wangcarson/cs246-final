@@ -54,7 +54,7 @@ bool GameStateChecker::isValidBoard() {
 }
 
 bool GameStateChecker::isCheck(Colour c) {
-    return moveGenerator.checkCheck(c);
+    return moveGenerator.isAttacked(board.getKing(c));
 }
 
 bool GameStateChecker::isCheckmate(Colour c) {
