@@ -8,8 +8,11 @@ GameController::GameController(istream &in, bool debug): in{in}, debug{debug} { 
     td = new TextDisplay{boardManager.getBoard()};
     boardManager.getBoard().attach(td);
 
+    // initialize maps.
     players.emplace(Colour::White, nullptr);
     players.emplace(Colour::Black, nullptr);
+    scores.emplace(Colour::White, 0);
+    scores.emplace(Colour::Black, 0);
 }
 
 // Creates a Player object corresponding to string `s`.

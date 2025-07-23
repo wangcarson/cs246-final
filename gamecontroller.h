@@ -31,13 +31,10 @@ class GameController {
     int turnNumber = 1;
     bool debug = false;
 
-    // Players are null until the 'game' cmd is run (so must be pointers)
+    // Maps for player objects and scores.
     std::map<Colour, std::unique_ptr<Player>> players;
-
-    std::map<Colour, int> scores = {
-        {Colour::White, 0}, 
-        {Colour::Black, 0}
-    };
+    std::map<Colour, int> scores;
+    // Players are null until the 'game' cmd is run (so must be pointers)
 
     // Creates a Player object corresponding to string `s`.
     // Returns as a smart pointer (transfers ownership).
