@@ -3,11 +3,11 @@
 int getPieceValue(Piece p) {
     int n = static_cast<int>(p.colour);
     switch (p.type) {
-        case PieceType::Pawn:   return n*100;
-        case PieceType::Knight: return n*320;
-        case PieceType::Bishop: return n*330;
-        case PieceType::Rook:   return n*500;
-        case PieceType::Queen:  return n*900;
+        case PieceType::Pawn:   return n*82;
+        case PieceType::Knight: return n*337;
+        case PieceType::Bishop: return n*365;
+        case PieceType::Rook:   return n*477;
+        case PieceType::Queen:  return n*1025;
         case PieceType::King:   return n*20000;
         default:                return 0;
     }

@@ -2,6 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include "structs.h"
+#include <iostream>
 
 using namespace std;
 
@@ -41,6 +42,9 @@ bool Puzzle::isCorrectMove(Move inputMove){
     iss >> a >> b;
     Tile ourStart = parseTile(a);
     Tile ourEnd = parseTile(b);
+
+    cout << "Input:   " << inputMove.getFrom() << " " << inputMove.getTo() << endl;
+    cout << "Correct: " << ourStart << " " << ourEnd << endl;
 
     return ourStart == inputMove.getFrom() && ourEnd == inputMove.getTo();
 }

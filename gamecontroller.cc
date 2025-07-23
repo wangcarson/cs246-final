@@ -182,11 +182,7 @@ void GameController::runGame() {
         // puzzle mode.
         } else if (mode == Mode::Puzzle) {
             // setup new position
-            cout << "Setting up puzzle..." << endl;
-            string p = puzzle->getPosition();
-            boardManager.init(p);
-            cout << *td << endl;
-            cout << boardManager.getMoveMaker().getTurn() << endl;
+            cout << boardManager.getMoveMaker().getTurn() << " to move." << endl;
 
             auto moves = boardManager.getMoveGenerator().generateLegalMoves();
             Move play;
@@ -195,7 +191,7 @@ void GameController::runGame() {
             } catch (eof_error &r) {
                 break;
             } catch (input_resign &r) {
-                resetState();
+                resetState(); // doesn't WORK!
                 continue;
             } catch (input_undo &r) {
                 --turnNumber;
@@ -249,6 +245,12 @@ void GameController::runGame() {
                 puzzlePlayer = make_unique<Human>(in);
                 puzzle = make_unique<Puzzle>();
                 mode = Mode::Puzzle;
+
+                // setup puzzle.
+                cout << "Setting up puzzle..." << endl;
+                string p = puzzle->getPosition();
+                boardManager.init(p);
+                cout << *td << endl;
             }
         }
     } // while loop breaks on EOF
