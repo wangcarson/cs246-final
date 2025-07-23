@@ -30,11 +30,6 @@ class eof_error: public std::runtime_error {
 
 enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty };
 
-enum class Mode { Setup, Game, Normal };
-// Setup Mode is for when we are setting up a position.
-// Game Mode is for taking move commands from input
-// Normal Mode is defult before we choose what other mode we want to be in.
-
 enum class Colour { White = 1, Black = -1, None = 0 };
 enum class CastleType { KingSide, QueenSide };
 

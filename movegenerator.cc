@@ -5,8 +5,8 @@
 using namespace std;
 
 // Constructor.
-MoveGenerator::MoveGenerator(ChessBoard &b, MoveMaker &mm): board{b}, moveMaker{mm} {}
-void MoveGenerator::setGSC(GameStateChecker *gsc) { gameStateChecker = gsc; }
+MoveGenerator::MoveGenerator(ChessBoard &b, MoveMaker &mm): 
+    board{b}, moveMaker{mm} {}
 
 // Vector constants for different moves.
 const vector<Tile> ROOK_VECTORS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};

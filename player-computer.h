@@ -10,7 +10,7 @@ class Computer: public Player {
 
   public:
     Computer(int level);
-    Move getLegalMove(const std::vector<Move> &moves) const override;
+    Move getLegalMove(const std::vector<Move> &legalMoves) const override;
 };
 
 #endif

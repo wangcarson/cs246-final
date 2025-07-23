@@ -1,4 +1,6 @@
 #include "gamecontroller.h"
+#include "player-human.h"
+#include "player-computer.h"
 #include <stdexcept>
 using namespace std;
 
@@ -15,15 +17,15 @@ GameController::~GameController() {
 // Get player object corresponding to s. Allocates dynamic memory.
 Player *GameController::getPlayer(string s) {
     if (s == "h" || s == "human") {
-        return new Human(boardManager, cin);
+        return new Human(cin);
     } else if (s == "computer1" || s == "1") {
-        return new Computer(boardManager, 1);
+        return new Computer(1);
     } else if (s == "computer2" || s == "2") {
-        return new Computer(boardManager, 2);
+        return new Computer(2);
     } else if (s == "computer3" || s == "3") {
-        return new Computer(boardManager, 3);
+        return new Computer(3);
     } else if (s == "computer4" || s == "4") {
-        return new Computer(boardManager, 4);
+        return new Computer(4);
     } else {
         throw invalid_argument("Invalid player type.");
     }
@@ -97,7 +99,7 @@ void GameController::start() {
                 }
             
             } else if (cmd == "done") {
-                if (boardManager.getGameStateChecker()->isValidBoard()) {
+                if (boardManager.getGameStateChecker().isValidBoard()) {
                     mode = Mode::Normal;
                     cout << endl << ">>> Normal Mode <<<" << endl;
                 } else {
@@ -107,7 +109,7 @@ void GameController::start() {
 
         ///////////////////////////////////////////////////////////////////
         } else if (mode == Mode::Game) {
-            auto moves = boardManager.getMoveGenerator()->generateLegalMoves(boardManager.getMoveMaker().getTurn());
+            auto moves = boardManager.getMoveGenerator().generateLegalMoves(boardManager.getMoveMaker().getTurn());
             if (debug) debugBoard(moves); // debugging
             cout << *td << endl;
 
@@ -139,11 +141,11 @@ void GameController::start() {
 
             // colour is now switched.
             c = boardManager.getMoveMaker().getTurn();
-            if (boardManager.getGameStateChecker()->isCheck(c)) {
+            if (boardManager.getGameStateChecker().isCheck(c)) {
                 cout << c << " is in check." << endl;
             }
 
-            if (boardManager.getGameStateChecker()->isMate(c)) {
+            if (boardManager.getGameStateChecker().isMate(c)) {
                 cout << "Checkmate! " << c << " wins!" << endl;
                 if (c == Colour::White) {
                     ++whiteScore;
@@ -152,7 +154,7 @@ void GameController::start() {
                 }
                 restart();
                 
-            } else if (boardManager.getGameStateChecker()->isDraw(c)) {
+            } else if (boardManager.getGameStateChecker().isDraw(c)) {
                 cout << "Stalemate!" << endl;
                 whiteScore += 0.5;
                 blackScore += 0.5;

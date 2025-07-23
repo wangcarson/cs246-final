@@ -9,10 +9,8 @@
 class GameStateChecker; // forward declaration
 
 class MoveGenerator {
-  
     ChessBoard &board;
     MoveMaker &moveMaker;
-    GameStateChecker *gameStateChecker = nullptr;
 
     std::vector<Move> lineRunner(Tile start, Tile dirVector, Colour c);
 
@@ -24,9 +22,6 @@ class MoveGenerator {
 
   public:
     MoveGenerator(ChessBoard &b, MoveMaker &mm);
-    void setGSC(GameStateChecker *gsc);
-
-    // bool isLegal(Move m);
 
     // generating moves.
     std::vector<Move> getPseudoMoves(Tile t);

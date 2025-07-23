@@ -3,13 +3,15 @@ using namespace std;
 
 Human::Human(istream &input): in{input} {}
 
-Move Human::getLegalMove(const vector<Move> &moves) const {
+// Gets a legal move from standard input.
+Move Human::getLegalMove(const vector<Move> &legalMoves) const {
     string cmd;
     if (in.fail()) throw eof_error(); // raise exception
 
     while (true) {
         in >> cmd;
         if (cmd == "move") {
+            // get move from standard input.
             string from, to;
             in >> from >> to;
             Tile start, end;
@@ -21,9 +23,15 @@ Move Human::getLegalMove(const vector<Move> &moves) const {
                 continue;
             }
 
-            for (auto it : moves) {
-                if (it.getFrom() == start && it.getTo() == end) {
-                    // input for promotion
+            // to determine if the input move is legal,
+            // check if the move is in the provided `legalMoves` vector.
+
+            // this way, if the move is legal, it already comes with all 
+            // necessary data for the move (move type, tiles, pieces).
+            Move legalMove;
+            for (auto it : legalMoves) {
+                if (start == it.getFrom() && end == it.getTo()) {
+                    // case for promotion move.
                     if (it.isPromotion()) {
                         char promote;
                     	Piece p;
@@ -32,15 +40,15 @@ Move Human::getLegalMove(const vector<Move> &moves) const {
                             p = parsePiece(promote);
                     	} catch (invalid_argument &r) {
                             cerr << r.what() << endl;
-                    		continue;
+                    		continue; // TODO: this continue doesn't actually work as intended
                     	}
                     	it.setPromotionPiece(p); // set promotion piece
                     }
-                    cout << "Legal move!" << endl;
+                    cerr << "Legal move!" << endl;
                     return it;
                 }
             }
-            cout << "Illegal move." << endl;
+            cerr << "Illegal move. Please enter another move." << endl;
         
         // we have to be a bit creative with handling resign.
         } else if (cmd == "resign") {

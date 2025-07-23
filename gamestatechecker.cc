@@ -4,8 +4,8 @@ using namespace std;
 
 using namespace std;
 
-GameStateChecker::GameStateChecker(ChessBoard &b): board{b} {}
-void GameStateChecker::setMG(MoveGenerator *gsc) { moveGenerator = gsc; }
+GameStateChecker::GameStateChecker(ChessBoard &b, MoveGenerator &mg): 
+    board{b}, moveGenerator{mg} {}
 
 // checking game states.
 bool GameStateChecker::isValidBoard() {
@@ -33,11 +33,11 @@ bool GameStateChecker::isValidBoard() {
 
 bool GameStateChecker::isCheck(Colour c) {
 
-    return moveGenerator->findCheckMoves(c);
+    return moveGenerator.findCheckMoves(c);
 }
 
 bool GameStateChecker::isMate(Colour c) {
-    if (isCheck(c) && moveGenerator->generateLegalMoves(c).size() == 0){
+    if (isCheck(c) && moveGenerator.generateLegalMoves(c).size() == 0){
         cout << "Checking mate" << endl;
         return true;
     }
@@ -50,7 +50,7 @@ bool GameStateChecker::isDraw(Colour c) {
         return false;
     }
 
-    if (!isCheck(c) && moveGenerator->generateLegalMoves(c).size() == 0)
+    if (!isCheck(c) && moveGenerator.generateLegalMoves(c).size() == 0)
         return true;
     // todo: check for insufficient material
     

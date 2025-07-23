@@ -12,23 +12,19 @@
 class BoardManager {
     ChessBoard board;
     MoveMaker moveMaker;
-
-    // since MoveGenerator and GameStateChecker need each other, 
-    // they have to be declared as pointers (references can't be null).
-    std::unique_ptr<MoveGenerator> moveGenerator;
-    std::unique_ptr<GameStateChecker> gameStateChecker;
+    MoveGenerator moveGenerator;
+    GameStateChecker gameStateChecker;
   
   public:
     BoardManager();
 
-    void init(); // init board to default position (deallocate old data, allocate new)
+    void init(); // init board and state to defaults
 
     // accessors.
     ChessBoard &getBoard();
     MoveMaker &getMoveMaker();
-
-    MoveGenerator *getMoveGenerator();
-    GameStateChecker *getGameStateChecker();
+    MoveGenerator &getMoveGenerator();
+    GameStateChecker &getGameStateChecker();
 };
 
 #endif

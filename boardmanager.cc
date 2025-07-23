@@ -5,15 +5,13 @@ using namespace std;
 
 const string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
+// Constructor.
 BoardManager::BoardManager(): 
-    board{}, 
     moveMaker{board}, 
-    moveGenerator{make_unique<MoveGenerator>(board, moveMaker)}, 
-    gameStateChecker{make_unique<GameStateChecker>(board)} {
-    moveGenerator->setGSC(gameStateChecker.get());
-    gameStateChecker->setMG(moveGenerator.get());
-}
+    moveGenerator{board, moveMaker}, 
+    gameStateChecker{board, moveGenerator} {}
 
+// Initializing state and board.
 void BoardManager::init() {
     // initialize state
     moveMaker.initBoardState();
@@ -21,7 +19,6 @@ void BoardManager::init() {
     // initialize grid to default
     board.clearGrid();
     int row = 0, col = 0;
-    
     for (char c : DEFAULT_POSITION) {
         if (c == '/') {
             row++;
@@ -35,9 +32,8 @@ void BoardManager::init() {
     }
 }
 
+// Accessors for classes.
 ChessBoard &BoardManager::getBoard() { return board; }
 MoveMaker &BoardManager::getMoveMaker() { return moveMaker; }
-
-// gives copy of raw pointer.
-MoveGenerator *BoardManager::getMoveGenerator() { return moveGenerator.get(); }
-GameStateChecker *BoardManager::getGameStateChecker() { return gameStateChecker.get(); }
+MoveGenerator &BoardManager::getMoveGenerator() { return moveGenerator; }
+GameStateChecker &BoardManager::getGameStateChecker() { return gameStateChecker; }

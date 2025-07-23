@@ -11,7 +11,7 @@ class Human: public Player {
 
   public:
     Human(std::istream &input);
-    Move getLegalMove(const std::vector<Move> &moves) const override;
+    Move getLegalMove(const std::vector<Move> &legalMoves) const override;
 }; 
 
 #endif
