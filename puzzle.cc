@@ -18,6 +18,32 @@ string Puzzle::getfileInput(){
     return stringResponse;
 }
 
+Move Puzzle::getResponseMove(vector<Move> &legalMoves) {
+
+    ifstream inFile;
+    inFile.open(fileName);
+
+    string stringResponse;
+    getline(inFile,stringResponse);
+
+    stringstream iss {stringResponse};
+
+    string temp;
+
+    iss >> temp;
+    Tile ourStart = parseTile(temp);
+    iss >> temp;
+    Tile ourEnd = parseTile(temp);
+
+    for (auto it : legalMoves) {
+        if (ourStart == it.getFrom() && ourEnd == it.getTo()) {
+            inFile.close();   
+            return it;
+        }
+    }
+    throw runtime_error("getResponseMove(): ?");
+}
+
 bool Puzzle::isCorrectMove(Move inputMove){
 
     ifstream inFile;
