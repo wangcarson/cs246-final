@@ -7,9 +7,9 @@
 using namespace std;
 
 GameController::GameController(istream &in, bool debug): in{in}, debug{debug} { // other fields are default constructed
-    td = new TextDisplay{boardManager.getBoard()};
-    boardManager.getBoard().attach(td);
-
+    td = make_unique<TextDisplay>(boardManager.getBoard());
+    boardManager.getBoard().attach(td.get());
+    
     // initialize maps.
     players.emplace(Colour::White, nullptr);
     players.emplace(Colour::Black, nullptr);

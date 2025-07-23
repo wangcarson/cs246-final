@@ -24,7 +24,7 @@ class GameController {
     BoardManager boardManager;
 
     std::istream &in;
-    TextDisplay *td = nullptr;
+    std::unique_ptr<TextDisplay> td;
     // GraphicsDisplay gd;
 
     Mode mode = Mode::Normal;
