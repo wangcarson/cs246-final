@@ -263,7 +263,7 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
 
 vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
     vector<Move> legalList;
-    for(int i = 0; i < BOARD_ROWS; ++i){
+    for (int i = 0; i < BOARD_ROWS; ++i) {
         for(int j = 0; j < BOARD_COLS; ++j) {
             Tile t{i, j};
             if (c == board.getColour(t)) {
@@ -277,8 +277,17 @@ vector<Move> MoveGenerator::generateLegalMoves(Colour c) {
 }
 
 // same as generatePseudoMoves and generateLegalMoves but breaks on legal move found. 
+// a bit more efficient
 bool MoveGenerator::checkNoMoves(Colour c) {
-    return false;
+    for (int i = 0; i < BOARD_ROWS; ++i) {
+        for(int j = 0; j < BOARD_COLS; ++j) {
+            Tile t{i, j};
+            if (c == board.getColour(t) && getLegalMoves(t, c).size() != 0) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 bool MoveGenerator::checkCheck(Colour c) {
@@ -307,7 +316,6 @@ bool MoveGenerator::checkCheck(Colour c) {
     // Possible rook (and queen) spots.
     vector<Move> rookSpots = multiLineRunner(t, ROOK_VECTORS, c);
     for (auto possibleMove : rookSpots) {
-        Piece possiblePiece = possibleMove.getPiece();
         if (possibleMove.isCapture() && (possibleMove.getCapturePiece().isRook() || possibleMove.getCapturePiece().isQueen())) {
             return true;
         }
@@ -316,7 +324,6 @@ bool MoveGenerator::checkCheck(Colour c) {
     // Possible knight spots.
     vector<Move> knightSpots = multiMoveRunner(t, KNIGHT_VECTORS, c);
     for (auto possibleMove : knightSpots) {
-        Piece possiblePiece = possibleMove.getPiece();
         if (possibleMove.isCapture() && possibleMove.getCapturePiece().isKnight()) {
             return true;
         }

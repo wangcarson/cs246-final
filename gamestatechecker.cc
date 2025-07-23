@@ -40,7 +40,6 @@ bool GameStateChecker::isValidBoard() {
             }
         }
     }
-
     // check kings exist
     if (!whiteKing || !blackKing) {
         cerr << "Invalid board: Missing king." << endl;
@@ -59,20 +58,14 @@ bool GameStateChecker::isCheck(Colour c) {
 }
 
 bool GameStateChecker::isMate(Colour c) {
-    return (isCheck(c) && moveGenerator.generateLegalMoves(c).size() == 0);
+    return (isCheck(c) && moveGenerator.checkNoMoves(c));
 }
 
 bool GameStateChecker::isDraw(Colour c) {
-    if (isCheck(c)) {
-        return false;
-    }
-
-    if (!isCheck(c) && moveGenerator.generateLegalMoves(c).size() == 0)
-        return true;
-    // todo: check for insufficient material
+    if (isCheck(c)) return false;
+    if (moveGenerator.checkNoMoves(c)) return true;
     
-    //insufficent matiral is 1 bishop/1 knight.
-
+    // insufficent material is 1 bishop/1 knight.
     vector <int> eachPieceCount;
     eachPieceCount.reserve(14);
 

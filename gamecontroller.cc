@@ -36,12 +36,13 @@ unique_ptr<Player> GameController::getPlayer(string s) {
 // Resets states for new game.
 void GameController::resetState() {
     cout << "White " << scores.at(Colour::White) << " - " << scores.at(Colour::Black) << " Black" << endl << endl;
-    
+    cout << endl << ">>> Normal Mode <<<" << endl;
+
     // reset states.
+    mode = Mode::Normal;
     players.at(Colour::White).reset(); // deallocates memory
     players.at(Colour::Black).reset();
     turnNumber = 1;
-    mode = Mode::Normal;
     boardManager.init();
 }
 
@@ -147,7 +148,7 @@ void GameController::runGame() {
 
             // colour is now switched.
             if (boardManager.getGameStateChecker().isCheck(opponent)) {
-                cout << turn << " is in check." << endl;
+                cout << opponent << " is in check." << endl;
             }
 
             if (boardManager.getGameStateChecker().isMate(opponent)) {
