@@ -10,8 +10,7 @@ class Puzzle{
     public:
 
         
-        std::string getPosition();
-        std::string getResponse();
+        std::string getfileInput();
         bool isCorrectMove(Move inputMove);
 
     

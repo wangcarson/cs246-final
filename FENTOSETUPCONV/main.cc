@@ -53,57 +53,12 @@ int main() {
     string moveToMake="*";
 
     while(!cin.eof() && moveToMake=="*"){
-        string fullFenString;
-        cin >> fullFenString;
-
+        string fullFenString,colour;
+        cin >> fullFenString >> colour;
+        
         // cout << "PUZZLESTART"<<endl;
 
-
-        for(int i =1;i<=8;++i){
-            for(char j='a';j<='h';++j){
-                cout << "- " << j << i << endl;
-            }
-        }
-
-        string boardPartWithSlashes = extractBoardPart(fullFenString);
-
-        stringstream ss_board(boardPartWithSlashes);
-        string rankString;
-        int currentRank = 8; 
-        while (getline(ss_board, rankString, '/') && currentRank >= 1) {
-            char currentCol = 'a'; 
-            
-            for (char c : rankString) {
-                if (isdigit(c)) {
-                    int emptySquares = c - '0'; 
-                    currentCol += emptySquares; 
-                } else {
-
-                    cout << "+ " << c << " " << currentCol << currentRank << endl;
-                    currentCol++; 
-                }
-
-            }
-            currentRank--; 
-        }
-
-        //white
-        //black
-        string colour;
-        cin >>  colour;
-        
-        if (colour == "W" || colour == "w"){
-            cout << "= white" << endl;
-            colour = "White to move";
-
-        }else{
-            cout << "= black" << endl;
-            colour = "Black to move";
-
-        }
-        cout << "PUZZLESETUP"<<endl;
-        cout << colour << endl;
-        cout << "PUZZLESOLUTION"<<endl;
+        cout << fullFenString << " " << colour << endl;
 
         for(int i =0;i<4;++i){
             cin >> moveToMake;

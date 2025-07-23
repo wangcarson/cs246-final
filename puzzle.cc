@@ -5,13 +5,8 @@
 
 using namespace std;
 
-string Puzzle::getPosition(){
-    string stringResponse;
-    getline(puzzleFile,stringResponse);
-    return stringResponse;
-}
 
-string Puzzle::getResponse(){
+string Puzzle::getfileInput(){
     string stringResponse;
     getline(puzzleFile,stringResponse);
     return stringResponse;
