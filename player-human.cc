@@ -1,17 +1,8 @@
-#include "player.h"
-#include "structs.h"
+#include "player-human.h"
 using namespace std;
 
-////////////////////////////////////////////////////////////
+Human::Human(istream &input): in{input} {}
 
-Player::Player(BoardManager &bm): boardManager{bm} {}
-Player::~Player() {}
-
-////////////////////////////////////////////////////////////
-
-Human::Human(BoardManager &bm, istream &input): Player{bm}, in{input} {}
-
-// Returns a valid move.
 Move Human::getLegalMove(const vector<Move> &moves) const {
     string cmd;
     if (in.fail()) throw eof_error(); // raise exception
@@ -23,10 +14,10 @@ Move Human::getLegalMove(const vector<Move> &moves) const {
             in >> from >> to;
             Tile start, end;
             try {
-                start = parseTile(from); // add exception handling here
+                start = parseTile(from);
                 end = parseTile(to);
             } catch (invalid_argument &r) {
-                cerr << r.what() << endl;
+                cerr << r.what() << endl; // give feedback and continue
                 continue;
             }
 
@@ -50,22 +41,13 @@ Move Human::getLegalMove(const vector<Move> &moves) const {
                 }
             }
             cout << "Illegal move." << endl;
-
+        
+        // we have to be a bit creative with handling resign.
         } else if (cmd == "resign") {
             throw resign_error();
+        
         } else if (cmd == "undo") {
             throw undo_error();
         }
     }
-}
-
-////////////////////////////////////////////////////////////
-
-Computer::Computer(BoardManager &bm, int level): Player{bm}, level{level} {}
-Move Computer::getLegalMove(const vector<Move> &moves) const {
-    // TODO: Actual implementation of bot goes here
-    // Maybe make a different class for each type of bot
-    Move move = moves.at(0);
-    cout << move << endl;
-    return move;
 }
