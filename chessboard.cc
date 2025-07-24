@@ -73,3 +73,7 @@ void ChessBoard::printSize(string s) { // debugging
     }
 }
 
+Colour ChessBoard::getTurn(){
+    return turn;
+}
+

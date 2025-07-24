@@ -12,8 +12,8 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
         in >> cmd;
         if (cmd == "move") {
             // get move from standard input.
+
             string from, to;
-            
             in >> from >> to;
             Tile start, end;
             try {

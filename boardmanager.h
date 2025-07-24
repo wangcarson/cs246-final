@@ -10,13 +10,14 @@
 #include "gamestatechecker.h"
 #include "movegenerator.h"
 
-const std::string DEFAULT_POSITION = "8/PPPP4/5k2/8/8/8/8/K7 w";//rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w
+const std::string DEFAULT_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";//rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w
 
 class BoardManager {
     ChessBoard board;
     MoveMaker moveMaker;
     MoveGenerator moveGenerator;
     GameStateChecker gameStateChecker;
+
   
   public:
     BoardManager();
@@ -27,6 +28,9 @@ class BoardManager {
     MoveMaker &getMoveMaker();
     MoveGenerator &getMoveGenerator();
     GameStateChecker &getGameStateChecker();
+
+    std::string &boardToFen();
+
 };
 
 #endif
