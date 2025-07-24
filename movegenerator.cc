@@ -127,10 +127,6 @@ vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){ // todo
             legalList.emplace_back(m);
         }
     }
-
-    cout << legalList << endl;
-
-
     return legalList;
 }
 

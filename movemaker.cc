@@ -15,7 +15,6 @@ void MoveMaker::initBoardState(Colour starting) {
 
 // assumes m is a legal move
 void MoveMaker::makeMove(Move m) {
-    // cout << "Make move: " << m << endl;
     previous.emplace_back(MoveData{m, BoardState{turn, enPassant, castlingRights}});
 
     // add and remove pieces.
@@ -73,7 +72,6 @@ void MoveMaker::undoMove() {
     Tile fromTile = lastMove.getFrom();
     Tile toTile = lastMove.getTo();
     previous.pop_back();
-    // cout << "UNDO move: " << lastMove << endl;
 
     // revert piece to original tile
     board.setPiece(fromTile, lastMove.getPiece());
