@@ -51,7 +51,7 @@ void GameController::resetState() {
     players.at(Colour::White).reset(); // deallocates memory
     players.at(Colour::Black).reset();
     turnNumber = 1;
-    boardManager.init();
+    boardManager.init(FenString);
 }
 
 // Input management and error handling for program.
@@ -114,6 +114,9 @@ void GameController::runGame() {
             } else if (cmd == "done") {
                 if (boardManager.getGameStateChecker().isValidBoard()) {
                     mode = Mode::Normal;
+
+                    FenString = boardManager.boardToFen(); //updates fen string
+
                     cout << endl << ">>> Normal Mode <<<" << endl;
                 } else {
                     cerr << "Please correct the board before exiting setup." << endl;

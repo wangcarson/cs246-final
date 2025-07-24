@@ -29,7 +29,7 @@ class BoardManager {
     MoveGenerator &getMoveGenerator();
     GameStateChecker &getGameStateChecker();
 
-    std::string &boardToFen();
+    std::string boardToFen();
 
 };
 

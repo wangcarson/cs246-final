@@ -43,11 +43,11 @@ MoveMaker &BoardManager::getMoveMaker() { return moveMaker; }
 MoveGenerator &BoardManager::getMoveGenerator() { return moveGenerator; }
 GameStateChecker &BoardManager::getGameStateChecker() { return gameStateChecker; }
 
-std::string &BoardManager::boardToFen(){
-    string fenString="";
+std::string BoardManager::boardToFen(){
+    std::string fenString="";
     int skip =0;
 
-    for(int row =8;row>=0;--row){
+    for(int row =7;row>=0;--row){
         for(int col=0;col<8;++col){
             
             char toUseInString = getPieceChar(board.getPiece(Tile {row,col}));
@@ -55,7 +55,8 @@ std::string &BoardManager::boardToFen(){
             if (toUseInString==' '){
                 ++skip;
             }else if (skip>0){
-                fenString+=skip;
+                char alpha = (char)(skip+48);
+                fenString+=alpha;
                 fenString+=toUseInString;
                 skip=0;
             }else{
@@ -63,6 +64,11 @@ std::string &BoardManager::boardToFen(){
             }
 
 
+        }
+        if (skip>0){
+            char alpha = (char)(skip+48);
+            fenString+=alpha;
+            skip=0;
         }
         if (row>0){
             fenString+='/';
