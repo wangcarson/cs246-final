@@ -31,8 +31,6 @@ bool Puzzle::isCorrectMove(Move inputMove){
 }
 
 void Puzzle::loadMoves() {
-    puzzleLineNumber+=2;
-
 
     string line1, line2;
     string a, b, c, d;
