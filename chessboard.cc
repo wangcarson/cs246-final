@@ -16,13 +16,13 @@ Piece ChessBoard::getPiece(Tile t) { // O(1)
     }
 }
 
-void ChessBoard::setPiece(Tile t, Piece p) { // O(1)
+void ChessBoard::setPiece(Tile t, Piece p, bool official) { // O(1)
     grid.at(t.row).at(t.col) = p;
-    notifyObservers(t);
+    if (official) notifyObservers(t);
 }
 
-void ChessBoard::removePiece(Tile t) { // O(1)
-    setPiece(t, EMPTY_PIECE);
+void ChessBoard::removePiece(Tile t, bool official) { // O(1)
+    setPiece(t, EMPTY_PIECE, official);
 }
 
 Colour ChessBoard::getColour (Tile t) { // O(1)
@@ -34,7 +34,7 @@ void ChessBoard::clearGrid() {
     for (size_t i = 0; i < BOARD_ROWS; ++i) {
         auto row = grid[i];
         for (size_t j = 0; j < BOARD_COLS; ++j) {
-            removePiece(Tile{static_cast<int>(i), static_cast<int>(j)});
+            removePiece(Tile{static_cast<int>(i), static_cast<int>(j)}, true);
         }
     }
 }

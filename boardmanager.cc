@@ -31,7 +31,7 @@ void BoardManager::init(string position) {
         } else if (isdigit(c)) {
             col += c - '0';
         } else {
-            board.setPiece(Tile{BOARD_ROWS-row-1, col}, parsePiece(c)); // at() raises error if not found
+            board.setPiece(Tile{BOARD_ROWS-row-1, col}, parsePiece(c), true);
             col++;
         }
     }

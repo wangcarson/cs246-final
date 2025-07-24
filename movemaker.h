@@ -23,8 +23,8 @@ class MoveMaker: public Subject {
     void initBoardState(Colour starting=Colour::White);
 
     // making moves (add to previous)
-    void makeMove(Move m); // should be called on legal moves
-    void undoMove();
+    void makeMove(Move m, bool official=false); // should be called on legal moves
+    void undoMove(bool official=false);
 
     // board state accessors.
     Colour getTurn() const noexcept;

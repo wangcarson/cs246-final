@@ -13,8 +13,8 @@ class ChessBoard: public Subject {
     ChessBoard();
 
     // changing board. (should call observers)
-    void setPiece(Tile t, Piece p);
-    void removePiece(Tile t);
+    void setPiece(Tile t, Piece p, bool official=false);
+    void removePiece(Tile t, bool official=false);
     void clearGrid();
 
     // some accessors.

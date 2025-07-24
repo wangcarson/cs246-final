@@ -94,7 +94,7 @@ char getPieceChar(Piece p) {
     auto it = PIECE_CHAR_MAP.find(p);
     if (it == PIECE_CHAR_MAP.end()) {
         cerr << "INVALID_PIECE(" << p.type << ", " << p.colour << ")" << endl;
-        throw std::invalid_argument("getPieceChar(): Invalid Piece object (likely called on uninitialized piece - e.g. capturePiece, promotionPiece).");
+        throw std::invalid_argument("getPieceChar(): Invalid Piece object.");
     }
     return it->second;
 }
