@@ -197,8 +197,8 @@ void GameController::runGame() {
         // puzzle mode.
         } else if (mode == Mode::Puzzle) {
             // do computer move first.
-            auto moves = boardManager.getMoveGenerator().generateLegalMoves();
-            Move response = puzzle->getResponseMove(moves);
+            cachedLegalMoves = boardManager.getMoveGenerator().generateLegalMoves();
+            Move response = puzzle->getResponseMove(cachedLegalMoves);
             boardManager.getMoveMaker().makeMove(response, true);
             cout << "Computer moves " << response << endl;
             cout << *td << endl;
@@ -206,10 +206,14 @@ void GameController::runGame() {
 
             // do human player moves.
             Move m;
-            moves = boardManager.getMoveGenerator().generateLegalMoves();
+            cachedLegalMoves = boardManager.getMoveGenerator().generateLegalMoves();
+            bool eof_break = false;
             while (true) {
                 in >> cmd;
-                if (in.fail()) break;
+                if (in.fail()) {
+                    eof_break = true;
+                    break;
+                }
                 
                 if (cmd == "move") {
                     try { m = puzzlePlayer->getLegalMove(cachedLegalMoves); } // get legal move from player.
@@ -221,6 +225,8 @@ void GameController::runGame() {
                     cout << "Incorrect move! Try again." << endl;
                 }
             }
+            if (eof_break) break; // break twice on EOF
+
             // make move.
             boardManager.getMoveMaker().makeMove(m, true);
             cout << "Correct!" << endl;
@@ -230,7 +236,8 @@ void GameController::runGame() {
                 puzzle->loadMoves();
             } catch (puzzle_end &r) { // puzzle finished
                 cout << "Puzzle completed!" << endl;
-                resetState();
+                mode = Mode::Normal;
+                cout << endl << ">>> Normal Mode <<<" << endl;
             }
         
         // default mode
@@ -269,9 +276,6 @@ void GameController::runGame() {
                 cout << endl << ">>> Puzzle Mode <<<" << endl;
                 mode = Mode::Puzzle;
                 
-                puzzlePlayer = make_unique<Human>(in,Colour::White);
-                puzzle = make_unique<Puzzle>();
-
                 // setup puzzle.
                 cout << "Setting up puzzle..." << endl;
                 string p = puzzle->getPosition();
