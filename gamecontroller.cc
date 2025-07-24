@@ -61,8 +61,7 @@ void GameController::runGame() {
     catch (...) {
         throw runtime_error("GameController::start(): Error with initializing board");
     }
-    cout << endl << "Starting program..." << endl;
-    cout << *td  << endl;
+    cout << "Starting program..." << endl;
     cout << endl << ">>> Normal Mode <<<" << endl;
     
     string cmd;
@@ -131,31 +130,27 @@ void GameController::runGame() {
             // get turn info.
             Colour turn = boardManager.getMoveMaker().getTurn();
             Colour opponent = oppositeColour(turn);
-            auto legalMoves = boardManager.getMoveGenerator().generateLegalMoves();
-            
-            // output board and debug info
-            printData(legalMoves);
-            cout << turn << " to play." << endl;
             auto player = players.at(turn).get();
 
             // get a move from player.
             Move m;
             if (cmd == "move") {
                 try { // get legal move from player.
-                    m = player->getLegalMove(legalMoves);
+                    m = player->getLegalMove(cachedLegalMoves);
                 } catch (...) {
-                    continue;
+                    continue; // skip if invalid move.
                 }
-                
-                // make the move.
+
+                // make the move and print.
                 ++turnNumber;
                 boardManager.getMoveMaker().makeMove(m);
+                cachedLegalMoves = boardManager.getMoveGenerator().generateLegalMoves();
+                printData(cachedLegalMoves);
 
                 // check for game end.
                 if (boardManager.getGameStateChecker().isCheck(opponent)) {
                     cout << opponent << " is in check." << endl;
                 }
-
                 if (boardManager.getGameStateChecker().isCheckmate(opponent)) {
                     cout << *td << endl;
                     cout << "Checkmate! " << turn << " wins!" << endl;
@@ -179,6 +174,9 @@ void GameController::runGame() {
                     resetState();
                     continue;
                 }
+
+                // print new turn.
+                cout << opponent << " to play." << endl;
         
             // we have to be a bit creative with handling resign.
             } else if (cmd == "resign") {
@@ -254,6 +252,9 @@ void GameController::runGame() {
                 }
                 cout << endl << ">>> Game Mode <<<" << endl;
                 mode = Mode::Game;
+                cachedLegalMoves = boardManager.getMoveGenerator().generateLegalMoves();
+                printData(cachedLegalMoves);
+                cout << boardManager.getMoveMaker().getTurn() << " to play." << endl;
 
             } else if (cmd == "setup") {
                 cout << endl << ">>> Setup Mode <<<" << endl;
@@ -304,8 +305,7 @@ void GameController::printData(const vector<Move> &moves) {
         cout << "Castle Black K: " << cr.at(Colour::Black).at(CastleType::KingSide) << endl;
         cout << "Castle Black Q: " << cr.at(Colour::Black).at(CastleType::QueenSide) << endl;
         cout << bar << endl;
+        cout << "Evaluation: " << getEvaluationValue(boardManager) << endl;
     }
-    
     cout << *td << endl << endl;
-    cout << "Evaluation: " << getEvaluationValue(boardManager) << endl;
 }

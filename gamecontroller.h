@@ -40,6 +40,8 @@ class GameController {
     std::map<Colour, float> scores;
     // Players are null until the 'game' cmd is run (so must be pointers)
 
+    std::vector<Move> cachedLegalMoves;
+
     // Puzzle objects.
     std::unique_ptr<Player> puzzlePlayer;
     std::unique_ptr<Puzzle> puzzle;
