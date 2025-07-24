@@ -15,10 +15,14 @@ movegenerator.cc
 # Things to do
 - graphics display
 - puzzle shuffle
+-when we setup a board it should remain.
 -if type just move bot make a move for us.
 -needs to say check when the king is in check
 -game 4 4 bug
 -something about bot level 4 needs fixing to many random moves spazing out
+-add error checking for Colour's on promotion.
+-UML update
+-documnetation update.
 
 # optimizations
 - go over every method we wrote and set them to `const` or `noexcept`
