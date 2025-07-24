@@ -5,7 +5,6 @@
 #include <fstream>
 
 class Puzzle {
-    int puzzleLineNumber=1;
     std::string fileName;
     std::ifstream inFile;
     
