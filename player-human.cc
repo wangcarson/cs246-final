@@ -35,7 +35,7 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
                     throw invalid_move();
                 }
                 if (p.colour != colour || p.type == PieceType::Pawn || p.type == PieceType::King) {
-                    cerr << "Illegal promotion piece: " << p << endl;
+                    cerr << "Illegal promotion piece: " << promote << endl;
                     throw invalid_move();
                 }
                 it.setPromotionPiece(p); // set promotion piece

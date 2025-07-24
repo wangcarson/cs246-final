@@ -14,15 +14,15 @@ void MoveMaker::initBoardState(Colour starting) {
 }
 
 // assumes m is a legal move
-void MoveMaker::makeMove(Move m) {
+void MoveMaker::makeMove(Move m, bool official) {
     previous.emplace_back(MoveData{m, BoardState{turn, enPassant, castlingRights}});
 
     // add and remove pieces.
-    board.removePiece(m.getFrom());
+    board.removePiece(m.getFrom(), official);
     if (m.isPromotion()) {
-        board.setPiece(m.getTo(), m.getPromotionPiece());
+        board.setPiece(m.getTo(), m.getPromotionPiece(), official);
     } else {
-        board.setPiece(m.getTo(), m.getPiece());
+        board.setPiece(m.getTo(), m.getPiece(), official);
     }
 
     // special cases.
@@ -31,12 +31,12 @@ void MoveMaker::makeMove(Move m) {
     if (m.isCastle()) {
         Tile oldRookTile = c < nc ? Tile{r, 7} : Tile{r, 0};
         Tile newRookTile{r, (c+nc)/2};
-        board.setPiece(newRookTile, board.getPiece(oldRookTile));
-        board.removePiece(oldRookTile);
+        board.setPiece(newRookTile, board.getPiece(oldRookTile), official);
+        board.removePiece(oldRookTile, official);
     
     } else if (m.isEnPassant()) {
         Tile captureTile{r, nc};
-        board.removePiece(captureTile);
+        board.removePiece(captureTile, official);
     }
 
     // castling states.
@@ -63,7 +63,7 @@ void MoveMaker::makeMove(Move m) {
     turn = (turn == Colour::White) ? Colour::Black : Colour::White;
 }
 
-void MoveMaker::undoMove() {
+void MoveMaker::undoMove(bool official) {
     // get previous move.
     if (previous.size() == 0) return;
     MoveData lastMoveData = previous.back();
@@ -74,8 +74,8 @@ void MoveMaker::undoMove() {
     previous.pop_back();
 
     // revert piece to original tile
-    board.setPiece(fromTile, lastMove.getPiece());
-    board.removePiece(toTile);
+    board.setPiece(fromTile, lastMove.getPiece(), official);
+    board.removePiece(toTile, official);
 
     auto [r, c] = lastMove.getFrom();
     auto [nr, nc] = lastMove.getTo();
@@ -83,15 +83,15 @@ void MoveMaker::undoMove() {
     if (lastMove.isCastle()){
         Tile oldRookTile = c < nc ? Tile{r, 7} : Tile{r, 0};
         Tile newRookTile{r, (c+nc)/2};
-        board.setPiece(oldRookTile, board.getPiece(newRookTile));
-        board.removePiece(newRookTile);
+        board.setPiece(oldRookTile, board.getPiece(newRookTile), official);
+        board.removePiece(newRookTile, official);
 
     } else if (lastMove.isEnPassant()) {
         Tile captureTile{r, nc};
-        board.setPiece(captureTile, lastMove.getCapturePiece());
+        board.setPiece(captureTile, lastMove.getCapturePiece(), official);
 
     } else if (lastMove.isCapture()) {
-        board.setPiece(toTile, lastMove.getCapturePiece());
+        board.setPiece(toTile, lastMove.getCapturePiece(), official);
     }
     
     // reverting all invisible board states. (en passant/castling)

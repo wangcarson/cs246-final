@@ -48,7 +48,7 @@ void GameController::resetState() {
 
     // reset states.
     mode = Mode::Normal;
-    players.at(Colour::White).reset(); // deallocates memory
+    players.at(Colour::White).reset();
     players.at(Colour::Black).reset();
     turnNumber = 1;
     try { boardManager.init(FenString); }
@@ -81,7 +81,7 @@ void GameController::runGame() {
                 try {
                     Piece piece = parsePiece(p);
                     Tile tile = parseTile(t);
-                    boardManager.getBoard().setPiece(tile, piece);
+                    boardManager.getBoard().setPiece(tile, piece, true);
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
                 } catch (...) {
@@ -94,7 +94,7 @@ void GameController::runGame() {
                 in >> s;
                 try {
                     Tile t = parseTile(s);
-                    boardManager.getBoard().removePiece(t);
+                    boardManager.getBoard().removePiece(t, true);
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
                 } catch (...) {
@@ -146,21 +146,20 @@ void GameController::runGame() {
             
             } else if (cmd == "undo") {
                 --turnNumber;             
-                boardManager.getMoveMaker().undoMove();
+                boardManager.getMoveMaker().undoMove(true);
                 cachedLegalMoves = boardManager.getMoveGenerator().generateLegalMoves();
                 printData(cachedLegalMoves);
                 continue;
             
             } else if (autoMovementForBot || cmd == "move") {
-                try { // get legal move from player.
-                    m = player->getLegalMove(cachedLegalMoves);
-                } catch (...) {
-                    continue; // skip if invalid move.
-                }
+                try { m = player->getLegalMove(cachedLegalMoves); } // get legal move from player.
+                catch (...) { continue; }                           // skip if invalid move.
 
                 // make the move and print.
                 ++turnNumber;
-                boardManager.getMoveMaker().makeMove(m);
+                boardManager.getMoveMaker().makeMove(m, true);
+
+                // print board.
                 cachedLegalMoves = boardManager.getMoveGenerator().generateLegalMoves();
                 printData(cachedLegalMoves);
 
@@ -169,14 +168,12 @@ void GameController::runGame() {
                     cout << opponent << " is in check." << endl;
                 }
                 if (boardManager.getGameStateChecker().isCheckmate(opponent)) {
-                    cout << *td << endl;
                     cout << "Checkmate! " << turn << " wins!" << endl;
                     ++scores.at(turn);
                     resetState();
                     continue;
                     
                 } else if (boardManager.getGameStateChecker().isStalemate(opponent)) {
-                    cout << *td << endl;
                     cout << "Stalemate!" << endl;
                     scores.at(turn) += 0.5;
                     scores.at(opponent) += 0.5;
@@ -184,7 +181,6 @@ void GameController::runGame() {
                     continue;
                 
                 } else if (boardManager.getGameStateChecker().isMaterialDraw()) {
-                    cout << *td << endl;
                     cout << "Draw by insufficient material!" << endl;
                     scores.at(turn) += 0.5;
                     scores.at(opponent) += 0.5;
@@ -203,7 +199,7 @@ void GameController::runGame() {
             // do computer move first.
             auto moves = boardManager.getMoveGenerator().generateLegalMoves();
             Move response = puzzle->getResponseMove(moves);
-            boardManager.getMoveMaker().makeMove(response);
+            boardManager.getMoveMaker().makeMove(response, true);
             cout << "Computer moves " << response << endl;
             cout << *td << endl;
             cout << boardManager.getMoveMaker().getTurn() << " to move." << endl;
@@ -216,11 +212,9 @@ void GameController::runGame() {
                 if (in.fail()) break;
                 
                 if (cmd == "move") {
-                    try { // get legal move from player.
-                        m = puzzlePlayer->getLegalMove(moves);
-                    } catch (...) {
-                        continue;
-                    }
+                    try { m = puzzlePlayer->getLegalMove(cachedLegalMoves); } // get legal move from player.
+                    catch (...) { continue; }                                 // skip if invalid move.
+                    
                     if (puzzle->isCorrectMove(m)) { // exit loop if correct move.
                         break;
                     }
@@ -228,7 +222,7 @@ void GameController::runGame() {
                 }
             }
             // make move.
-            boardManager.getMoveMaker().makeMove(m);
+            boardManager.getMoveMaker().makeMove(m, true);
             cout << "Correct!" << endl;
             cout << *td << endl;
 
@@ -237,7 +231,6 @@ void GameController::runGame() {
             } catch (puzzle_end &r) { // puzzle finished
                 cout << "Puzzle completed!" << endl;
                 resetState();
-                cout << endl << ">>> Normal Mode <<<" << endl;
             }
         
         // default mode
