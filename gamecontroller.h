@@ -34,6 +34,7 @@ class GameController {
     int turnNumber = 1;
     bool debug = false;
     bool useGD = false;
+    bool largeTD = false;
     bool autoMovementForBot = false;
 
     // Maps for player objects and scores.
@@ -58,7 +59,7 @@ class GameController {
     void printData(const std::vector<Move> &moves);
 
   public:
-    GameController(std::istream &in, bool debug, bool useGD,bool autoMovementForBot);
+    GameController(std::istream &in, bool debug, bool useGD, bool largeTD, bool autoMovementForBot);
 
     // Main function for controlling the program. Should be called by `main()`.
     // Manages input and error handling.

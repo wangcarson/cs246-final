@@ -5,7 +5,8 @@
 int main(int argc, char* argv[]) {
     // command line arguments.
     bool debug = false;
-    bool gd = false;
+    bool showGD = false;
+    bool largeTD = false;
     bool autoMovementForBot = false;
 
     for (int i = 1; i < argc; ++i) {
@@ -13,12 +14,14 @@ int main(int argc, char* argv[]) {
         if (arg == "-d") {
             debug = true;
         } else if (arg == "-g") {
-            gd = true;
-        }else if (arg == "-auto"){
+            showGD = true;
+        } else if (arg == "-t") {
+            largeTD = true;
+        } else if (arg == "-auto"){
             autoMovementForBot=true;
         }
     }
 
-    GameController g(std::cin, debug, gd,autoMovementForBot);
+    GameController g(std::cin, debug, showGD, largeTD, autoMovementForBot);
     g.runGame();
 }
