@@ -44,7 +44,7 @@ class GameController {
 
     // Creates a Player object corresponding to string `s`.
     // Returns as a smart pointer (transfers ownership).
-    std::unique_ptr<Player> getPlayer(std::string s);
+    std::unique_ptr<Player> getPlayer(std::string s,Colour c);
 
     // Restarts the game by resetting states.
     void resetState();

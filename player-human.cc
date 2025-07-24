@@ -1,7 +1,7 @@
 #include "player-human.h"
 using namespace std;
 
-Human::Human(istream &input): in{input} {}
+Human::Human(istream &input,Colour color): in{input},color{color} {}
 
 // Gets a legal move from standard input.
 Move Human::getLegalMove(const vector<Move> &legalMoves) const {
@@ -13,6 +13,7 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
         if (cmd == "move") {
             // get move from standard input.
             string from, to;
+            
             in >> from >> to;
             Tile start, end;
             try {
@@ -36,12 +37,21 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
                         char promote;
                     	Piece p;
                     	in >> promote;
+
                     	try {
                             p = parsePiece(promote);
+                            p.colour = color;
                     	} catch (invalid_argument &r) {
                             cerr << r.what() << endl;
                     		continue; // TODO: this continue doesn't actually work as intended
                     	}
+
+                        if (p.type!= PieceType::Queen || p.type!= PieceType::Rook || p.type!= PieceType::Bishop || p.type!= PieceType::Knight){
+                            cerr << "Illegal promotion, defult promotion." <<endl;
+                            p.type = PieceType::Queen;
+                        }
+
+                        
                     	it.setPromotionPiece(p); // set promotion piece
                     }
                     // cerr << "Legal move!" << endl;

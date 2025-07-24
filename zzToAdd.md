@@ -17,7 +17,15 @@ movegenerator.cc
 - Add case in generateLegalMoves() where the move is castling. For this case, make sure the king isn't in check at any point in path. 
 - computer
 - graphics display
-
+- puzzle shuffle
+-when we setup a board it should remain.
+-if type just move bot make a move for us.
+-needs to say check when the king is in check
+-game 4 4 bug
+-something about bot level 4 needs fixing to many random moves spazing out
+-add error checking for Colour's on promotion.
+-UML update
+-documnetation update.
 
 # optimizations
 - check no memory is leaked

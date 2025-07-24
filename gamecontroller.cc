@@ -25,9 +25,9 @@ GameController::GameController(istream &in, bool debug, bool useGD): in{in}, deb
 
 // Creates a Player object corresponding to string `s`.
 // Returns as a smart pointer (transfers ownership).
-unique_ptr<Player> GameController::getPlayer(string s) {
+unique_ptr<Player> GameController::getPlayer(string s,Colour c) {
     if (s == "h" || s == "human") {
-        return make_unique<Human>(in);
+        return make_unique<Human>(in, c);
     } else if (s == "computer1" || s == "1") {
         return make_unique<Computer>(1, boardManager);
     } else if (s == "computer2" || s == "2") {
@@ -233,8 +233,8 @@ void GameController::runGame() {
                 string p1, p2;
                 in >> p1 >> p2;
                 try {
-                    players.at(Colour::White) = getPlayer(p1); // gets either human or computer
-                    players.at(Colour::Black) = getPlayer(p2);
+                    players.at(Colour::White) = getPlayer(p1,Colour::White); // gets either human or computer
+                    players.at(Colour::Black) = getPlayer(p2,Colour::Black);
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
                     continue;
@@ -249,7 +249,7 @@ void GameController::runGame() {
             // starting a new puzzle.
             } else if (cmd == "puzzle") {
                 cout << endl << ">>> Puzzle Mode <<<" << endl;
-                puzzlePlayer = make_unique<Human>(in);
+                puzzlePlayer = make_unique<Human>(in,Colour::White);
                 puzzle = make_unique<Puzzle>();
                 mode = Mode::Puzzle;
 
