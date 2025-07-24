@@ -42,3 +42,38 @@ ChessBoard &BoardManager::getBoard() { return board; }
 MoveMaker &BoardManager::getMoveMaker() { return moveMaker; }
 MoveGenerator &BoardManager::getMoveGenerator() { return moveGenerator; }
 GameStateChecker &BoardManager::getGameStateChecker() { return gameStateChecker; }
+
+std::string &BoardManager::boardToFen(){
+    string fenString="";
+    int skip =0;
+
+    for(int row =8;row>=0;--row){
+        for(int col=0;col<8;++col){
+            
+            char toUseInString = getPieceChar(board.getPiece(Tile {row,col}));
+
+            if (toUseInString==' '){
+                ++skip;
+            }else if (skip>0){
+                fenString+=skip;
+                fenString+=toUseInString;
+                skip=0;
+            }else{
+                fenString+=toUseInString;
+            }
+
+
+        }
+        if (row>0){
+            fenString+='/';
+        }
+    }
+
+    if (board.getTurn()==Colour::Black){
+        fenString+=" b";
+    }else{
+        fenString+=" w";
+    }
+
+    return fenString;
+}

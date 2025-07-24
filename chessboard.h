@@ -25,6 +25,7 @@ class ChessBoard: public Subject {
     Tile getKing(Colour c);
 
     void printSize(std::string s);
+    Colour getTurn();
 };
 
 #endif

@@ -27,6 +27,9 @@ class BoardManager {
     MoveMaker &getMoveMaker();
     MoveGenerator &getMoveGenerator();
     GameStateChecker &getGameStateChecker();
+
+    std::string &boardToFen();
+
 };
 
 #endif

@@ -13,17 +13,15 @@ movegenerator.cc
 - bug in capture moves for pawn in MoveGenerator
 
 # Things to do
-- change player pointers to smart pointers (and remove dtors - extra credit)
 - Add case in generateLegalMoves() where the move is castling. For this case, make sure the king isn't in check at any point in path. 
 - computer
 - graphics display
 - puzzle shuffle
 -when we setup a board it should remain.
 -if type just move bot make a move for us.
--needs to say check when the king is in check
--game 4 4 bug
+-game 4 4 bug aka make them do a random move every once in a while since game 4 4 causing a 3 move draw.
+
 -something about bot level 4 needs fixing to many random moves spazing out
--add error checking for Colour's on promotion.
 -UML update
 -documnetation update.
 
