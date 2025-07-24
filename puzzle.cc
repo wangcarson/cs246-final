@@ -32,7 +32,7 @@ void Puzzle::loadMoves() {
     string a, b, c, d;
 
     getline(inFile, line1);
-    if (line1 == "PUZZLEEND") throw eof_error();
+    if (line1 == "PUZZLEEND") throw puzzle_end();
     stringstream iss1{line1};
     iss1 >> a >> b;
 

@@ -11,9 +11,9 @@ const int BOARD_ROWS = 8;
 const int BOARD_COLS = 8;
 
 // new exception classes.
-class eof_error: public std::exception {};
-class input_resign: public std::exception {};
-class input_undo: public std::exception {};
+class invalid_move: public std::exception {};
+class puzzle_end: public std::exception {};
+class illegal_move: public std::exception {};
 class tile_out_of_board: public std::out_of_range {
     public:
         tile_out_of_board(const std::string &s): out_of_range(s) {}

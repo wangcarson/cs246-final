@@ -125,6 +125,10 @@ void GameController::runGame() {
 
         // game mode.
         } else if (mode == Mode::Game) {
+            in >> cmd;
+            if (in.fail()) break;
+
+            // get turn info.
             Colour turn = boardManager.getMoveMaker().getTurn();
             Colour opponent = oppositeColour(turn);
             auto legalMoves = boardManager.getMoveGenerator().generateLegalMoves();
@@ -133,55 +137,59 @@ void GameController::runGame() {
             printData(legalMoves);
             cout << turn << " to play." << endl;
             auto player = players.at(turn).get();
-            
-            Move m;
-            try {
-                m = player->getLegalMove(legalMoves);
-            } catch (eof_error &r) {
-                break;
 
-            } catch (input_resign &r) {
+            // get a move from player.
+            Move m;
+            if (cmd == "move") {
+                try { // get legal move from player.
+                    m = player->getLegalMove(legalMoves);
+                } catch (...) {
+                    continue;
+                }
+                
+                // make the move.
+                ++turnNumber;
+                boardManager.getMoveMaker().makeMove(m);
+
+                // check for game end.
+                if (boardManager.getGameStateChecker().isCheck(opponent)) {
+                    cout << opponent << " is in check." << endl;
+                }
+
+                if (boardManager.getGameStateChecker().isCheckmate(opponent)) {
+                    cout << *td << endl;
+                    cout << "Checkmate! " << turn << " wins!" << endl;
+                    ++scores.at(turn);
+                    resetState();
+                    continue;
+                    
+                } else if (boardManager.getGameStateChecker().isStalemate(opponent)) {
+                    cout << *td << endl;
+                    cout << "Stalemate!" << endl;
+                    scores.at(turn) += 0.5;
+                    scores.at(opponent) += 0.5;
+                    resetState();
+                    continue;
+                
+                } else if (boardManager.getGameStateChecker().isMaterialDraw()) {
+                    cout << *td << endl;
+                    cout << "Draw by insufficient material!" << endl;
+                    scores.at(turn) += 0.5;
+                    scores.at(opponent) += 0.5;
+                    resetState();
+                    continue;
+                }
+        
+            // we have to be a bit creative with handling resign.
+            } else if (cmd == "resign") {
                 cerr << turn << " resigned. " << opponent << " wins!" << endl;
                 ++scores.at(opponent);
                 resetState();
                 continue;
             
-            } catch (input_undo &r) {
+            } else if (cmd == "undo") {
                 --turnNumber;             
                 boardManager.getMoveMaker().undoMove();
-                continue;
-            }
-
-            // make the move.
-            ++turnNumber;
-            boardManager.getMoveMaker().makeMove(m);
-
-            // colour is now switched.
-            if (boardManager.getGameStateChecker().isCheck(opponent)) {
-                cout << opponent << " is in check." << endl;
-            }
-
-            if (boardManager.getGameStateChecker().isCheckmate(opponent)) {
-                cout << *td << endl;
-                cout << "Checkmate! " << turn << " wins!" << endl;
-                ++scores.at(turn);
-                resetState();
-                continue;
-                
-            } else if (boardManager.getGameStateChecker().isStalemate(opponent)) {
-                cout << *td << endl;
-                cout << "Stalemate!" << endl;
-                scores.at(turn) += 0.5;
-                scores.at(opponent) += 0.5;
-                resetState();
-                continue;
-            
-            } else if (boardManager.getGameStateChecker().isMaterialDraw()) {
-                cout << *td << endl;
-                cout << "Draw by insufficient material!" << endl;
-                scores.at(turn) += 0.5;
-                scores.at(opponent) += 0.5;
-                resetState();
                 continue;
             }
         
@@ -196,30 +204,33 @@ void GameController::runGame() {
             cout << boardManager.getMoveMaker().getTurn() << " to move." << endl;
 
             // do human player moves.
+            in >> cmd;
+            if (in.fail()) break;
+
+            Move m;
             moves = boardManager.getMoveGenerator().generateLegalMoves();
-            Move play;
             while (true) {
-                try {
-                    play = puzzlePlayer->getLegalMove(moves);
-                } catch (eof_error &r) {
-                    break;
-                } catch (...) {
-                    continue;
+                if (cmd == "move") {
+                    try { // get legal move from player.
+                        m = puzzlePlayer->getLegalMove(moves);
+                    } catch (illegal_move &r) {
+                        cerr << "Illegal move. Please enter another move." << endl;
+                        continue;
+                    }
+                    if (puzzle->isCorrectMove(m)) { // exit loop if correct move.
+                        break;
+                    }
+                    cout << "Incorrect move! Try again." << endl;
                 }
-                // verify correct move.
-                if (puzzle->isCorrectMove(play)) {
-                    break;
-                }
-                cout << "Incorrect move! Try again." << endl;
             }
             // make move.
-            boardManager.getMoveMaker().makeMove(play);
+            boardManager.getMoveMaker().makeMove(m);
             cout << "Correct!" << endl;
             cout << *td << endl;
 
             try { 
                 puzzle->loadMoves();
-            } catch (eof_error &r) { // puzzle finished
+            } catch (puzzle_end &r) { // puzzle finished
                 cout << "Puzzle completed!" << endl;
                 mode = Mode::Normal;
                 cout << endl << ">>> Normal Mode <<<" << endl;
