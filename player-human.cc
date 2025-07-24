@@ -13,6 +13,7 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
         if (cmd == "move") {
             // get move from standard input.
             string from, to;
+            
             in >> from >> to;
             Tile start, end;
             try {
@@ -37,19 +38,20 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
                     	Piece p;
                     	in >> promote;
 
-                        if (color==Colour::Black && promote>96){
-                            promote-=32;
-                        }else if (color==Colour::White && promote<91){
-                            promote+=32;
-                        }
-
-
                     	try {
                             p = parsePiece(promote);
+                            p.colour = color;
                     	} catch (invalid_argument &r) {
                             cerr << r.what() << endl;
                     		continue; // TODO: this continue doesn't actually work as intended
                     	}
+
+                        if (p.type!= PieceType::Queen || p.type!= PieceType::Rook || p.type!= PieceType::Bishop || p.type!= PieceType::Knight){
+                            cerr << "Illegal promotion, defult promotion." <<endl;
+                            p.type = PieceType::Queen;
+                        }
+
+                        
                     	it.setPromotionPiece(p); // set promotion piece
                     }
                     cerr << "Legal move!" << endl;
