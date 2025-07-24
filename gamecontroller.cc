@@ -51,10 +51,6 @@ void GameController::resetState() {
     players.at(Colour::White).reset();
     players.at(Colour::Black).reset();
     turnNumber = 1;
-    try { boardManager.init(FenString); }
-    catch (...) {
-        throw runtime_error("GameController::resetState(): Error with initializing board");
-    }
 }
 
 // Input management and error handling for program.
@@ -214,7 +210,7 @@ void GameController::runGame() {
                 if (cmd == "move") {
                     try { m = puzzlePlayer->getLegalMove(cachedLegalMoves); } // get legal move from player.
                     catch (...) { continue; }                                 // skip if invalid move.
-                    
+
                     if (puzzle->isCorrectMove(m)) { // exit loop if correct move.
                         break;
                     }
@@ -251,6 +247,10 @@ void GameController::runGame() {
                 }
                 cout << endl << ">>> Game Mode <<<" << endl;
                 mode = Mode::Game;
+                try { boardManager.init(FenString); }
+                catch (...) {
+                    throw runtime_error("GameController::runGame(): Error with initializing board");
+                }
                 cachedLegalMoves = boardManager.getMoveGenerator().generateLegalMoves();
                 printData(cachedLegalMoves);
                 cout << boardManager.getMoveMaker().getTurn() << " to play." << endl;
@@ -263,14 +263,18 @@ void GameController::runGame() {
             // starting a new puzzle.
             } else if (cmd == "puzzle") {
                 cout << endl << ">>> Puzzle Mode <<<" << endl;
+                mode = Mode::Puzzle;
+                
                 puzzlePlayer = make_unique<Human>(in,Colour::White);
                 puzzle = make_unique<Puzzle>();
-                mode = Mode::Puzzle;
 
                 // setup puzzle.
                 cout << "Setting up puzzle..." << endl;
                 string p = puzzle->getPosition();
-                boardManager.init(p);
+                try { boardManager.init(p); }
+                catch (...) {
+                    throw runtime_error("GameController::runGame(): Error with initializing puzzle board");
+                }
                 cout << *td << endl;
                 puzzle->loadMoves();
             }

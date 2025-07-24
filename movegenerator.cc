@@ -319,8 +319,8 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
 vector<Move> MoveGenerator::generateLegalMoves() {
     Colour c = moveMaker.getTurn();
     vector<Move> legalList;
-    for (int i = 0; i < BOARD_ROWS; ++i) { // guarantees invariant that tile is in board
-        for(int j = 0; j < BOARD_COLS; ++j) {
+    for (int i = 0; i < BOARD_SIZE; ++i) { // guarantees invariant that tile is in board
+        for(int j = 0; j < BOARD_SIZE; ++j) {
             Tile t{i, j};
             if (c == board.getColour(t)) { // guarantees invariant that tile is nonempty
                 // add legal moves for tile
@@ -335,8 +335,8 @@ vector<Move> MoveGenerator::generateLegalMoves() {
 // same as generatePseudoMoves and generateLegalMoves but breaks on legal move found. 
 // a bit more efficient
 bool MoveGenerator::checkNoMoves(Colour c) {
-    for (int i = 0; i < BOARD_ROWS; ++i) {
-        for (int j = 0; j < BOARD_COLS; ++j) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
             Tile t{i, j};
             if (c == board.getColour(t) && !getLegalMoves(t, c).empty()) {
                 return false;

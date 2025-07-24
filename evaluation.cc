@@ -16,9 +16,9 @@ int getPieceValue(Piece p) {
 int getPositionValue(Piece p, Tile t) {
     int n = static_cast<int>(p.colour);
     if (p.colour == Colour::White) {
-        t.row = BOARD_ROWS-t.row-1;
+        t.row = BOARD_SIZE-t.row-1;
     }
-    int i = t.row*BOARD_COLS + t.col;
+    int i = t.row*BOARD_SIZE + t.col;
     switch (p.type) {
         case PieceType::Pawn:   return n*PAWN_VALUES[i];
         case PieceType::Knight: return n*KNIGHT_VALUES[i];
@@ -34,8 +34,8 @@ int getPositionValue(Piece p, Tile t) {
 int getEvaluationValue(BoardManager &b) {
     int n = static_cast<int>(b.getMoveMaker().getTurn());
     int eval = 0;
-    for (int i = 0; i < BOARD_ROWS; ++i) {
-        for (int j = 0; j < BOARD_COLS; ++j) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
             Tile t{i, j};
             Piece p = b.getBoard().getPiece(t);
             eval += getPieceValue(p);

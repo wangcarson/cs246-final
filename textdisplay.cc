@@ -31,9 +31,9 @@ void TextDisplay::notify(Tile t) {
 // However, since we display from top to bottom, we have to use iterators differently.
 void TextDisplay::print(ostream &out) const {
     for (size_t i = 0; i < display.size(); ++i) {
-        auto &row = display.at(BOARD_ROWS-i-1); // notice this is not `i`
+        auto &row = display.at(BOARD_SIZE-i-1); // notice this is not `i`
         
-        cout << BOARD_ROWS-i << " "; // row number
+        cout << BOARD_SIZE-i << " "; // row number
         for (size_t j = 0; j < row.size(); ++j) {
             cout << row.at(j);
         }
@@ -44,10 +44,10 @@ void TextDisplay::print(ostream &out) const {
 
 void TextDisplay::printLarge(ostream &out) const {
     for (size_t i = 0; i < display.size(); ++i) {
-        auto &row = display.at(BOARD_ROWS-i-1); // notice this is not `i`
+        auto &row = display.at(BOARD_SIZE-i-1); // notice this is not `i`
         
         cout << "  +---+---+---+---+---+---+---+---+" << endl;
-        cout << BOARD_ROWS-i; // row number
+        cout << BOARD_SIZE-i; // row number
         for (size_t j = 0; j < row.size(); ++j) {
             cout << " | " << row.at(j);
         }

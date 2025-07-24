@@ -12,15 +12,15 @@ bool GameStateChecker::isValidBoard() {
     bool whiteKing = false;
     bool blackKing = false;
 
-    for (int i = 0; i < BOARD_COLS; ++i) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
         // check no pawns on first or last rank.
-        if (board.getPiece(Tile{0, i}).isPawn() || board.getPiece(Tile{BOARD_ROWS-1, i}).isPawn()) {
+        if (board.getPiece(Tile{0, i}).isPawn() || board.getPiece(Tile{BOARD_SIZE-1, i}).isPawn()) {
             cerr << "Invalid board: Pawn is on either rank 0 or 7." << endl;
             return false;
         }
 
         // check no duplicate kings
-        for (int j = 0; j < BOARD_ROWS; ++j) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
             Piece p = board.getPiece(Tile{i, j});
             if (p.isKing()) {
                 if (p.isColour(Colour::White)) {
@@ -68,8 +68,8 @@ bool GameStateChecker::isStalemate(Colour c) {
 bool GameStateChecker::isMaterialDraw() {
     std::map<char, int> pieceCounts;
 
-    for (int i = 0; i < BOARD_ROWS; ++i) {
-        for (int j = 0; j < BOARD_COLS; ++j) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
             Piece p = board.getPiece({i,j});
             
             // Not draw when one side has a rook, queen, or pawn.

@@ -7,8 +7,7 @@
 #include <vector>
 
 // board size constants.
-const int BOARD_ROWS = 8;
-const int BOARD_COLS = 8;
+const int BOARD_SIZE = 8;
 
 // new exception classes.
 class invalid_move: public std::exception {};
@@ -46,7 +45,7 @@ struct Tile {
         return tmp += other;
     }
     bool inBoard() const {
-        return col >= 0 && row >= 0 && col < BOARD_COLS && row < BOARD_ROWS; 
+        return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE; 
     }
 };
 
