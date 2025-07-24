@@ -7,12 +7,11 @@
 #include "window.h"
 
 class GraphicsDisplay: public Observer {
-    BoardManager &boardManager;
-    Xwindow *window; // X11 graphical display
+    ChessBoard &board;
+    std::unique_ptr<Xwindow> window; // X11 graphical display
 
   public:
-    GraphicsDisplay(BoardManager bm);
-    ~GraphicsDisplay();
+    GraphicsDisplay(ChessBoard &b);
     void notify(Tile t) override; 
 };
 

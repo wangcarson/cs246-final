@@ -44,7 +44,7 @@ Move Human::getLegalMove(const vector<Move> &legalMoves) const {
                     	}
                     	it.setPromotionPiece(p); // set promotion piece
                     }
-                    cerr << "Legal move!" << endl;
+                    // cerr << "Legal move!" << endl;
                     return it;
                 }
             }

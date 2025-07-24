@@ -12,7 +12,7 @@ class TextDisplay: public Observer {
     std::vector<std::vector<char>> display; // stdout display
 
   public:
-    TextDisplay(ChessBoard &b); // explicit?
+    TextDisplay(ChessBoard &b);
     void notify(Tile t) override;
     void print(std::ostream &out) const;
     void printLarge(std::ostream &out) const;

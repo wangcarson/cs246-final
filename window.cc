@@ -25,6 +25,14 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
         height,DefaultDepth(d,DefaultScreen(d)));
   gc = XCreateGC(d, pix, 0,(XGCValues *)0);
 
+  // load font.
+  XFontStruct* font = XLoadQueryFont(d, "*-c-60-iso8859-1");
+  if (!font) {
+      cerr << "Could not load font" << endl;
+      exit(1);
+  }
+  XSetFont(d, gc, font->fid);
+  
   XFlush(d);
   XFlush(d);
 
@@ -68,7 +76,9 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
   XSetForeground(d, gc, colours[Black]);
 }
 
-void Xwindow::drawString(int x, int y, string msg) {
-  XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
+void Xwindow::drawString(int x, int y, string msg, int colour) {
+  XSetForeground(d, gc, colours[colour]);
+  XDrawString(d, w, gc, x, y, msg.c_str(), msg.length());
+  XSetForeground(d, gc, colours[Black]);
 }
 

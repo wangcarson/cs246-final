@@ -26,11 +26,12 @@ class GameController {
 
     std::istream &in;
     std::unique_ptr<TextDisplay> td;
-    // GraphicsDisplay gd;
+    std::unique_ptr<GraphicsDisplay> gd;
 
     Mode mode = Mode::Normal;
     int turnNumber = 1;
     bool debug = false;
+    bool useGD = false;
 
     // Maps for player objects and scores.
     std::map<Colour, std::unique_ptr<Player>> players;
@@ -52,7 +53,7 @@ class GameController {
     void printData(const std::vector<Move> &moves);
 
   public:
-    GameController(std::istream &in, bool debug);
+    GameController(std::istream &in, bool debug, bool useGD);
 
     // Main function for controlling the program. Should be called by `main()`.
     // Manages input and error handling.

@@ -8,8 +8,12 @@
 #include "player-engine.h"
 using namespace std;
 
-GameController::GameController(istream &in, bool debug): in{in}, debug{debug} { // other fields are default constructed
+GameController::GameController(istream &in, bool debug, bool useGD): in{in}, debug{debug}, useGD{useGD} { // other fields are default constructed
     td = make_unique<TextDisplay>(boardManager.getBoard());
+    if (useGD) {
+        gd = make_unique<GraphicsDisplay>(boardManager.getBoard()); // optional with tag
+        boardManager.getBoard().attach(gd.get());
+    }
     boardManager.getBoard().attach(td.get());
     
     // initialize maps.
@@ -181,40 +185,43 @@ void GameController::runGame() {
         
         // puzzle mode.
         } else if (mode == Mode::Puzzle) {
-            // setup new position
-            cout << boardManager.getMoveMaker().getTurn() << " to move." << endl;
-
+            // do computer move first.
             auto moves = boardManager.getMoveGenerator().generateLegalMoves();
-            Move play;
-            try {
-                play = puzzlePlayer->getLegalMove(moves);
-            } catch (eof_error &r) {
-                break;
-            } catch (input_resign &r) {
-                resetState(); // doesn't WORK!
-                continue;
-            } catch (input_undo &r) {
-                --turnNumber;
-                --turnNumber;
-                boardManager.getMoveMaker().undoMove(); // response move
-                boardManager.getMoveMaker().undoMove(); // player move
-                continue;
-            }
-            // verify correct move.
-            if (!puzzle->isCorrectMove(play)) {
-                cout << "Incorrect move! Try again." << endl;
-                continue;
-            }
-            // make move.
-            ++turnNumber;
-            boardManager.getMoveMaker().makeMove(play);
-            cout << *td << endl;
-
-            // puzzle response.
-            moves = boardManager.getMoveGenerator().generateLegalMoves();
             Move response = puzzle->getResponseMove(moves);
             boardManager.getMoveMaker().makeMove(response);
+            cout << "Computer moves " << response << endl;
             cout << *td << endl;
+            cout << boardManager.getMoveMaker().getTurn() << " to move." << endl;
+
+            // do human player moves.
+            moves = boardManager.getMoveGenerator().generateLegalMoves();
+            Move play;
+            while (true) {
+                try {
+                    play = puzzlePlayer->getLegalMove(moves);
+                } catch (eof_error &r) {
+                    break;
+                } catch (...) {
+                    continue;
+                }
+                // verify correct move.
+                if (puzzle->isCorrectMove(play)) {
+                    break;
+                }
+                cout << "Incorrect move! Try again." << endl;
+            }
+            // make move.
+            boardManager.getMoveMaker().makeMove(play);
+            cout << "Correct!" << endl;
+            cout << *td << endl;
+
+            try { 
+                puzzle->loadMoves();
+            } catch (eof_error &r) { // puzzle finished
+                cout << "Puzzle completed!" << endl;
+                mode = Mode::Normal;
+                cout << endl << ">>> Normal Mode <<<" << endl;
+            }
         
         // default mode
         } else if (mode == Mode::Normal) {
@@ -251,6 +258,7 @@ void GameController::runGame() {
                 string p = puzzle->getPosition();
                 boardManager.init(p);
                 cout << *td << endl;
+                puzzle->loadMoves();
             }
         }
     } // while loop breaks on EOF
