@@ -8,7 +8,7 @@
 #include "player-engine.h"
 using namespace std;
 
-GameController::GameController(istream &in, bool debug, bool useGD,bool autoMovmentForBot): in{in}, debug{debug}, useGD{useGD},autoMovmentForBot{autoMovmentForBot} { // other fields are default constructed
+GameController::GameController(istream &in, bool debug, bool useGD,bool autoMovementForBot): in{in}, debug{debug}, useGD{useGD}, autoMovementForBot{autoMovementForBot} { // other fields are default constructed
     td = make_unique<TextDisplay>(boardManager.getBoard());
     if (useGD) {
         gd = make_unique<GraphicsDisplay>(boardManager.getBoard()); // optional with tag
@@ -124,7 +124,7 @@ void GameController::runGame() {
 
         // game mode.
         } else if (mode == Mode::Game) {
-            if (!autoMovmentForBot){
+            if (!autoMovementForBot){
                 in >> cmd;
                 if (in.fail()) break;
             }
@@ -136,7 +136,18 @@ void GameController::runGame() {
 
             // get a move from player.
             Move m;
-            if (autoMovmentForBot || cmd == "move") {
+            if (cmd == "resign") {
+                cerr << turn << " resigned. " << opponent << " wins!" << endl;
+                ++scores.at(opponent);
+                resetState();
+                continue;
+            
+            } else if (cmd == "undo") {
+                --turnNumber;             
+                boardManager.getMoveMaker().undoMove();
+                continue;
+            
+            } else if (autoMovementForBot || cmd == "move") {
                 try { // get legal move from player.
                     m = player->getLegalMove(cachedLegalMoves);
                 } catch (...) {
@@ -181,16 +192,6 @@ void GameController::runGame() {
                 cout << opponent << " to play." << endl;
         
             // we have to be a bit creative with handling resign.
-            } else if (cmd == "resign") {
-                cerr << turn << " resigned. " << opponent << " wins!" << endl;
-                ++scores.at(opponent);
-                resetState();
-                continue;
-            
-            } else if (cmd == "undo") {
-                --turnNumber;             
-                boardManager.getMoveMaker().undoMove();
-                continue;
             }
         
         // puzzle mode.
