@@ -32,10 +32,11 @@ int Engine::alphaBeta(int depth, int alpha, int beta, Colour c) const {
 
 Move Engine::getLegalMove(const std::vector<Move> &legalMoves) const {
     Colour c = legalMoves.at(0).getColour(); // should never throw
-    
+        
     int bestScore = -MAX_EVAL;
-    Move bestMove;
+    Move bestMove = legalMoves.at(0);
     for (const Move &move : legalMoves) {
+        
         bm.getMoveMaker().makeMove(move);
         int score = -alphaBeta(max_depth-1, -MAX_EVAL, MAX_EVAL, c);
         bm.getMoveMaker().undoMove();

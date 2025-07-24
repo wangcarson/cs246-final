@@ -57,7 +57,6 @@ void GameController::resetState() {
 // Input management and error handling for program.
 void GameController::runGame() {
     // initialize board and print.
-    // boardManager.init();
     try { boardManager.init(); }
     catch (...) {
         throw runtime_error("GameController::start(): Error with initializing board");
