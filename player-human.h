@@ -8,9 +8,9 @@
 
 class Human: public Player {
     std::istream &in;
-    Colour color;
+    Colour colour;
   public:
-    Human(std::istream &input, Colour color);
+    Human(std::istream &input, Colour colour);
     Move getLegalMove(const std::vector<Move> &legalMoves) const override;
 }; 
 

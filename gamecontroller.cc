@@ -51,13 +51,16 @@ void GameController::resetState() {
     players.at(Colour::White).reset(); // deallocates memory
     players.at(Colour::Black).reset();
     turnNumber = 1;
-    boardManager.init(FenString);
+    try { boardManager.init(FenString); }
+    catch (...) {
+        throw runtime_error("GameController::resetState(): Error with initializing board");
+    }
 }
 
 // Input management and error handling for program.
 void GameController::runGame() {
     // initialize board and print.
-    try { boardManager.init(); }
+    try { boardManager.init(FenString); }
     catch (...) {
         throw runtime_error("GameController::start(): Error with initializing board");
     }
@@ -113,10 +116,9 @@ void GameController::runGame() {
             } else if (cmd == "done") {
                 if (boardManager.getGameStateChecker().isValidBoard()) {
                     mode = Mode::Normal;
-
                     FenString = boardManager.boardToFen(); //updates fen string
-
                     cout << endl << ">>> Normal Mode <<<" << endl;
+                    
                 } else {
                     cerr << "Please correct the board before exiting setup." << endl;
                 }
@@ -145,6 +147,8 @@ void GameController::runGame() {
             } else if (cmd == "undo") {
                 --turnNumber;             
                 boardManager.getMoveMaker().undoMove();
+                cachedLegalMoves = boardManager.getMoveGenerator().generateLegalMoves();
+                printData(cachedLegalMoves);
                 continue;
             
             } else if (autoMovementForBot || cmd == "move") {
@@ -205,17 +209,16 @@ void GameController::runGame() {
             cout << boardManager.getMoveMaker().getTurn() << " to move." << endl;
 
             // do human player moves.
-            in >> cmd;
-            if (in.fail()) break;
-
             Move m;
             moves = boardManager.getMoveGenerator().generateLegalMoves();
             while (true) {
+                in >> cmd;
+                if (in.fail()) break;
+                
                 if (cmd == "move") {
                     try { // get legal move from player.
                         m = puzzlePlayer->getLegalMove(moves);
-                    } catch (illegal_move &r) {
-                        cerr << "Illegal move. Please enter another move." << endl;
+                    } catch (...) {
                         continue;
                     }
                     if (puzzle->isCorrectMove(m)) { // exit loop if correct move.
@@ -234,6 +237,7 @@ void GameController::runGame() {
             } catch (puzzle_end &r) { // puzzle finished
                 cout << "Puzzle completed!" << endl;
                 mode = Mode::Normal;
+                resetState();
                 cout << endl << ">>> Normal Mode <<<" << endl;
             }
         
@@ -261,6 +265,7 @@ void GameController::runGame() {
 
             } else if (cmd == "setup") {
                 cout << endl << ">>> Setup Mode <<<" << endl;
+                cout << *td << endl;
                 mode = Mode::Setup;
             
             // starting a new puzzle.

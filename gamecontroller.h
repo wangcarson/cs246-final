@@ -22,7 +22,7 @@ enum class Mode { Setup, Game, Normal, Puzzle };
 // implementation included as well (remove later)
 // for input and output (maybe change this)
 class GameController {
-    std::string FenString="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
+    std::string FenString="rnbqkbnr/pPpppppp/8/8/8/8/PP1PPPPP/RNBQKBNR w";
 
     BoardManager boardManager;
 
