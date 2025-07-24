@@ -8,7 +8,7 @@
 #include "player-engine.h"
 using namespace std;
 
-GameController::GameController(istream &in, bool debug, bool useGD): in{in}, debug{debug}, useGD{useGD} { // other fields are default constructed
+GameController::GameController(istream &in, bool debug, bool useGD,bool autoMovmentForBot): in{in}, debug{debug}, useGD{useGD},autoMovmentForBot{autoMovmentForBot} { // other fields are default constructed
     td = make_unique<TextDisplay>(boardManager.getBoard());
     if (useGD) {
         gd = make_unique<GraphicsDisplay>(boardManager.getBoard()); // optional with tag
@@ -125,9 +125,11 @@ void GameController::runGame() {
 
         // game mode.
         } else if (mode == Mode::Game) {
-            in >> cmd;
-            if (in.fail()) break;
-
+            if (!autoMovmentForBot){
+                in >> cmd;
+                if (in.fail()) break;
+            }
+            
             // get turn info.
             Colour turn = boardManager.getMoveMaker().getTurn();
             Colour opponent = oppositeColour(turn);
@@ -140,7 +142,7 @@ void GameController::runGame() {
 
             // get a move from player.
             Move m;
-            if (cmd == "move") {
+            if (autoMovmentForBot || cmd == "move") {
                 try { // get legal move from player.
                     m = player->getLegalMove(legalMoves);
                 } catch (...) {

@@ -17,7 +17,6 @@ movegenerator.cc
 - computer
 - graphics display
 - puzzle shuffle
--when we setup a board it should remain.
 -if type just move bot make a move for us.
 -game 4 4 bug aka make them do a random move every once in a while since game 4 4 causing a 3 move draw.
 
