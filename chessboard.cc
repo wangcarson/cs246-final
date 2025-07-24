@@ -57,7 +57,7 @@ Tile ChessBoard::getKing(Colour c) {
             }
         }
     }
-    throw runtime_error("No king? lmao"); // todo: add exception handling
+    throw runtime_error("No king? lmao");
     // this should never in theory happen
     // the exception is just to satisfy the compiler
 }

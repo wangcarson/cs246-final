@@ -95,13 +95,13 @@ vector<Move> MoveGenerator::multiMoveRunner(Tile start, vector<Tile> moveVectors
 ////////////////// Moves for specific pieces ////////////////////////
 
 // Invariant: `start` tile is non-empty and in board. 
-vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){ // todo
+vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){
     // regular moves.
     vector<Move> legalList = multiMoveRunner(start, ALL_VECTORS, c);
     
     // castling.
     Piece startPiece = board.getPiece(start);
-    if (moveMaker.getCastlingRights(c, CastleType::QueenSide)) { // TODO: can abstract later
+    if (moveMaker.getCastlingRights(c, CastleType::QueenSide)) {
         Tile rookTile = Tile{start.row, 0};
         
         if (board.getPiece(rookTile).isRook() && // technically unnecessary

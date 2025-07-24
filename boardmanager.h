@@ -21,14 +21,13 @@ class BoardManager {
   public:
     BoardManager();
     void init(std::string position=DEFAULT_POSITION); // init board and state to defaults
+    std::string boardToFen();
 
     // accessors.
     ChessBoard &getBoard();
     MoveMaker &getMoveMaker();
     MoveGenerator &getMoveGenerator();
     GameStateChecker &getGameStateChecker();
-
-    std::string boardToFen();
 
 };
 
