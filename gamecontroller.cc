@@ -236,7 +236,6 @@ void GameController::runGame() {
                 puzzle->loadMoves();
             } catch (puzzle_end &r) { // puzzle finished
                 cout << "Puzzle completed!" << endl;
-                mode = Mode::Normal;
                 resetState();
                 cout << endl << ">>> Normal Mode <<<" << endl;
             }
