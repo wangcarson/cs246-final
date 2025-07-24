@@ -7,8 +7,12 @@
 
 #include "player-engine.h"
 using namespace std;
+//                puzzle = make_unique<Puzzle>();
 
-GameController::GameController(istream &in, bool debug, bool useGD,bool autoMovementForBot): in{in}, debug{debug}, useGD{useGD}, autoMovementForBot{autoMovementForBot} { // other fields are default constructed
+GameController::GameController(istream &in, bool debug, bool useGD,bool autoMovementForBot): 
+in{in}, debug{debug}, useGD{useGD}, autoMovementForBot{autoMovementForBot} { // other fields are default constructed
+    puzzle = make_unique<Puzzle>();
+
     td = make_unique<TextDisplay>(boardManager.getBoard());
     if (useGD) {
         gd = make_unique<GraphicsDisplay>(boardManager.getBoard()); // optional with tag
@@ -271,6 +275,9 @@ void GameController::runGame() {
                 // setup puzzle.
                 cout << "Setting up puzzle..." << endl;
                 string p = puzzle->getPosition();
+                
+                puzzlePlayer = make_unique<Human>(in,p.back() == 'w' ? Colour::White : Colour::Black);
+
                 try { boardManager.init(p); }
                 catch (...) {
                     throw runtime_error("GameController::runGame(): Error with initializing puzzle board");

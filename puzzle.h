@@ -5,7 +5,8 @@
 #include <fstream>
 
 class Puzzle {
-    std::string fileName = "puzzle.txt";
+    int puzzleLineNumber=1;
+    std::string fileName;
     std::ifstream inFile;
     
     Tile correctStart;
@@ -14,11 +15,13 @@ class Puzzle {
     Tile responseEnd;
 
   public:
-    Puzzle();
+
+    Puzzle(std::string fileName="puzzle.txt");
     std::string getPosition();
     Move getResponseMove(std::vector<Move> &legalMoves);
     bool isCorrectMove(Move inputMove);
     void loadMoves();
+
 };
 
 #endif

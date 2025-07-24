@@ -35,7 +35,7 @@ int Engine::alphaBeta(int depth, int alpha, int beta, Colour c) const {
 
 Move Engine::getLegalMove(const std::vector<Move> &legalMoves) const {
 
-    if (rand() % 201==0){
+    if (rand() % 101==0){
         return legalMoves.at(rand() % (legalMoves.size()));
     }
 

@@ -6,12 +6,15 @@
 
 using namespace std;
 
-Puzzle::Puzzle(): inFile{fileName} {}
+Puzzle::Puzzle(string fileName): inFile{fileName} {}
 
 string Puzzle::getPosition(){
-    string stringResponse;
-    getline(inFile, stringResponse);
-    return stringResponse;
+    string temp;
+    getline(inFile,temp);
+    if (temp=="PUZZLEEND"){
+        getline(inFile,temp);
+    }
+    return temp;
 }
 
 Move Puzzle::getResponseMove(vector<Move> &legalMoves) {
@@ -28,10 +31,13 @@ bool Puzzle::isCorrectMove(Move inputMove){
 }
 
 void Puzzle::loadMoves() {
+    puzzleLineNumber+=2;
+
+
     string line1, line2;
     string a, b, c, d;
 
-    getline(inFile, line1);
+    getline(inFile, line1); //GetNthLine()
     if (line1 == "PUZZLEEND") throw puzzle_end();
     stringstream iss1{line1};
     iss1 >> a >> b;
@@ -39,6 +45,7 @@ void Puzzle::loadMoves() {
     getline(inFile, line2);
     stringstream iss2{line2};
     iss2 >> c >> d;
+
 
     try {
         responseStart = parseTile(a);

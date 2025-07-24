@@ -1,3 +1,4 @@
+PUZZLEEND
 5rk1/1p3ppp/pq3b2/8/8/1P1Q1N2/P4PPP/3R2K1 w
 d3 d6
 f8 d8
