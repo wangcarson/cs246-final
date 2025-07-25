@@ -106,3 +106,4 @@ std::ostream &operator<<(std::ostream &out, const Piece &p) {
     out << s;
     return out;
 }
+
