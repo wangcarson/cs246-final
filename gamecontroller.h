@@ -24,7 +24,7 @@ enum class Mode { Setup, Game, Normal, Puzzle };
 // for input and output (maybe change this)
 class GameController {
     std::string FenString="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
-
+  
     BoardManager boardManager;
 
     std::istream &in;

@@ -290,7 +290,7 @@ void GameController::runGame() {
     } // while loop breaks on EOF
 
     // print scores
-    cout << "Final Score:" << endl;
+    cout << endl << "Final Score:" << endl;
     cout << "White: " << scores.at(Colour::White) << endl;
     cout << "Black: " << scores.at(Colour::Black) << endl;
 }
