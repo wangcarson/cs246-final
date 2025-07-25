@@ -52,7 +52,10 @@ struct Move {
 struct BoardState {
     Colour turn;
     std::optional<Tile> enPassant; // nullopt to represent no tile
-    std::map<Colour, std::map<CastleType, bool>> castlingRights;
+    bool castleRightWK;
+    bool castleRightWQ;
+    bool castleRightBK;
+    bool castleRightBQ;
 };
 struct MoveData {
     Move move;

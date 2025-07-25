@@ -10,34 +10,37 @@
 class MoveMaker: public Subject {
     ChessBoard &board;
 
-    std::vector<MoveData> previous;
-
+    
     // board state.
     Colour turn;
     std::optional<Tile> enPassant;
-    std::map<Colour, std::map<CastleType, bool>> castlingRights;
-  
+    // std::map<Colour, std::map<CastleType, bool>> castlingRights;
+    bool castleRightWK;
+    bool castleRightWQ;
+    bool castleRightBK;
+    bool castleRightBQ;
+
+    void setCastlingRights(Colour c, bool b);
+    void setCastlingRights(Colour c, CastleType s, bool b);
+    
   public:
+    std::vector<MoveData> previous;
     MoveMaker(ChessBoard &b);
     
     // initializing board state.
     void initBoardState(Colour starting=Colour::White);
 
     // making moves.
-    void makeMove(Move m, bool official=false); // official moves notify display observers
+    void makeMove(const Move &m, bool official=false); // official moves notify display observers
     void undoMove(bool official=false);
 
     // board state accessors.
     Colour getTurn() const noexcept;
     std::optional<Tile> getEnPassant() const noexcept;
-    std::map<Colour, std::map<CastleType, bool>> getCastlingRights() const noexcept;
     bool getCastlingRights(Colour c, CastleType s) const;
 
     // board state mutators.
-    void setTurn(Colour c);
-    void setEnPassant(std::optional<Tile> t);
-    void setCastlingRights(std::map<Colour, std::map<CastleType, bool>> castlingRights);
-    void setCastlingRights(Colour c, CastleType s, bool b);
+    void setTurn(Colour c); // called in setup mode
 };
 
 #endif

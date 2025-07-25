@@ -64,7 +64,6 @@ void GameController::runGame() {
         throw runtime_error("GameController::start(): Error with initializing board");
     }
     boardManager.getMoveGenerator().generateLegalMoves();
-    return;
 
     cout << "Starting program..." << endl;
     cout << endl << ">>> Normal Mode <<<" << endl;
@@ -315,11 +314,10 @@ void GameController::printData(const vector<Move> &moves) {
         if (ep.has_value()) cout << "En Passant: " << ep.value() << endl;
         else cout << "En Passant: None" << endl;
         
-        auto cr = boardManager.getMoveMaker().getCastlingRights();
-        cout << "Castle White K: " << cr.at(Colour::White).at(CastleType::KingSide) << endl;
-        cout << "Castle White Q: " << cr.at(Colour::White).at(CastleType::QueenSide) << endl;
-        cout << "Castle Black K: " << cr.at(Colour::Black).at(CastleType::KingSide) << endl;
-        cout << "Castle Black Q: " << cr.at(Colour::Black).at(CastleType::QueenSide) << endl;
+        cout << "Castle White K: " << boardManager.getMoveMaker().getCastlingRights(Colour::White, CastleType::KingSide) << endl;
+        cout << "Castle White Q: " << boardManager.getMoveMaker().getCastlingRights(Colour::White, CastleType::QueenSide) << endl;
+        cout << "Castle Black K: " << boardManager.getMoveMaker().getCastlingRights(Colour::Black, CastleType::KingSide) << endl;
+        cout << "Castle Black Q: " << boardManager.getMoveMaker().getCastlingRights(Colour::Black, CastleType::QueenSide) << endl;
         cout << bar << endl;
         cout << "Evaluation: " << getEvaluationValue(boardManager) << endl;
     }

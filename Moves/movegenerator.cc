@@ -220,6 +220,7 @@ void MoveGenerator::pawnMoveGen(const Tile &start, const Colour &c) {
 // Invariant: `start` tile is non-empty and in board. 
 void MoveGenerator::getPseudoMoves(const Tile &t) {
     pseudoMoves.clear();
+    pseudoMoves.reserve(40);
 
     Colour c = board.getColour(t);
     Piece curP = board.getPiece(t);
@@ -250,7 +251,7 @@ void MoveGenerator::getPseudoMoves(const Tile &t) {
 void MoveGenerator::getLegalMoves(const Tile &t, const Colour &c) {
     getPseudoMoves(t); // writes moves into `pseudoMoves` field
     
-    try {
+    try {        
         for (const auto m : pseudoMoves) { // if it's castling, check it's check to the left + right.
 
             bool isCleanAlongPath = true;
@@ -288,7 +289,6 @@ void MoveGenerator::getLegalMoves(const Tile &t, const Colour &c) {
                 moveMaker.undoMove();
 
             }
-            
             // check for check after move.
             moveMaker.makeMove(m);
             if (!isAttacked(board.getKing(c)) && isCleanAlongPath) {
@@ -303,9 +303,10 @@ void MoveGenerator::getLegalMoves(const Tile &t, const Colour &c) {
     }
 }
 
-vector<Move> MoveGenerator::generateLegalMoves() {
+vector<Move> &MoveGenerator::generateLegalMoves() {
     legalMoves.clear();
-
+    legalMoves.reserve(40);
+    
     Colour c = moveMaker.getTurn();
     vector<Move> legalList;    
     for (int i = 0; i < BOARD_SIZE; ++i) { // guarantees invariant that tile is in board
@@ -324,6 +325,7 @@ vector<Move> MoveGenerator::generateLegalMoves() {
 // a bit more efficient
 bool MoveGenerator::hasNoMoves(const Colour &c) {
     legalMoves.clear();
+    legalMoves.reserve(40);
     
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {

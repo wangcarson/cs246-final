@@ -28,7 +28,7 @@ class MoveGenerator {
     MoveGenerator(ChessBoard &b, MoveMaker &mm);
     
     // for current colour.
-    std::vector<Move> generateLegalMoves(); // returns copy, not reference
+    std::vector<Move> &generateLegalMoves(); // returns copy, not reference
 
     // used by GameStateChecker.
     bool isAttacked(const Tile &t); // used by check and isSafeMove()

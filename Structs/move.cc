@@ -13,12 +13,8 @@ Tile Move::getTo() const { return endTile; }
 Colour Move::getColour() const { return piece.colour; }
 MoveType Move::getType() const { return type; }
 Piece Move::getPiece() const { return piece; }
-Piece Move::getCapturePiece() const {
-    return capturePiece;
-}
-Piece Move::getPromotionPiece() const {
-    return promotionPiece; 
-}
+Piece Move::getCapturePiece() const { return capturePiece; }
+Piece Move::getPromotionPiece() const { return promotionPiece; }
  
 void Move::setCapturePiece(Piece p) { capturePiece = p; }
 void Move::setPromotionPiece(Piece p) { promotionPiece = p; }
