@@ -5,8 +5,6 @@
 #include "chessboard.h"
 #include "movegenerator.h"
 
-class MoveGenerator; // forward declaration
-
 class GameStateChecker {
     ChessBoard &board;
     MoveGenerator &moveGenerator;
