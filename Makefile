@@ -1,7 +1,7 @@
 CXX = g++-14
-CXXFLAGS = -std=c++20 -Wall -MMD
+CXXFLAGS = -std=c++20 -Wall -MMD -I./GameLogic -I./Graphics -I./Moves -I./Players -I./Structs -I.
 EXEC = chess-exec
-OBJECTS = structs.o subject.o player-human.o player-computer.o chessboard.o evaluation.o player-engine.o movemaker.o movegenerator.o gamestatechecker.o puzzle.o boardmanager.o window.o textdisplay.o graphicsdisplay.o gamecontroller.o main.o 
+OBJECTS = subject.o Structs/tile.o Structs/piece.o Structs/move.o Players/player-human.o Players/player-computer.o GameLogic/chessboard.o Players/evaluation.o Players/player-engine.o Moves/movemaker.o Moves/movegenerator.o GameLogic/gamestatechecker.o puzzle.o GameLogic/boardmanager.o Graphics/window.o Graphics/textdisplay.o Graphics/graphicsdisplay.o GameLogic/gamecontroller.o main.o 
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}

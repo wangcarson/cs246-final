@@ -2,9 +2,6 @@
 #define __PIECE_H__
 #include <iostream>
 
-// empty piece constant.
-const Piece EMPTY_PIECE{PieceType::Empty, Colour::None};
-
 // custom enums for piece types and colours.
 enum class PieceType { Pawn, Rook, Bishop, Knight, King, Queen, Empty };
 enum class Colour { White = 1, Black = -1, None = 0 };
@@ -29,6 +26,9 @@ struct Piece {
     bool operator==(const Piece& other) const;
     bool operator<(const Piece& other) const;
 };
+
+// empty piece constant.
+const Piece EMPTY_PIECE{PieceType::Empty, Colour::None};
 
 // helper functions with colours and pieces.
 Colour oppositeColour(Colour c);

@@ -5,6 +5,8 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include "piece.h"
+#include "tile.h"
 
 // custom exceptions.
 class invalid_move: public std::exception {};
@@ -14,18 +16,6 @@ class illegal_move: public std::exception {};
 // custom enums for representing type.
 enum class MoveType { Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
 enum class CastleType { KingSide, QueenSide };
-
-// Keeps a move and previous state.
-// Used by MoveMaker for storing data to undo moves.
-struct MoveData {
-    Move move;
-    BoardState oldState;
-};
-struct BoardState {
-    Colour turn;
-    std::optional<Tile> enPassant; // nullopt to represent no tile
-    std::map<Colour, std::map<CastleType, bool>> castlingRights;
-};
 
 // Move class.
 // Represents a single move and keeps necessary information for making and undoing the move.
@@ -56,6 +46,18 @@ class Move {
     bool isDoubleAdvance() const;
     bool isQCastle() const;
     bool isKCastle() const;
+};
+
+// Keeps a move and previous state.
+// Used by MoveMaker for storing data to undo moves.
+struct BoardState {
+    Colour turn;
+    std::optional<Tile> enPassant; // nullopt to represent no tile
+    std::map<Colour, std::map<CastleType, bool>> castlingRights;
+};
+struct MoveData {
+    Move move;
+    BoardState oldState;
 };
 
 // output operators.

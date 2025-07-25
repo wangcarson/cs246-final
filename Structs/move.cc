@@ -1,5 +1,6 @@
 #include "move.h"
-
+#include "piece.h"
+#include "tile.h"
 #include <iostream>
 using namespace std;
 
