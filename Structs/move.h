@@ -5,12 +5,17 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
-#include "structs.h"
+#include <iostream>
 
+#include "piece.h"
+#include "tile.h"
+
+// custom exceptions.
 class invalid_move: public std::exception {};
 class puzzle_end: public std::exception {};
 class illegal_move: public std::exception {};
 
+// custom enums for representing type.
 enum class MoveType { Quiet, DoublePush, KingSideCastle, QueenSideCastle, Capture, EnPassant, Promotion, PromotionCapture };
 enum class CastleType { KingSide, QueenSide };
 
@@ -57,6 +62,7 @@ class Move {
     bool isKCastle() const;
 };
 
+// output operators.
 std::ostream &operator<<(std::ostream &out, const Move &m);
 std::ostream &operator<<(std::ostream &out, const std::vector<Move> &v);
 

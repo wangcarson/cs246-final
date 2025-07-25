@@ -1,7 +1,4 @@
 #include "move.h"
-#include "structs.h"
-
-#include <iostream>
 using namespace std;
 
 Move::Move() {}
@@ -31,3 +28,22 @@ bool Move::isQCastle() const { return type == MoveType::QueenSideCastle; }
 bool Move::isKCastle() const { return type == MoveType::KingSideCastle; }
 
 bool Move::isDoubleAdvance() const { return type == MoveType::DoublePush; }
+
+std::ostream &operator<<(std::ostream &out, const Move &m) {
+    out << m.getPiece() << " from " << m.getFrom() << " to " << m.getTo();
+    if (m.isEnPassant()) { out << " en passant"; }
+    if (m.isCapture()) { out << " capture " << m.getCapturePiece(); }
+    if (m.isPromotion()) { out << " promote " << m.getPromotionPiece(); }
+    if (m.isCastle()) { out << " castle"; }
+    if (m.isDoubleAdvance()) { out << " double push"; }
+    return out;
+}
+
+std::ostream &operator<<(std::ostream &out, const std::vector<Move> &v) {
+    int n = 0;
+    for (const auto &move : v) {
+        ++n;
+        out << n << ": " << move << endl;
+    }
+    return out;
+}

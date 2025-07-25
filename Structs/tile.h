@@ -1,7 +1,12 @@
+#ifndef __TILE_H__
+#define __TILE_H__
+#include <iostream>
+#include <stdexcept>
 
-// board size constants.
+// board size constant.
 const int BOARD_SIZE = 8;
 
+// custom exceptions.
 class tile_out_of_board: public std::out_of_range {
     public:
         tile_out_of_board(const std::string &s): out_of_range(s) {}
@@ -10,23 +15,16 @@ class tile_out_of_board: public std::out_of_range {
 struct Tile {
     int row;
     int col;
-    bool operator==(const Tile &other) const {
-        return row == other.row && col == other.col;
-    }
-    Tile &operator+=(const Tile &other) {
-        row += other.row;
-    	col += other.col;
-    	return *this;
-    }
-    Tile operator+(const Tile &other) const {
-        Tile tmp{*this};
-        return tmp += other;
-    }
-    bool inBoard() const {
-        return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE; 
-    }
+    bool operator==(const Tile &other) const;
+    Tile &operator+=(const Tile &other);
+    Tile operator+(const Tile &other) const;
+    bool inBoard() const;
 };
 
-// Parsing and output.
+// parsing helper function.
 Tile parseTile(std::string s);
+
+// output operator (for debugging).
 std::ostream &operator<<(std::ostream &out, const Tile &t);
+
+#endif
