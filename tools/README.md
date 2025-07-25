@@ -13,7 +13,7 @@ board
 chess
 main
 
-# Explanation:
+# Explaining the UML:
 
 `Chessboard` is just the board representation.
 It gives functionality for adding and removing pieces, as well as accessing board information.
@@ -44,6 +44,16 @@ This is because castling and en passant are state-based moves.
 
 `generateLegalMoves()` needs `isCheck()`
 `isMate()` needs `generateLegalMoves()`
+
+total:               54 allocs, 80,942 bytes
+
+in piece.cc:         25 allocs, 1200 bytes
+in evaluation.h:     18 allocs, 4608 bytes
+in movegenerator.cc: 5 allocs, 208 bytes
+
+1 in bar
+
+6 left
 
 # To test program:
 (1) make

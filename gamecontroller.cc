@@ -63,6 +63,9 @@ void GameController::runGame() {
     catch (...) {
         throw runtime_error("GameController::start(): Error with initializing board");
     }
+    boardManager.getMoveGenerator().generateLegalMoves();
+    return;
+
     cout << "Starting program..." << endl;
     cout << endl << ">>> Normal Mode <<<" << endl;
     

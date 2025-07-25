@@ -9,31 +9,34 @@ class MoveGenerator {
     ChessBoard &board;
     MoveMaker &moveMaker;
 
-    std::vector<Move> lineRunner(Tile start, Tile dirVector, Colour c);
+    std::vector<Move> pseudoMoves;
+    std::vector<Move> legalMoves;
 
-    std::vector<Move> multiLineRunner(Tile start, std::vector<Tile> dirVectors, Colour c);
-    std::vector<Move> multiMoveRunner(Tile start, std::vector<Tile> moveVectors, Colour c);
+    void lineRunner(const Tile &start, const Tile &dirVector, Colour c);
+
+    void multiLineRunner(const Tile &start, const std::vector<Tile> &dirVectors, const Colour &c);
+    void multiMoveRunner(const Tile &start, const std::vector<Tile> &moveVectors, const Colour &c);
     
-    std::vector<Move> pawnMoveGen(Tile t, Colour c); // need to know last move so that we can check for en passant
-    std::vector<Move> kingMoveGen(Tile t, Colour c); // need a way to check for castling
+    void pawnMoveGen(const Tile &start, const Colour &c); // need to know last move so that we can check for en passant
+    void kingMoveGen(const Tile &start, const Colour &c); // need a way to check for castling
 
     // generating moves.
-    std::vector<Move> getPseudoMoves(Tile t);
-    std::vector<Move> getLegalMoves(Tile t, Colour c);
+    void getPseudoMoves(const Tile &t);
+    void getLegalMoves(const Tile &t, const Colour &c);
 
   public:
     MoveGenerator(ChessBoard &b, MoveMaker &mm);
     
     // for current colour.
-    std::vector<Move> generateLegalMoves();
+    std::vector<Move> generateLegalMoves(); // returns copy, not reference
 
     // used by GameStateChecker.
-    bool isAttacked(Tile t); // used by check and isSafeMove()
-    bool hasNoMoves(Colour c);
+    bool isAttacked(const Tile &t); // used by check and isSafeMove()
+    bool hasNoMoves(const Colour &c);
 
     // used by Computer.
-    bool isCheckMove(Move m);
-    bool isSafeMove(Move m);
+    bool isCheckMove(const Move &m);
+    bool isSafeMove(const Move &m);
 };
 
 #endif

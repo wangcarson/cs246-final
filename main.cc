@@ -2,7 +2,7 @@
 #include <string>
 #include "gamecontroller.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {    
     // command line arguments.
     bool debug = false;
     bool showGD = false;
@@ -21,7 +21,6 @@ int main(int argc, char* argv[]) {
             autoMovementForBot=true;
         }
     }
-
     GameController g(std::cin, debug, showGD, largeTD, autoMovementForBot);
     g.runGame();
 }

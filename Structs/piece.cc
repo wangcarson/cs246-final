@@ -23,6 +23,7 @@ bool Piece::operator<(const Piece& other) const {
     return type < other.type;
 }
 
+// 25 allocs, 1200 bytes
 const std::map<char, Piece> CHAR_PIECE_MAP = { // for creating pieces
     {'P', Piece{PieceType::Pawn,   Colour::White}},
     {'N', Piece{PieceType::Knight, Colour::White}},

@@ -17,15 +17,13 @@ const vector<Tile> ALL_VECTORS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {1
 const vector<Tile> KNIGHT_VECTORS = {{1, -2}, {1, 2}, {-1, -2}, {-1, 2}, {-2, 1}, {2, 1}, {-2, -1}, {2, -1}};
 
 // Constants for pawn moves.
-const vector<PieceType> PROMOTION_PIECES = {PieceType::Queen, PieceType::Rook, PieceType::Bishop, PieceType::Knight};
+const vector<PieceType> PROMOTION_PIECES; // = {PieceType::Queen, PieceType::Rook, PieceType::Bishop, PieceType::Knight};
 const int WHITE_FORWARD = 1;
 const int BLACK_FORWARD = -1;
 
 // A function which goes down a line and checks if you can keep going or not.
 // Invariant: `start` tile is non-empty and in board. 
-vector<Move> MoveGenerator::lineRunner(Tile start, Tile dirVector, Colour c) {
-    vector<Move> legalList;
-    
+void MoveGenerator::lineRunner(const Tile &start, const Tile &dirVector, Colour c) {    
     const Piece startPiece = board.getPiece(start);
     Tile end = start;
     end += dirVector;
@@ -38,41 +36,32 @@ vector<Move> MoveGenerator::lineRunner(Tile start, Tile dirVector, Colour c) {
         
         } else if (currentPiece.isEmpty()) {
             Move m{MoveType::Quiet, startPiece, start, end};
-            legalList.emplace_back(m);
+            pseudoMoves.emplace_back(m);
         
         } else { // opposite colour
             Move m{MoveType::Capture, startPiece, start, end};
             m.setCapturePiece(currentPiece);
-            legalList.emplace_back(m);
+            pseudoMoves.emplace_back(m);
             break;
         }
 
         end += dirVector;
     }
-    return legalList;
 }
 
 // For every direction vector, goes down a line and adds moves until a piece is encountered.
 // Used for rook, bishop, queen.
 // Invariant: `start` tile is non-empty and in board. 
-vector<Move> MoveGenerator::multiLineRunner(Tile start, vector<Tile> dirVectors, Colour c) {
-    vector<Move> legalList;
-
+void MoveGenerator::multiLineRunner(const Tile &start, const vector<Tile> &dirVectors, const Colour &c) {
     for (const auto dirVector : dirVectors) {
-        vector<Move> dirMoves = lineRunner(start, dirVector, c);
-
-        // append items to legalList
-        legalList.insert(legalList.end(), dirMoves.begin(), dirMoves.end());
+        lineRunner(start, dirVector, c);
     }
-    return legalList;
 }
 
 // For every move vector, adds a move if square is empty or capturable. 
 // Used for knight, king.
 // Invariant: `start` tile is non-empty and in board. 
-vector<Move> MoveGenerator::multiMoveRunner(Tile start, vector<Tile> moveVectors, Colour c){
-    vector<Move> legalList;
-
+void MoveGenerator::multiMoveRunner(const Tile &start, const vector<Tile> &moveVectors, const Colour &c){
     Piece startPiece = board.getPiece(start);
     for (const auto moveVector : moveVectors){
         Tile end = start + moveVector;
@@ -82,24 +71,23 @@ vector<Move> MoveGenerator::multiMoveRunner(Tile start, vector<Tile> moveVectors
 
             if (endPiece.isEmpty()) {
                 Move m{MoveType::Quiet, startPiece, start, end};
-                legalList.emplace_back(m);
+                pseudoMoves.emplace_back(m);
 
             } else if (endPiece.isOppositeColour(c)) {
                 Move m{MoveType::Capture, startPiece, start, end};
                 m.setCapturePiece(endPiece);
-                legalList.emplace_back(m);
+                pseudoMoves.emplace_back(m);
             }
         }
     }
-    return legalList;
 }
 
 ////////////////// Moves for specific pieces ////////////////////////
 
 // Invariant: `start` tile is non-empty and in board. 
-vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){
+void MoveGenerator::kingMoveGen(const Tile &start, const Colour &c){
     // regular moves.
-    vector<Move> legalList = multiMoveRunner(start, ALL_VECTORS, c);
+    multiMoveRunner(start, ALL_VECTORS, c);
     
     // castling.
     Piece startPiece = board.getPiece(start);
@@ -113,7 +101,7 @@ vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){
             start.col == 4)
         {
             Move m{MoveType::QueenSideCastle, startPiece, start, Tile{start.row, 2}};
-            legalList.emplace_back(m);
+            pseudoMoves.emplace_back(m);
         }
 
     } 
@@ -126,16 +114,14 @@ vector<Move> MoveGenerator::kingMoveGen(Tile start, Colour c){
             start.col == 4)
         {
             Move m{MoveType::KingSideCastle, startPiece, start, Tile{start.row, 6}};
-            legalList.emplace_back(m);
+            pseudoMoves.emplace_back(m);
         }
     }
-    return legalList;
 }
 
 // Invariant: Pawns never appear on rank 0 or 7.
 // Invariant: `start` tile is non-empty and in board. 
-vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
-    vector<Move> legalList;
+void MoveGenerator::pawnMoveGen(const Tile &start, const Colour &c) {
     bool promotionAdd = false;
     bool doublePushAdd = false;
     int forward = (c == Colour::White) ? WHITE_FORWARD : BLACK_FORWARD;
@@ -177,17 +163,17 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
             for (const auto pieceType : PROMOTION_PIECES) {
                 Move m{MoveType::Promotion, startPiece, start, pushTile};
                 m.setPromotionPiece(Piece{pieceType, c});
-                legalList.emplace_back(m);
+                pseudoMoves.emplace_back(m);
             }
         
         } else {
             Move m{MoveType::Quiet, startPiece, start, pushTile};
-            legalList.emplace_back(m);
+            pseudoMoves.emplace_back(m);
         }
 
         if (doublePushAdd) {
             Move m{MoveType::DoublePush, startPiece, start, doublePushTile};
-            legalList.emplace_back(m);
+            pseudoMoves.emplace_back(m);
         }
     }
     
@@ -202,13 +188,13 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
                     Move m{MoveType::PromotionCapture, startPiece, start, end};
                     m.setCapturePiece(endPiece);
                     m.setPromotionPiece(Piece{pieceType, c});
-                    legalList.emplace_back(m);
+                    pseudoMoves.emplace_back(m);
                 }
 
             } else {
                 Move m{MoveType::Capture, startPiece, start, end};
                 m.setCapturePiece(endPiece);
-                legalList.emplace_back(m);
+                pseudoMoves.emplace_back(m);
             }
         }
     }
@@ -225,47 +211,47 @@ vector<Move> MoveGenerator::pawnMoveGen(Tile start, Colour c) {
         if (epTile == leftTile || epTile == rightTile) {
             Move m{MoveType::EnPassant, startPiece, start, epTile + Tile{forward, 0}};
             m.setCapturePiece(epPiece);
-            legalList.emplace_back(m);
+            pseudoMoves.emplace_back(m);
         }
     }
-
-    return legalList;
 }
 
 // Gets all pseudo-legal moves for a piece on a tile.
 // Invariant: `start` tile is non-empty and in board. 
-vector<Move> MoveGenerator::getPseudoMoves(Tile t) {
+void MoveGenerator::getPseudoMoves(const Tile &t) {
+    pseudoMoves.clear();
+
     Colour c = board.getColour(t);
     Piece curP = board.getPiece(t);
         
     if (curP.isRook()) {
-        return multiLineRunner(t, ROOK_VECTORS, c);
+        multiLineRunner(t, ROOK_VECTORS, c);
          
     } else if (curP.isBishop()) {
-        return multiLineRunner(t, BISHOP_VECTORS, c);
+        multiLineRunner(t, BISHOP_VECTORS, c);
     
     } else if (curP.isQueen()) {
-        return multiLineRunner(t, ALL_VECTORS, c);
+        multiLineRunner(t, ALL_VECTORS, c);
 
     } else if (curP.isKnight()) {
-        return multiMoveRunner(t, KNIGHT_VECTORS, c);
+        multiMoveRunner(t, KNIGHT_VECTORS, c);
 
     } else if (curP.isKing()) {
-        return kingMoveGen(t, c);
+        kingMoveGen(t, c);
 
     } else if (curP.isPawn()) {
-        return pawnMoveGen(t, c);
+        pawnMoveGen(t, c);
 
     } else {
         throw invalid_argument("getPseudoMoves: called on empty square.");
     }
 }
 
-vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
-    vector<Move> legalList;
-    vector<Move> pseudoList = getPseudoMoves(t);
+void MoveGenerator::getLegalMoves(const Tile &t, const Colour &c) {
+    getPseudoMoves(t); // writes moves into `pseudoMoves` field
+    
     try {
-        for (const auto m : pseudoList) {//if it's castling, check it's check to the left + right.
+        for (const auto m : pseudoMoves) { // if it's castling, check it's check to the left + right.
 
             bool isCleanAlongPath = true;
             if (m.getType()==MoveType::KingSideCastle){
@@ -302,11 +288,11 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
                 moveMaker.undoMove();
 
             }
+            
+            // check for check after move.
             moveMaker.makeMove(m);
-
-
-            if (!isAttacked(board.getKing(c)) && isCleanAlongPath) { // i.e. check for check
-                legalList.emplace_back(m);
+            if (!isAttacked(board.getKing(c)) && isCleanAlongPath) {
+                legalMoves.emplace_back(m);
             }
             moveMaker.undoMove();
         }
@@ -315,40 +301,43 @@ vector<Move> MoveGenerator::getLegalMoves(Tile t, Colour c) {
         cerr << "In undoMove()" << endl;
         throw;
     }
-    return legalList;
 }
 
 vector<Move> MoveGenerator::generateLegalMoves() {
+    legalMoves.clear();
+
     Colour c = moveMaker.getTurn();
-    vector<Move> legalList;
+    vector<Move> legalList;    
     for (int i = 0; i < BOARD_SIZE; ++i) { // guarantees invariant that tile is in board
         for(int j = 0; j < BOARD_SIZE; ++j) {
             Tile t{i, j};
             if (c == board.getColour(t)) { // guarantees invariant that tile is nonempty
                 // add legal moves for tile
-                vector<Move> curLegalMoves = getLegalMoves(t, c);
-                legalList.insert(legalList.end(), curLegalMoves.begin(), curLegalMoves.end());
+                getLegalMoves(t, c);
             }
         }
     }
-    return legalList;
+    return legalMoves;
 }
 
 // same as generatePseudoMoves and generateLegalMoves but breaks on legal move found. 
 // a bit more efficient
-bool MoveGenerator::hasNoMoves(Colour c) {
+bool MoveGenerator::hasNoMoves(const Colour &c) {
+    legalMoves.clear();
+    
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             Tile t{i, j};
-            if (c == board.getColour(t) && !getLegalMoves(t, c).empty()) {
-                return false;
+            if (c == board.getColour(t)) {
+                getLegalMoves(t, c);
+                if (!legalMoves.empty()) return false;
             }
         }
     }
     return true;
 }
 
-bool MoveGenerator::isAttacked(Tile t) {
+bool MoveGenerator::isAttacked(const Tile &t) {
     Colour c = board.getColour(t);
     int forward = (c == Colour::White) ? WHITE_FORWARD : BLACK_FORWARD;
 
@@ -414,7 +403,7 @@ bool MoveGenerator::isAttacked(Tile t) {
 
 
 // m should be a legal move.
-bool MoveGenerator::isCheckMove(Move m) {
+bool MoveGenerator::isCheckMove(const Move &m) {
     Colour c = m.getColour();
     moveMaker.makeMove(m);
     bool checkMove = isAttacked(board.getKing(oppositeColour(c))); // opponent in check
@@ -422,7 +411,7 @@ bool MoveGenerator::isCheckMove(Move m) {
     return checkMove;
 }
 
-bool MoveGenerator::isSafeMove(Move m) {
+bool MoveGenerator::isSafeMove(const Move &m) {
     moveMaker.makeMove(m);
     bool safeMove = !isAttacked(m.getTo()); // piece attacked
     moveMaker.undoMove();

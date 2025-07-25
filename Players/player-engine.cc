@@ -11,7 +11,7 @@ Engine::Engine(BoardManager &bm): bm{bm} {}
 // returns negative for better positions
 int Engine::alphaBeta(int depth, int alpha, int beta, Colour c) const {
     if (depth == 0) return getEvaluationValue(bm);
-
+    
     auto legalMoves = bm.getMoveGenerator().generateLegalMoves();
     if (legalMoves.empty()) {
         if (bm.getGameStateChecker().isCheck(bm.getMoveMaker().getTurn())) return -MAX_EVAL;
@@ -28,7 +28,9 @@ int Engine::alphaBeta(int depth, int alpha, int beta, Colour c) const {
             bestValue = score;
             if (score > alpha) alpha = score;
         }
-        if (score >= beta) return bestValue;
+        if (score >= beta) {
+            return bestValue;
+        }
     }
    return bestValue;
 }
