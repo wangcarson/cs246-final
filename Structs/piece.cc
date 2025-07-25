@@ -58,7 +58,7 @@ const std::map<Piece, char> PIECE_CHAR_MAP = {
 Piece parsePiece(char s) {
     auto it = CHAR_PIECE_MAP.find(s);
     if (it == CHAR_PIECE_MAP.end()) {
-        throw std::invalid_argument("parsePiece(): Invalid piece " + s);
+        throw std::invalid_argument("parsePiece(): Invalid piece.");
     }
     return it->second;
 }
@@ -76,7 +76,7 @@ Colour oppositeColour(Colour c) {
         case Colour::Black: return Colour::White;
         case Colour::White: return Colour::Black;
         default:
-            throw std::invalid_argument("oppositeColour(): Input colour must be White or Black");
+            throw std::invalid_argument("oppositeColour(): Input colour must be White or Black.");
     }
 }
 

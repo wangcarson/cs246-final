@@ -46,7 +46,7 @@ unique_ptr<Player> GameController::getPlayer(string s,Colour c) {
 
 // Resets states for new game.
 void GameController::resetState() {
-    cout << "White " << scores.at(Colour::White) << " - " << scores.at(Colour::Black) << " Black" << endl << endl;
+    cout << "White " << scores.at(Colour::White) << " - " << scores.at(Colour::Black) << " Black" << endl;
     cout << endl << ">>> Normal Mode <<<" << endl;
 
     // reset states.
@@ -83,8 +83,7 @@ void GameController::runGame() {
                     boardManager.getBoard().setPiece(tile, piece, true);
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
-                } catch (...) {
-                    cerr << "+: Error" << endl;
+                    continue;
                 }
                 cout << *td << endl;
                 
@@ -96,8 +95,7 @@ void GameController::runGame() {
                     boardManager.getBoard().removePiece(t, true);
                 } catch (invalid_argument &r) {
                     cerr << r.what() << endl;
-                } catch (...) {
-                    cerr << "-: Error" << endl;
+                    continue;
                 }
                 cout << *td << endl;
             
