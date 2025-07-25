@@ -58,11 +58,11 @@ bool GameStateChecker::isCheck(Colour c) {
 }
 
 bool GameStateChecker::isCheckmate(Colour c) {
-    return (isCheck(c) && moveGenerator.checkNoMoves(c));
+    return (isCheck(c) && moveGenerator.hasNoMoves(c));
 }
 
 bool GameStateChecker::isStalemate(Colour c) {
-    return (!isCheck(c) && moveGenerator.checkNoMoves(c));
+    return (!isCheck(c) && moveGenerator.hasNoMoves(c));
 }
 
 bool GameStateChecker::isMaterialDraw() {

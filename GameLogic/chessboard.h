@@ -13,19 +13,17 @@ class ChessBoard: public Subject {
   public:
     ChessBoard();
 
-    // changing board. (should call observers)
+    // modifying the board.
     void setPiece(Tile t, Piece p, bool official=false);
     void removePiece(Tile t, bool official=false);
     void clearGrid();
 
-    // some accessors.
+    // board accessors.
     Piece getPiece(Tile t);
     Colour getColour(Tile t);
     bool isOccupied(Tile t);
     bool isEmpty(Tile t);
     Tile getKing(Colour c);
-
-    void printSize(std::string s);
     Colour getTurn();
 };
 

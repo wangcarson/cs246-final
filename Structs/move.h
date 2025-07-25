@@ -19,12 +19,11 @@ enum class CastleType { KingSide, QueenSide };
 
 // Move class.
 // Represents a single move and keeps necessary information for making and undoing the move.
-class Move {
+struct Move {
     MoveType type;
     Piece piece, capturePiece, promotionPiece; // last two are optional
     Tile startTile, endTile;
-
-  public:
+    
     Move();
     Move(MoveType type, Piece piece, Tile from, Tile to);
 

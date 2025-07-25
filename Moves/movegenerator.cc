@@ -336,7 +336,7 @@ vector<Move> MoveGenerator::generateLegalMoves() {
 
 // same as generatePseudoMoves and generateLegalMoves but breaks on legal move found. 
 // a bit more efficient
-bool MoveGenerator::checkNoMoves(Colour c) {
+bool MoveGenerator::hasNoMoves(Colour c) {
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             Tile t{i, j};

@@ -4,7 +4,7 @@
 
 #include "move.h"
 
-
+// abstract Player class 
 class Player {
     // Returns a legal move. Overrided by subclasses.
     virtual Move getMove(const std::vector<Move> &legalMoves) const = 0;

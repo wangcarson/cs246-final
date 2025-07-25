@@ -32,11 +32,11 @@ unique_ptr<Player> GameController::getPlayer(string s,Colour c) {
     if (s == "h" || s == "human") {
         return make_unique<Human>(in, c);
     } else if (s == "computer1" || s == "1") {
-        return make_unique<Computer>(1, boardManager);
+        return make_unique<ComputerL1>(boardManager);
     } else if (s == "computer2" || s == "2") {
-        return make_unique<Computer>(2, boardManager);
+        return make_unique<ComputerL2>(boardManager);
     } else if (s == "computer3" || s == "3") {
-        return make_unique<Computer>(3, boardManager);
+        return make_unique<ComputerL3>(boardManager);
     } else if (s == "computer4" || s == "4") {
         return make_unique<Engine>(boardManager);
     } else {
@@ -233,6 +233,7 @@ void GameController::runGame() {
                 puzzle->loadMoves();
             } catch (puzzle_end &r) { // puzzle finished
                 cout << "Puzzle completed!" << endl;
+                puzzlePlayer.reset();
                 mode = Mode::Normal;
                 cout << endl << ">>> Normal Mode <<<" << endl;
             }
@@ -277,7 +278,7 @@ void GameController::runGame() {
                 cout << "Setting up puzzle..." << endl;
                 string p = puzzle->getPosition();
                 
-                puzzlePlayer = make_unique<Human>(in,p.back() == 'w' ? Colour::White : Colour::Black);
+                puzzlePlayer = make_unique<Human>(in, p.back() == 'w' ? Colour::White : Colour::Black);
 
                 try { boardManager.init(p); }
                 catch (...) {

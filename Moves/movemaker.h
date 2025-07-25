@@ -20,10 +20,11 @@ class MoveMaker: public Subject {
   public:
     MoveMaker(ChessBoard &b);
     
+    // initializing board state.
     void initBoardState(Colour starting=Colour::White);
 
-    // making moves (add to previous)
-    void makeMove(Move m, bool official=false); // should be called on legal moves
+    // making moves.
+    void makeMove(Move m, bool official=false); // official moves notify display observers
     void undoMove(bool official=false);
 
     // board state accessors.
@@ -32,7 +33,7 @@ class MoveMaker: public Subject {
     std::map<Colour, std::map<CastleType, bool>> getCastlingRights() const noexcept;
     bool getCastlingRights(Colour c, CastleType s) const;
 
-    // // board state mutators.
+    // board state mutators.
     void setTurn(Colour c);
     void setEnPassant(std::optional<Tile> t);
     void setCastlingRights(std::map<Colour, std::map<CastleType, bool>> castlingRights);

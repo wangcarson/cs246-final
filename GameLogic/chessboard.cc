@@ -62,17 +62,6 @@ Tile ChessBoard::getKing(Colour c) {
     // the exception is just to satisfy the compiler
 }
 
-void ChessBoard::printSize(string s) { // debugging
-    cout << &grid << " " << grid.size() << " " << grid[0].size() << " " << s << endl;
-    for (auto r : grid) {
-    	for (auto p : r) {
-    		char ch = getPieceChar(p);
-    		cout << ch;
-    	}
-    	cout << endl;
-    }
-}
-
 Colour ChessBoard::getTurn(){
     return turn;
 }
