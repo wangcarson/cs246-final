@@ -38,7 +38,7 @@ Move Computer::getL3Move(const vector<Move> &legalMoves) const {
     return getRandomMove(moves);
 }
 
-Move Computer::getLegalMove(const vector<Move> &legalMoves) const {
+Move Computer::getMove(const vector<Move> &legalMoves) const {
     Move m;
     switch (level) {
         case 3:

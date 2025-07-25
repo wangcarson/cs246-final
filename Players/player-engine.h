@@ -16,7 +16,7 @@ class Engine: public Player {
 
   public:
     Engine(BoardManager &bm);
-    Move getLegalMove(const std::vector<Move> &legalMoves) const override;
+    Move getMove(const std::vector<Move> &legalMoves) const override;
 };
 
 #endif

@@ -4,7 +4,7 @@ using namespace std;
 Human::Human(istream &input, Colour colour): in{input}, colour{colour} {}
 
 // Gets a legal move from standard input.
-Move Human::getLegalMove(const vector<Move> &legalMoves) const {
+Move Human::getMove(const vector<Move> &legalMoves) const {
     string from, to;
     in >> from >> to;
     Tile start, end;

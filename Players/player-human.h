@@ -13,7 +13,7 @@ class Human: public Player {
     Colour colour;
   public:
     Human(std::istream &input, Colour colour);
-    Move getLegalMove(const std::vector<Move> &legalMoves) const override;
+    Move getMove(const std::vector<Move> &legalMoves) const override;
 }; 
 
 #endif
