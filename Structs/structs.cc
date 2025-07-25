@@ -3,18 +3,8 @@
 using namespace std;
 #include "move.h"
 
-Colour oppositeColour(Colour c) {
-    switch (c) {
-        case Colour::Black: return Colour::White;
-        case Colour::White: return Colour::Black;
-        default:
-            throw std::invalid_argument("oppositeColour(): Input colour must be White or Black");
-    }
-}
+// Helper functions for structures.
 
-
-
-////////////////// For parsing pieces
 
 const std::map<char, Piece> CHAR_PIECE_MAP = { // for creating pieces
     {'P', Piece{PieceType::Pawn,   Colour::White}},
