@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "observer.h"
-#include "structs.h"
 
 class Subject {
     std::vector<Observer*> observers;

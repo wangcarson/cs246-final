@@ -5,7 +5,8 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
-#include "structs.h"
+#include "piece.h"
+
 
 class invalid_move: public std::exception {};
 class puzzle_end: public std::exception {};

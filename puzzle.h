@@ -1,6 +1,8 @@
 #ifndef __PUZZLE_H__
 #define __PUZZLE_H__
-#include "structs.h"
+#include "tile.h"
+#include "move.h"
+
 #include <vector>
 #include <fstream>
 

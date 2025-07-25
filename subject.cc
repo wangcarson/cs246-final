@@ -1,5 +1,4 @@
 #include "subject.h"
-#include "structs.h"
 using namespace std;
 #include <iostream>
 

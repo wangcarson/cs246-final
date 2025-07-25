@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include "structs.h"
+
 #include "chessboard.h"
 #include "movemaker.h"
 #include "gamestatechecker.h"

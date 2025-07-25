@@ -1,7 +1,7 @@
 #ifndef __MOVEGENERATOR_H__
 #define __MOVEGENERATOR_H__
-
-#include "structs.h"
+#include "move.h"
+#include "tile.h"
 #include "chessboard.h"
 #include "movemaker.h"
 #include "gamestatechecker.h"

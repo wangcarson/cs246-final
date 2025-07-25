@@ -3,7 +3,9 @@
 #include <vector>
 #include <iostream>
 
-#include "structs.h"
+#include "piece.h"
+#include "move.h"
+
 #include "player.h"
 
 class Human: public Player {

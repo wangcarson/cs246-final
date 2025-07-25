@@ -1,8 +1,11 @@
 #include "puzzle.h"
 #include <sstream>
 #include <fstream>
-#include "structs.h"
+
 #include <iostream>
+#include "move.h"
+#include "tile.h"
+
 
 using namespace std;
 

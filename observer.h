@@ -1,7 +1,7 @@
 #ifndef __OBSERVER_H__
 #define __OBSERVER_H__
 
-#include "structs.h"
+#include "tile.h"
 
 class Observer {
   public:

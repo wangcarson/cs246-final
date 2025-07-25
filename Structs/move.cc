@@ -1,5 +1,5 @@
 #include "move.h"
-#include "structs.h"
+#include "tile.h"
 
 #include <iostream>
 using namespace std;

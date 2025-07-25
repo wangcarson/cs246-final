@@ -1,7 +1,8 @@
-#include "structs.h"
+#include "piece.h"
 #include <iostream>
 using namespace std;
 #include "move.h"
+#include "tile.h"
 
 // Helper functions for structures.
 

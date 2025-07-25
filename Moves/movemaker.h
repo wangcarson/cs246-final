@@ -3,8 +3,8 @@
 #include <vector>
 #include <map>
 #include <optional>
-
-#include "structs.h"
+#include "move.h"
+#include "tile.h"
 #include "chessboard.h" 
 
 class MoveMaker: public Subject {

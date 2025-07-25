@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 
-#include "structs.h"
+#include "tile.h"
 #include "chessboard.h"
 #include "observer.h"
 

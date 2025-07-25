@@ -1,7 +1,7 @@
 #ifndef __GAMESTATECHECKER_H__
 #define __GAMESTATECHECKER_H__
+#include "piece.h"
 
-#include "structs.h"
 #include "chessboard.h"
 #include "movegenerator.h"
 
