@@ -2,7 +2,8 @@
 #define __PLAYER_H__
 #include <vector>
 
-#include "structs.h"
+#include "move.h"
+
 
 class Player {
   public:

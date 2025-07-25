@@ -2,7 +2,8 @@
 #define __CHESSBOARD_H__
 #include <vector>
 
-#include "structs.h"
+#include "piece.h"
+#include "tile.h"
 #include "subject.h"
 
 class ChessBoard: public Subject {

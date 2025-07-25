@@ -2,7 +2,8 @@
 #define __COMPUTER_H__
 #include <vector>
 
-#include "structs.h"
+#include "move.h"
+
 #include "player.h"
 #include "boardmanager.h"
 

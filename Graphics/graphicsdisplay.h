@@ -1,7 +1,7 @@
 #ifndef __GRAPHICSDISPLAY_H__
 #define __GRAPHICSDISPLAY_H__
 
-#include "structs.h"
+#include "tile.h"
 #include "boardmanager.h"
 #include "observer.h"
 #include "window.h"

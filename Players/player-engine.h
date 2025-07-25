@@ -2,7 +2,9 @@
 #define __ENGINE_H__
 #include <vector>
 
-#include "structs.h"
+#include "piece.h"
+#include "move.h"
+
 #include "player.h"
 #include "boardmanager.h"
 

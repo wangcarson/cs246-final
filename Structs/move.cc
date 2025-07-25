@@ -1,4 +1,6 @@
 #include "move.h"
+
+#include <iostream>
 using namespace std;
 
 Move::Move() {}

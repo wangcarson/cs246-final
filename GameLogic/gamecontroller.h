@@ -6,7 +6,8 @@
 #include <map>
 #include <memory>
 
-#include "structs.h"
+#include "move.h"
+
 #include "puzzle.h"
 #include "textdisplay.h"
 #include "graphicsdisplay.h"

@@ -1,7 +1,7 @@
 #ifndef __EVALUATION_H__
 #define __EVALUATION_H__
 #include <map>
-#include "structs.h"
+#include "piece.h"
 #include "boardmanager.h"
 
 // Evaluation functions.

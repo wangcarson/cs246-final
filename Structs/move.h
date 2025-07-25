@@ -5,10 +5,6 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
-#include <iostream>
-
-#include "piece.h"
-#include "tile.h"
 
 // custom exceptions.
 class invalid_move: public std::exception {};
