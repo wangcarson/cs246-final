@@ -3,8 +3,8 @@ movegenerator.cc
 
 # Things to do
 - separt struct file
--UML update
--documnetation update.
+- UML update
+- documnetation update.
 
 # optimizations
 - check no memory is leaked

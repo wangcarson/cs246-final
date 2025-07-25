@@ -1,7 +1,8 @@
 #include "textdisplay.h"
 using namespace std;
 
-TextDisplay::TextDisplay(ChessBoard &b): board{b}, display{vector<vector<char>>(8, vector<char>(8, ' '))} {
+TextDisplay::TextDisplay(ChessBoard &b, bool largeTD): 
+board{b}, largeTD{largeTD}, display{vector<vector<char>>(8, vector<char>(8, ' '))} {
     for (size_t i = 0; i < display.size(); ++i) {
         auto &row = display.at(i); 
         for (size_t j = 0; j < row.size(); ++j) {
@@ -33,31 +34,30 @@ void TextDisplay::print(ostream &out) const {
     for (size_t i = 0; i < display.size(); ++i) {
         auto &row = display.at(BOARD_SIZE-i-1); // notice this is not `i`
         
-        cout << BOARD_SIZE-i << " "; // row number
-        for (size_t j = 0; j < row.size(); ++j) {
-            cout << row.at(j);
+        if (largeTD) {
+            cout << "  +---+---+---+---+---+---+---+---+" << endl;
+            cout << BOARD_SIZE-i; // row number
+            for (size_t j = 0; j < row.size(); ++j) {
+                cout << " | " << row.at(j);
+            }
+            cout << " | " << endl;
+        } else {
+            cout << BOARD_SIZE-i << " "; // row number
+            for (size_t j = 0; j < row.size(); ++j) {
+                cout << row.at(j);
+            }
+            cout << endl;
         }
-        cout << endl;
     }
-    cout << "  abcdefgh";
-}
-
-void TextDisplay::printLarge(ostream &out) const {
-    for (size_t i = 0; i < display.size(); ++i) {
-        auto &row = display.at(BOARD_SIZE-i-1); // notice this is not `i`
-        
+    if (largeTD) {
         cout << "  +---+---+---+---+---+---+---+---+" << endl;
-        cout << BOARD_SIZE-i; // row number
-        for (size_t j = 0; j < row.size(); ++j) {
-            cout << " | " << row.at(j);
-        }
-        cout << " | " << endl;
+        cout << "    a   b   c   d   e   f   g   h";
+    } else {
+        cout << "  abcdefgh";
     }
-    cout << "  +---+---+---+---+---+---+---+---+" << endl;
-    cout << "    a   b   c   d   e   f   g   h";
 }
 
 std::ostream &operator<<(ostream &out, const TextDisplay &s) {
-    s.printLarge(out);
+    s.print(out);
     return out;
 }

@@ -9,13 +9,13 @@
 
 class TextDisplay: public Observer {
     ChessBoard &board;
+    bool largeTD;
     std::vector<std::vector<char>> display; // stdout display
 
   public:
-    TextDisplay(ChessBoard &b);
+    TextDisplay(ChessBoard &b, bool largeTD);
     void notify(Tile t) override;
     void print(std::ostream &out) const;
-    void printLarge(std::ostream &out) const;
 
     friend std::ostream &operator<<(std::ostream &out, const TextDisplay &s);
 };

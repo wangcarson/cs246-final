@@ -62,8 +62,6 @@ std::string BoardManager::boardToFen(){
             }else{
                 fenString+=toUseInString;
             }
-
-
         }
         if (skip>0){
             char alpha = (char)(skip+48);

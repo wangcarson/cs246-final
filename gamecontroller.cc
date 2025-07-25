@@ -13,7 +13,7 @@ GameController::GameController(istream &in, bool debug, bool useGD, bool largeTD
 in{in}, debug{debug}, useGD{useGD}, largeTD{largeTD}, autoMovementForBot{autoMovementForBot} { // other fields are default constructed
     puzzle = make_unique<Puzzle>();
 
-    td = make_unique<TextDisplay>(boardManager.getBoard());
+    td = make_unique<TextDisplay>(boardManager.getBoard(), largeTD);
     if (useGD) {
         gd = make_unique<GraphicsDisplay>(boardManager.getBoard()); // optional with tag
         boardManager.getBoard().attach(gd.get());
