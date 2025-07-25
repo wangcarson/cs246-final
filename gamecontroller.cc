@@ -7,7 +7,6 @@
 
 #include "player-engine.h"
 using namespace std;
-//                puzzle = make_unique<Puzzle>();
 
 GameController::GameController(istream &in, bool debug, bool useGD, bool largeTD, bool autoMovementForBot): 
 in{in}, debug{debug}, useGD{useGD}, largeTD{largeTD}, autoMovementForBot{autoMovementForBot} { // other fields are default constructed
